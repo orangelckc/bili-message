@@ -27,6 +27,7 @@ interface IMsg {
   type: 'entry' | 'message' | 'gift' | 'like' | 'follow' | 'emoji'
   uname: string
   message: string
+  medal: IUserMedal
 }
 
 interface IUserMedal {
