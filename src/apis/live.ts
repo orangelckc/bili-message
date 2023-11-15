@@ -54,9 +54,9 @@ function getEmojiApi() {
 
 // 发送消息
 function sendMessageApi(message: string, type: EDMType) {
-  const { currentUser, room, signRoom } = useAppStore()
+  const { currentUser, room, currentMedal } = useAppStore()
   const data = {
-    roomid: type === EDMType.打卡专用 ? `${signRoom}` : `${room}`,
+    roomid: type === EDMType.打卡专用 ? `${currentMedal?.roomid}` : `${room}`,
     msg: message,
     dm_type: type === EDMType.打卡专用 ? '0' : type,
     bubble: '0',
@@ -93,10 +93,27 @@ function getLiveStatusApi() {
   })
 }
 
+// 获取用户持有的粉丝勋章
+function getMedalApi(page: number = 1) {
+  const { currentUser } = useAppStore()
+  return request({
+    url: `${LIVE_URL_PREFIX}/xlive/app-ucenter/v1/user/GetMyMedals`,
+    method: 'GET',
+    params: {
+      page,
+      page_size: 10,
+    },
+    headers: {
+      cookie: currentUser?.cookie,
+    },
+  })
+}
+
 export {
   getLiveCodeApi,
   getLiveTokenApi,
   getEmojiApi,
   sendMessageApi,
   getLiveStatusApi,
+  getMedalApi,
 }

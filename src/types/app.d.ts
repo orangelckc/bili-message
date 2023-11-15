@@ -4,6 +4,8 @@ interface IUser {
   face: string;
   cookie?: string;
   csrf?: string;
+  medals: IUserMedal[],
+  medalCount: number
 }
 
 interface IAccess {
@@ -22,7 +24,29 @@ interface ILogin {
 
 interface IMsg {
   id: string
-  type: 'entry' | 'message' | 'gift' | 'like' | 'follow'|'emoji'
+  type: 'entry' | 'message' | 'gift' | 'like' | 'follow' | 'emoji'
   uname: string
   message: string
+}
+
+interface IUserMedal {
+  can_deleted: boolean;
+  day_limit: number;
+  guard_level: number;
+  guard_medal_title: string;
+  intimacy: number;
+  is_lighted: number;
+  level: number;
+  medal_name: string;
+  medal_color_border: number;
+  medal_color_end: number;
+  medal_color_start: number;
+  medal_id: number;
+  next_intimacy: number;
+  today_feed: number;
+  roomid: number;
+  status: number;
+  target_id: number;
+  target_name: string;
+  uname: string;
 }
