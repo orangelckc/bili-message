@@ -4,12 +4,21 @@ import { appWindow } from '@tauri-apps/api/window'
 import { sendMessageApi } from '@/apis/live'
 import Account from '@/components/Account.vue'
 import Danmu from '@/components/Danmu.vue'
+import Medal from '@/components/Medal.vue'
 import useWebsocket from '@/hooks/useWebsocket'
 import { EDMType } from '@/utils/enums'
 import { connected, startWebsocket, stopWebsocket } from '@/utils/room'
 
-const { userList, room, isFix, signRoom } = storeToRefs(useAppStore())
-const { refreshCurrentUser } = useAppStore()
+const { userList, room, isFix, currentMedal, currentUser } = storeToRefs(useAppStore())
+const { refreshCurrentUser, getUserMedal } = useAppStore()
+const popover = ref()
+
+const disabled = computed(() => {
+  if (!currentMedal.value)
+    return true
+
+  return !!currentMedal.value.is_lighted
+})
 
 function handleFix() {
   isFix.value = !isFix.value
@@ -23,6 +32,12 @@ async function handleSign() {
     return
 
   ElMessage.success('打卡成功')
+  currentMedal.value!.is_lighted = 1
+}
+
+function changeMedal(medal: IUserMedal) {
+  currentMedal.value = medal
+  popover.value?.hide()
 }
 
 onMounted(() => {
@@ -38,13 +53,35 @@ onMounted(() => {
         <Account v-for="user in userList" :key="user.mid" :user="user" />
       </div>
       <div class="sign">
-        <el-input v-model.trim="signRoom" placeholder="房间号">
-          <template #append>
-            <el-button @click="handleSign">
-              打卡
-            </el-button>
+        <el-popover
+          ref="popover"
+          placement="top-start"
+          trigger="click"
+          :popper-style="{
+            margin: 0,
+            padding: 0,
+            width: '190px',
+          }"
+          @before-enter="getUserMedal"
+        >
+          <div v-if="currentUser?.medalCount" class="flex flex-wrap gap-2 p-2">
+            <Medal
+              v-for="medal in currentUser.medals"
+              :key="medal.medal_id"
+              :medal="medal"
+              @click="changeMedal(medal)"
+            />
+          </div>
+          <div v-else class="p-2">
+            <span>当前没有任何粉丝勋章</span>
+          </div>
+          <template #reference>
+            <Medal :medal="currentMedal" />
           </template>
-        </el-input>
+        </el-popover>
+        <el-button size="small" :disabled="disabled" @click="handleSign">
+          点亮勋章
+        </el-button>
       </div>
       <div class="tip">
         <span>
@@ -90,7 +127,7 @@ onMounted(() => {
     }
 
     .sign{
-      @apply fixed bottom-15 flex gap-4 items-center w-40 bg-white;
+      @apply fixed bottom-15 flex justify-around items-center w-40 bg-white;
     }
 
     .tip{

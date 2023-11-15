@@ -1,4 +1,5 @@
 import { getUserInfoApi } from '@/apis/bilibili'
+import { getMedalApi } from '@/apis/live'
 
 export const useAppStore = defineStore(
   'app',
@@ -11,19 +12,21 @@ export const useAppStore = defineStore(
       mid: 0,
       uname: '',
       face: '',
+      medals: [],
+      medalCount: 0,
     }])
 
     // 当前的房间号
     const room = ref<number>()
-
-    // 打卡房间号
-    const signRoom = ref<number>()
 
     // 信息列表
     const msgList = ref<IMsg[]>([])
 
     // 置顶
     const isFix = ref(false)
+
+    // 当前佩戴的粉丝勋章
+    const currentMedal = ref<IUserMedal>()
 
     // 刷新当前用户信息
     async function refreshCurrentUser() {
@@ -45,19 +48,56 @@ export const useAppStore = defineStore(
         userList.value[index] = currentUser.value
     }
 
+    // 获取当前用户的所有粉丝勋章
+    async function getUserMedal() {
+      if (!currentUser.value)
+        return
+
+      const list: IUserMedal[] = []
+      const { data } = await getMedalApi(1)
+
+      if (!data)
+        return
+
+      currentUser.value.medalCount = data.count
+
+      list.push(...data.items)
+
+      const { cur_page, total_page } = data.page_info
+      // 循环获取所有勋章
+      if (cur_page < total_page) {
+        for (let i = cur_page + 1; i <= total_page; i++) {
+          const { data } = await getMedalApi(i)
+          if (!data)
+            return
+
+          list.push(...data.items)
+        }
+      }
+
+      currentUser.value.medals = list
+
+      // 更新当前选中的粉丝勋章
+      const target = list.find(item => item.medal_id === currentMedal.value?.medal_id)
+
+      if (target)
+        currentMedal.value = target
+    }
+
     return {
       currentUser,
       userList,
       room,
       msgList,
       isFix,
-      signRoom,
+      currentMedal,
       refreshCurrentUser,
+      getUserMedal,
     }
   },
   {
     persist: {
-      paths: ['currentUser', 'userList', 'room', 'signRoom'],
+      paths: ['currentUser', 'userList', 'room', 'currentMedal'],
     },
   },
 )

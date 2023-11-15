@@ -5,7 +5,7 @@ const props = defineProps<{
   user: IUser
 }>()
 
-const { currentUser, userList } = storeToRefs(useAppStore())
+const { currentUser, userList, currentMedal } = storeToRefs(useAppStore())
 const { refreshCurrentUser } = useAppStore()
 
 const isDefault = computed(() => currentUser.value?.mid === props.user?.mid)
@@ -23,6 +23,8 @@ function handleSuccessLogin() {
 
 function setMaster() {
   currentUser.value = props.user
+  currentMedal.value = undefined
+  refreshCurrentUser()
 }
 
 function handleExit() {
@@ -30,8 +32,10 @@ function handleExit() {
   userList.value.splice(idx, 1)
 
   // 如果退出的是当前账号
-  if (isDefault.value)
+  if (isDefault.value) {
     currentUser.value = undefined
+    currentMedal.value = undefined
+  }
 }
 </script>
 
