@@ -9,7 +9,7 @@ import useWebsocket from '@/hooks/useWebsocket'
 import { EDMType } from '@/utils/enums'
 import { connected, startWebsocket, stopWebsocket } from '@/utils/room'
 
-const { userList, room, isFix, currentMedal, currentUser } = storeToRefs(useAppStore())
+const { userList, room, isFix, currentMedal, currentUser, msgList } = storeToRefs(useAppStore())
 const { refreshCurrentUser, getUserMedal } = useAppStore()
 const popover = ref()
 
@@ -107,7 +107,16 @@ onMounted(() => {
       <div class="my-1 cursor-move text-sm text-gray-200" data-tauri-drag-region>
         —— 拖拽我移动位置吧 ——
       </div>
-      <Danmu class="w-full" />
+      <el-card
+        class="w-full"
+        :body-style="{
+          padding: '0',
+          margin: '0',
+        }"
+      >
+        <Danmu :msg-list="msgList" mode="host" @clear="msgList = []" />
+        <Chat />
+      </el-card>
     </div>
   </div>
 </template>

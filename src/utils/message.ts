@@ -16,7 +16,7 @@ async function handleMessage(messages: any[]) {
   const redPocketList: any[] = []
 
   const parseRank = (data: any) => {
-    const { list } = data
+    const list = data?.list || data?.online_list || []
     list.length > 3 && list.splice(3)
     rankList.splice(0)
     list.forEach((item: any) => rankList.push(item))
@@ -100,7 +100,15 @@ async function handleMessage(messages: any[]) {
       isEmoji: !!info[0][12], // 弹幕类型，0-文字，1-emoji
       emoji: info[0][13],
       unameColor: info[2][7],
-      medal: info[3],
+      medal: info[3].length
+        ? {
+            level: info[3][0],
+            medal_name: info[3][1],
+            medal_color_start: info[3][8],
+            medal_color_end: info[3][7],
+            medal_color_border: info[3][9],
+          }
+        : undefined,
       backgroundColor: '',
     }
     const nameColor = barrageInfo.unameColor
@@ -260,8 +268,16 @@ async function handleMessage(messages: any[]) {
       case MESSAGE_TYPE.LIVEGAME:
         break
 
+      // 在线人数更新
+      case MESSAGE_TYPE.ONLINE_RANK_COUNT:
+        break
+
+      // 点赞更新
+      case MESSAGE_TYPE.ONLINE_LIKE_COUNT:
+        break
+
       default:
-        // console.log("未知消息类型", message)
+        // console.log('未知消息类型', message)
         break
     }
   }

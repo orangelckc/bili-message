@@ -1,88 +1,73 @@
 <script lang="ts" setup>
-import { sendMessageApi } from '@/apis/live'
-import { EDMType } from '@/utils/enums'
-import { connected, emojiList } from '@/utils/room'
+import Medal from '@/components/Medal.vue'
+import { connected } from '@/utils/room'
 
-const { msgList, currentUser } = storeToRefs(useAppStore())
+const props = defineProps<{
+  msgList: IMsg[]
+  mode: 'host' | 'client'
+}>()
 
-const msg = ref('')
+defineEmits(['clear'])
+
 const danmuRef = ref<HTMLElement>()
-const emojiRef = ref()
-const activeTab = ref('0')
-const disabled = computed(() => !connected.value || !currentUser.value)
 
-async function handleSend() {
-  if (!msg.value.trim())
+const autoScroll = ref(true)
+
+watch(() => props.msgList, () => {
+  if (!danmuRef.value || !autoScroll.value)
     return
 
-  const res = await sendMessageApi(msg.value.trim(), EDMType.普通弹幕)
-  if (!res)
-    return
-
-  msg.value = ''
-}
-
-function handleSendEmoji(value: string) {
-  sendMessageApi(value, EDMType.表情弹幕)
-  emojiRef.value.hide()
-}
-
-watch(msgList, () => {
-  if (!danmuRef.value)
-    return
-
-  danmuRef.value.scrollTop = danmuRef.value.scrollHeight
+  nextTick(() => {
+    danmuRef.value!.scrollTop = danmuRef.value!.scrollHeight
+  })
 }, {
   deep: true,
+})
+
+watch(autoScroll, (val) => {
+  if (val)
+    danmuRef.value!.scrollTop = danmuRef.value!.scrollHeight
 })
 </script>
 
 <template>
-  <el-card
-    :body-style="{
-      padding: '0',
-      margin: '0',
-    }"
-  >
-    <div ref="danmuRef" class="danmu">
-      <div v-for="item in msgList" :key="item.id" class="text-sm">
-        <div v-if="item.type === 'message' || item.type === 'emoji'" class="flex items-center gap-2 text-base">
-          <span class="max-w-50 truncate text-amber">{{ item.uname }}: </span>
-          <div v-if="item.type === 'emoji'">
-            <img :src="item.message" alt="" class="min-h-6 w-20">
-          </div>
-          <span v-else class="text-blue-500">{{ item.message }}</span>
-        </div>
-        <span v-else-if="item.type === 'gift'" class="text-red">{{ item.message }}</span>
-        <span v-else-if="item.type === 'like' || item.type === 'follow'" class="text-orange">{{ item.message }}</span>
-        <span v-else class="text-gray-400">{{ item.message }}</span>
+  <div ref="danmuRef" class="danmu">
+    <div v-if="mode === 'host'" class="fixed right-5 top-28 center gap-2">
+      <el-tooltip content="自动滚动">
+        <el-button v-show="connected" :type="autoScroll ? 'primary' : 'info'" size="small" plain round @click="autoScroll = !autoScroll">
+          <span class="i-carbon-auto-scroll h-4 w-4" />
+        </el-button>
+      </el-tooltip>
+      <el-tooltip content="清屏">
+        <el-button v-show="msgList.length" type="danger" size="small" plain round @click="$emit('clear')">
+          <span class="i-carbon-trash-can h-4 w-4" />
+        </el-button>
+      </el-tooltip>
+    </div>
+    <span v-for="item in msgList" :key="item.id" class="flex items-center gap-1 text-sm">
+      <div>
+        <Medal v-if="item.medal" :medal="item.medal" />
       </div>
-    </div>
-    <div class="chat">
-      <el-popover ref="emojiRef" placement="top" trigger="click" :width="300">
-        <template #reference>
-          <el-button class="border-none!" plain :disabled="disabled">
-            <span class="i-carbon-face-activated-add h-6 w-6" />
-          </el-button>
-        </template>
-        <el-tabs v-model="activeTab">
-          <el-tab-pane v-for="tab in emojiList" :key="tab.pkg_id" :label="tab.pkg_name" class="h-30 overflow-y-scroll">
-            <div class="flex flex-wrap gap-3">
-              <div v-for="emoji in tab.emoticons" :key="emoji.emoticon_id" class="min-h-6 w-20 center cursor-pointer" @click="handleSendEmoji(emoji.emoticon_unique)">
-                <el-tooltip :content="emoji.emoji">
-                  <img :src="emoji.url" :alt="emoji.emoji">
-                </el-tooltip>
-              </div>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-      </el-popover>
-      <el-input v-model="msg" placeholder="发送一条弹幕吧" class="flex-1" :disabled="disabled" @keyup.enter="handleSend" />
-      <el-button round type="primary" :disabled="disabled" @click="handleSend">
-        <span class="i-carbon-send-alt h-6 w-6" />
-      </el-button>
-    </div>
-  </el-card>
+      <div v-if="item.type === 'emoji'" class="flex items-center gap-2 text-base">
+        <span class="text-amber">{{ item.uname }}: </span>
+        <div v-if="item.type === 'emoji'">
+          <img :src="item.message" alt="" class="min-h-6 w-20">
+        </div>
+      </div>
+      <div v-else-if="item.type === 'message'" class="text-base">
+        <span class="text-amber">{{ item.uname }}: </span>
+        <span
+          :class="{
+            'text-blue-500': mode === 'host',
+            'text-white': mode === 'client',
+          }"
+        >{{ item.message }}</span>
+      </div>
+      <span v-else-if="item.type === 'gift'" class="text-red">{{ item.message }}</span>
+      <span v-else-if="item.type === 'like' || item.type === 'follow'" class="text-orange">{{ item.message }}</span>
+      <span v-else class="text-gray-400">{{ item.message }}</span>
+    </span>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -90,10 +75,7 @@ watch(msgList, () => {
   display: none;
 }
 .danmu{
-  @apply h-130 overflow-y-scroll w-full relative p-2 flex flex-col gap-2;
+  @apply h-130 overflow-y-scroll w-full p-2 flex flex-col gap-2 relative;
   scroll-behavior: smooth;
-}
-.chat{
-  @apply center gap-2 px-2 py-3 border-t border-gray-200;
 }
 </style>

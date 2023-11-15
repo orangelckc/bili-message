@@ -21,7 +21,7 @@ let timer = null as any
 
 function useWebsocket() {
   const messageEmits = async (messages: any[]) => {
-    if (!messages || !messages.length)
+    if (!messages || !Array.isArray(messages) || !messages.length)
       return
 
     const result = await handleMessage(messages)

@@ -44,6 +44,7 @@ async function init_listener() {
           uname: item.uname,
           message: `${item.uname} 关注了主播`,
           id: item.id,
+          medal: item.medal,
         })
       }
       else if (item.msg_type === 'entry') {
@@ -53,6 +54,7 @@ async function init_listener() {
           uname: item.uname,
           message: `${item.uname} 进入了直播间`,
           id: item.id,
+          medal: item.medal,
         })
       }
     })
@@ -64,13 +66,14 @@ async function init_listener() {
 
     const data = event.payload as object[]
     data.forEach(async (item: any) => {
-      const { uname, message, isEmoji, emoji } = item.barrage
+      const { uname, message, isEmoji, emoji, medal } = item.barrage
 
       const msg = {
         uname,
         message: isEmoji ? emoji.url : message,
         type: isEmoji ? 'emoji' : 'message',
         id: item.id,
+        medal,
       }
 
       if (message) {
@@ -85,6 +88,7 @@ async function init_listener() {
           uname,
           message: `${uname} 点了个赞`,
           id: item.id,
+          medal: item.medal,
         })
       }
     })
@@ -104,6 +108,7 @@ async function init_listener() {
           uname,
           message: `感谢 ${uname} 赠送了 ${giftName}`,
           id: item.id,
+          medal: item.medal,
         })
       }
     })
@@ -117,7 +122,7 @@ async function getEmojiList() {
 }
 
 async function startWebsocket() {
-  const { room } = storeToRefs(useAppStore())
+  const { room, msgList } = storeToRefs(useAppStore())
   const { data } = await getLiveStatusApi()
   const roomid = Object.keys(data.by_room_ids)[0]
   if (!roomid) {
@@ -136,16 +141,14 @@ async function startWebsocket() {
       type: 'success',
     })
     connected.value = true
+    msgList.value = []
     getEmojiList()
     init_listener()
   })
 }
 
 function stopWebsocket() {
-  const { msgList } = storeToRefs(useAppStore())
-
   connected.value = false
-  msgList.value = []
   emit(EVENTS.CLOSE_WEBSOCKET_EVENT)
   unlisteners.forEach(unlistener => unlistener())
   unlisteners.length = 0

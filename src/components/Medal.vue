@@ -27,7 +27,10 @@ function calcColor(ori: number) {
 
 <template>
   <div
-    class="medal hover:cursor-pointer" :class="`border-[#${colors.border}]`"
+    class="medal h-18px w-80px text-xs hover:cursor-pointer hover:shadow-lime"
+    :style="{
+      borderColor: colors.border,
+    }"
   >
     <div
       class="h-full center flex-1 px-1 text-white"
@@ -37,7 +40,7 @@ function calcColor(ori: number) {
     >
       {{ medal?.medal_name || '未佩戴' }}
     </div>
-    <div v-if="medal" class="center bg-white px-1 text-gray-500" :class="`text-[${colors.end}]`">
+    <div v-if="medal" class="w-24px center bg-white px-1 text-gray-500" :class="`text-[${colors.end}]`">
       {{ medal.level }}
     </div>
   </div>
@@ -45,6 +48,6 @@ function calcColor(ori: number) {
 
 <style lang="scss" scoped>
 .medal{
-  @apply flex items-center rounded-md shadow border-solid border-1 overflow-hidden text-sm w-80px h-24px;
+  @apply flex items-center rounded-md shadow border-solid border-1 overflow-hidden;
 }
 </style>
