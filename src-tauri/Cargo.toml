@@ -1,0 +1,29 @@
+[package]
+name = "bili-message"
+version = "1.0.0"
+description = "bilibili弹幕机"
+authors = ["半糖人类"]
+license = "MIT"
+repository = ""
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1.4", features = [] }
+
+[dependencies]
+tauri = { version = "1.4", features = [ "window-start-dragging", "shell-open", "window-set-always-on-top", "http-all", "macos-private-api", "system-tray"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tauri-plugin-localhost = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tokio = "1.34.0"
+futures-channel = "0.3.29"
+futures-util = "0.3.29"
+tungstenite = "0.20.1"
+tokio-tungstenite = "0.20.1"
+
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]

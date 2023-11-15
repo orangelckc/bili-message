@@ -1,0 +1,68 @@
+{
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "bilibili弹幕机",
+    "version": "../package.json"
+  },
+  "tauri": {
+    "macOSPrivateApi": true,
+    "allowlist": {
+      "all": false,
+      "http": {
+        "request": true,
+        "all": true,
+        "scope": [
+          "https://**",
+          "http://**"
+        ]
+      },
+      "window":{
+        "setAlwaysOnTop": true,
+        "startDragging": true
+      },
+      "shell": {
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.bili-message",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.ico"
+      ],
+      "macOS": {
+        "exceptionDomain": "hdslb.com"
+      }
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "label": "main",
+        "title": "bilibili弹幕机",
+        "minWidth": 400,
+        "maxWidth": 640,
+        "width": 640,
+        "minHeight": 700,
+        "maxHeight": 700,
+        "height": 700,
+        "alwaysOnTop": false,
+        "decorations": false
+      }
+    ],
+    "systemTray": {
+      "iconPath": "assets/tray.png"
+    }
+  }
+}
