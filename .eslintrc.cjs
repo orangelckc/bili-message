@@ -17,5 +17,5 @@ module.exports = {
       },
     ],
   },
-  ignorePatterns: ['*.scss', 'src-tauri/**/*', 'src/assets/**/*', 'bun.lockb'],
+  ignorePatterns: ['*.scss', 'src-tauri/**/*', 'src/assets/**/*', 'bun.lockb', '*.yml'],
 }
