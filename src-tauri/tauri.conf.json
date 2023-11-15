@@ -32,7 +32,6 @@
     },
     "bundle": {
       "active": true,
-      "targets": "all",
       "identifier": "com.bili-message",
       "icon": [
         "icons/32x32.png",
@@ -42,6 +41,18 @@
       ],
       "macOS": {
         "exceptionDomain": "hdslb.com"
+      },
+      "targets": [
+        "msi",
+        "dmg"
+      ],
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": "",
+        "wix": {
+          "language": "zh-CN"
+        }
       }
     },
     "security": {
