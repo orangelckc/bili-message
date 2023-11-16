@@ -1,7 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import { decode as b64dec, length as b64len } from '@protobufjs/base64'
 import pako from 'pako'
+import { Field, Type } from 'protobufjs'
 
 const textEncoder = new TextEncoder()
 const textDecoder = new TextDecoder('utf-8')
+const UserInfo = new Type('UserInfo').add(new Field('face', 4, 'string'))
+const DanmakuMessageV2 = new Type('DanmakuMessageV2').add(UserInfo).add(new Field('user', 20, 'UserInfo'))
 
 function readInt(buffer: any, start: number, length: number) {
   let result = 0
@@ -97,6 +103,25 @@ function colorHexToRgba(color: string, opacity: number) {
 
     return `rgba(${colorList.join()}, ${opacity})`
   }
+}
+
+function decodeB64(str: string) {
+  const length = b64len(str)
+  const buffer = new Uint8Array(length)
+  b64dec(str, buffer, 0)
+  return buffer
+}
+
+// 转换弹幕v2(目前只有头像数据)
+// 因为不知道dm_v2的结构，理论上是包含弹幕的所有信息
+export function decodeDmV2(str: string) {
+  const buffer = decodeB64(str)
+  const message = DanmakuMessageV2.decode(buffer)
+  return DanmakuMessageV2.toObject(message, {
+    longs: String,
+    enums: String,
+    bytes: String,
+  })['user']['face']
 }
 
 export { encode, decode, colorHexToRgba }

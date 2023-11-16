@@ -66,10 +66,11 @@ async function init_listener() {
 
     const data = event.payload as object[]
     data.forEach(async (item: any) => {
-      const { uname, message, isEmoji, emoji, medal } = item.barrage
+      const { uname, message, isEmoji, emoji, medal, uface } = item.barrage
 
       const msg = {
         uname,
+        uface,
         message: isEmoji ? emoji.url : message,
         type: isEmoji ? 'emoji' : 'message',
         id: item.id,
