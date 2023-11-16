@@ -60,23 +60,26 @@ onMounted(() => {
           :popper-style="{
             margin: 0,
             padding: 0,
-            width: '190px',
+            width: '184px',
           }"
           @before-enter="getUserMedal"
         >
-          <div v-if="currentUser?.medalCount" class="flex flex-wrap gap-2 p-2">
-            <Medal
+          <div v-if="currentUser?.medalCount" class="flex flex-wrap gap-1 p-2">
+            <div
               v-for="medal in currentUser.medals"
               :key="medal.medal_id"
-              :medal="medal"
-              @click="changeMedal(medal)"
-            />
+              class="min-w-80px"
+            >
+              <Medal :medal="medal" @click="changeMedal(medal)" />
+            </div>
           </div>
           <div v-else class="p-2">
             <span>当前没有任何粉丝勋章</span>
           </div>
           <template #reference>
-            <Medal :medal="currentMedal" />
+            <div class="w-100px text-center">
+              <Medal :medal="currentMedal" />
+            </div>
           </template>
         </el-popover>
         <el-button size="small" :disabled="disabled" @click="handleSign">
@@ -136,7 +139,7 @@ onMounted(() => {
     }
 
     .sign{
-      @apply fixed bottom-15 flex justify-around items-center w-40 bg-white;
+      @apply fixed bottom-12 w-40 bg-white flex justify-around items-center;
     }
 
     .tip{
