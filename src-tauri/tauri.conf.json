@@ -26,8 +26,9 @@
         "setAlwaysOnTop": true,
         "startDragging": true
       },
-      "shell": {
-        "open": true
+      "clipboard": {
+        "all": false,
+        "writeText": true
       }
     },
     "bundle": {

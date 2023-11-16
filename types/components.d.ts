@@ -9,10 +9,12 @@ declare module 'vue' {
   export interface GlobalComponents {
     Account: typeof import('./../src/components/Account.vue')['default']
     Chat: typeof import('./../src/components/Chat.vue')['default']
+    Control: typeof import('./../src/components/Control.vue')['default']
     Danmu: typeof import('./../src/components/Danmu.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
+    ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElLink: typeof import('element-plus/es')['ElLink']
     ElPopover: typeof import('element-plus/es')['ElPopover']

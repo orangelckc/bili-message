@@ -14,7 +14,7 @@ import {
   WELCOME_EVENT,
 } from '@/utils/events'
 import handleMessage from '@/utils/message'
-import { decode, encode } from '@/utils/socket'
+import { decode, encode } from '@/utils/tools'
 
 let websocket: WebSocket
 let timer = null as any

@@ -22,11 +22,27 @@ export const useAppStore = defineStore(
     // 信息列表
     const msgList = ref<IMsg[]>([])
 
+    // 自动滚动
+    const autoScroll = ref(true)
+
     // 置顶
     const isFix = ref(false)
 
+    // 广播
+    const isBroadcast = ref(false)
+
     // 当前佩戴的粉丝勋章
     const currentMedal = ref<IUserMedal>()
+
+    // 自定义样式
+    const customStyle = ref<ICustomStyle>({
+      unameColor: 'orange',
+      unameFontSize: 18,
+      msgColor: 'white',
+      msgFontSize: 18,
+      msgGap: 20,
+      msgBackground: 'linear-gradient(to right, #8A2BE2, #4B0082)',
+    })
 
     // 刷新当前用户信息
     async function refreshCurrentUser() {
@@ -103,15 +119,18 @@ export const useAppStore = defineStore(
       room,
       msgList,
       isFix,
+      isBroadcast,
       currentMedal,
       refreshCurrentUser,
       getUserMedal,
       wearMedal,
+      autoScroll,
+      customStyle,
     }
   },
   {
     persist: {
-      paths: ['currentUser', 'userList', 'room', 'currentMedal'],
+      paths: ['currentUser', 'userList', 'room', 'currentMedal', 'autoScroll', 'isFix', 'customStyle'],
     },
   },
 )
