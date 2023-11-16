@@ -13,6 +13,9 @@ export const WEBSOCKET_URL = 'wss://broadcastlv.chat.bilibili.com/sub'
 // 本地分发socket地址
 export const LOCAL_WEBSOCKET_URL = 'ws://localhost:1234'
 
+// 本地广播的页面地址
+export const LOCAL_BROADCAST_URL = 'http://localhost:4000/#/client'
+
 // 弹幕CMD类型
 export const MESSAGE_TYPE = {
   RANK: 'ONLINE_RANK_V2',

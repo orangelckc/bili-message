@@ -5,20 +5,46 @@ import { LOCAL_WEBSOCKET_URL } from '@/utils/constants'
 const msgList = ref<IMsg[]>([])
 let ws: WebSocket
 
+const { customStyle } = useAppStore()
+const newStyle = ref(customStyle)
+
 async function init_listener() {
   ws = new WebSocket(LOCAL_WEBSOCKET_URL)
 
   ws.onopen = () => {
-    ElMessage.success('连接成功')
+    setInterval(() => {
+      ws.send('client-ping')
+    }, 30 * 1000)
   }
 
   ws.onmessage = (e) => {
-    const data = JSON.parse(e.data) as IMsg
-    msgList.value.push(data)
+    if (typeof e.data !== 'string')
+      return
+
+    try {
+      const data = JSON.parse(e.data)
+      if (data.type === 'config') {
+        newStyle.value = data.data
+        return
+      }
+
+      if (data.type === 'command') {
+        switch (data.command) {
+          case 'clear':
+            msgList.value = []
+            break
+        }
+      }
+
+      msgList.value.push(data as IMsg)
+    }
+    catch (error) {
+      ElMessage.success(e.data)
+    }
   }
 
-  ws.onerror = () => {
-    ElMessage.error('连接失败')
+  ws.onerror = (error) => {
+    ElMessage.error(`连接失败: ${error}`)
   }
 }
 
@@ -28,22 +54,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-400px overflow-hidden rounded-lg">
+  <div class="w-[400px] overflow-hidden rounded-lg">
     <Danmu
       mode="client"
       :msg-list="msgList"
-      :custom-style="{
-        unameColor: 'orange',
-        unameFontSize: '18px',
-        msgColor: 'white',
-        msgFontSize: '18px',
-        msgGap: '8px',
-        msgBackground: 'linear-gradient(to right, #8A2BE2, #4B0082)',
-      }"
+      :custom-style="newStyle"
     />
   </div>
 </template>
-
-<style lang="scss" scoped>
-
-</style>

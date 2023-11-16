@@ -25,7 +25,7 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: Socke
     let (tx, rx) = unbounded();
     let tx2 = tx.clone();
     peer_map.lock().unwrap().insert(addr, tx);
-    let m = Message::text(format!("欢迎你,{}", addr));
+    let m = Message::text(format!("连接成功"));
     tx2.unbounded_send(m).unwrap();
 
     let (outgoing, incoming) = ws_stream.split();
@@ -36,8 +36,8 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: Socke
         //     addr,
         //     msg.to_text().unwrap()
         // );
-        // 如果是心跳包，就不用广播了
-        if msg.to_text().unwrap() == "ping" {
+        // 如果是心跳包(包含ping的字符串)，就不用广播了
+        if msg.to_text().unwrap().contains("ping") {
             return future::ok(());
         }
 
@@ -65,7 +65,7 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: Socke
     peer_map.lock().unwrap().remove(&addr);
 }
 pub async fn server() {
-    let addr = "127.0.0.1:1234";
+    let addr = "localhost:1234";
     let state = PeerMap::new(Mutex::new(HashMap::new()));
     // Create the event loop and TCP listener we'll accept connections on.
     let try_socket = TcpListener::bind(&addr).await;

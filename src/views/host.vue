@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { appWindow } from '@tauri-apps/api/window'
-
 import { sendMessageApi } from '@/apis/live'
 import Account from '@/components/Account.vue'
+import Control from '@/components/Control.vue'
 import Danmu from '@/components/Danmu.vue'
 import Medal from '@/components/Medal.vue'
 import useWebsocket from '@/hooks/useWebsocket'
 import { EDMType } from '@/utils/enums'
-import { connected, startWebsocket, stopWebsocket } from '@/utils/room'
+import { connected } from '@/utils/room'
+import { socket } from '@/utils/socket'
 
-const { userList, room, isFix, currentMedal, currentUser, msgList } = storeToRefs(useAppStore())
+const { userList, currentMedal, currentUser, msgList, autoScroll } = storeToRefs(useAppStore())
 const { refreshCurrentUser, getUserMedal, wearMedal } = useAppStore()
 const popover = ref()
 
@@ -19,11 +19,6 @@ const disabled = computed(() => {
 
   return !!currentMedal.value.is_lighted
 })
-
-function handleFix() {
-  isFix.value = !isFix.value
-  appWindow.setAlwaysOnTop(isFix.value)
-}
 
 async function handleSign() {
   const res = await sendMessageApi('打卡', EDMType.打卡专用)
@@ -39,6 +34,14 @@ function changeMedal(medal: IUserMedal) {
   currentMedal.value = medal
   popover.value?.hide()
   wearMedal()
+}
+
+function handleClear() {
+  msgList.value = []
+  socket.send({
+    type: 'command',
+    command: 'clear',
+  })
 }
 
 onMounted(() => {
@@ -94,23 +97,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="right">
-      <div class="room">
-        <el-input v-model="room" placeholder="直播间ID" :disabled="connected" />
-        <el-button v-if="!connected" plain type="success" @click="startWebsocket">
-          开启监听
-        </el-button>
-        <el-button v-else plain type="danger" @click="stopWebsocket">
-          断开监听
-        </el-button>
-        <el-tooltip content="置顶" placement="bottom">
-          <el-button round :type="isFix ? 'danger' : ''" @click="handleFix">
-            <span class="i-carbon-pin h5 w5" />
-          </el-button>
-        </el-tooltip>
-      </div>
-      <div class="my1 cursor-move text-sm text-gray-200" data-tauri-drag-region>
-        —— 拖拽我移动位置吧 ——
-      </div>
+      <Control />
       <el-card
         class="w-full"
         :body-style="{
@@ -118,7 +105,20 @@ onMounted(() => {
           margin: '0',
         }"
       >
-        <Danmu :msg-list="msgList" mode="host" @clear="msgList = []" />
+        <Danmu :msg-list="msgList" mode="host">
+          <div class="fixed right-5 top-28">
+            <el-tooltip content="自动滚动">
+              <el-button v-show="connected" :type="autoScroll ? 'primary' : 'info'" size="small" round plain @click="autoScroll = !autoScroll">
+                <span class="i-carbon-auto-scroll h4 w4" />
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="清屏">
+              <el-button v-show="msgList.length" type="danger" size="small" plain round @click="handleClear">
+                <span class="i-carbon-trash-can h4 w4" />
+              </el-button>
+            </el-tooltip>
+          </div>
+        </Danmu>
         <Chat />
       </el-card>
     </div>
@@ -149,9 +149,7 @@ onMounted(() => {
   }
   .right{
     @apply relative w-120 flex flex-col items-center;
-    .room{
-      @apply center gap-4 p-4 rounded-md shadow-lg w-full;
-    }
+
   }
 }
 </style>

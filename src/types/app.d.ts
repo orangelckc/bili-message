@@ -24,7 +24,7 @@ interface ILogin {
 
 interface IMsg {
   id: string
-  type: 'entry' | 'message' | 'gift' | 'like' | 'follow' | 'emoji'
+  type: 'entry' | 'message' | 'gift' | 'like' | 'follow' | 'emoji'|'config'
   uname: string
   uface?: string
   message: string
@@ -52,3 +52,12 @@ interface IUserMedal {
   target_name: string;
   uname: string;
 }
+
+interface ICustomStyle {
+    unameColor?: string
+    unameFontSize?: number
+    msgColor?: string
+    msgFontSize?: number
+    msgGap?: number
+    msgBackground?: string
+  }

@@ -1,7 +1,7 @@
 import { emit, listen, once } from '@tauri-apps/api/event'
 import { ElNotification } from 'element-plus'
 
-import { LOCAL_WEBSOCKET_URL } from './constants'
+import { socket } from './socket'
 
 import type { UnlistenFn } from '@tauri-apps/api/event'
 
@@ -15,12 +15,6 @@ const emojiList = ref<any[]>([])
 
 async function init_listener() {
   const { msgList } = storeToRefs(useAppStore())
-  const ws = new WebSocket(LOCAL_WEBSOCKET_URL)
-
-  // socket保活，30s发送一次心跳
-  setInterval(() => {
-    ws.send('ping')
-  }, 30 * 1000)
 
   // 清空监听
   unlisteners.forEach(unlisten => unlisten())
@@ -80,7 +74,9 @@ async function init_listener() {
       if (message) {
         msgList.value.push(msg as IMsg)
 
-        ws.send(JSON.stringify(msg))
+        const { isBroadcast } = storeToRefs(useAppStore())
+        if (isBroadcast.value)
+          socket.send(msg)
       }
 
       if (item.barrageType === 'like') {
