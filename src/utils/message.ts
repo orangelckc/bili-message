@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid'
 import { MESSAGE_TYPE } from './constants'
 import { LIVE_END_EVENT, LIVE_START_EVENT, WATCHED_CHANGE_EVENT } from './events'
 
-import { colorHexToRgba } from '@/utils/socket'
+import { colorHexToRgba, decodeDmV2 } from '@/utils/socket'
 
 // 格式化弹幕信息
 async function handleMessage(messages: any[]) {
@@ -84,7 +84,9 @@ async function handleMessage(messages: any[]) {
     })
   }
 
-  const parseDanmu = async (info: any) => {
+  const parseDanmu = async (message: any) => {
+    const { info, dm_v2 } = message
+
     const id = nanoid()
     const { currentUser } = useAppStore()
 
@@ -93,6 +95,7 @@ async function handleMessage(messages: any[]) {
     const barrageInfo = {
       uid: info[2][0],
       uname: info[2][1],
+      uface: dm_v2 ? decodeDmV2(dm_v2) : null,
       message: info[1],
       isAnchor: info[2][0] === up_id,
       isManager: !!info[2][2], // 房管
@@ -216,7 +219,7 @@ async function handleMessage(messages: any[]) {
 
       // 弹幕信息
       case MESSAGE_TYPE.DANMU:
-        await parseDanmu(message?.info)
+        await parseDanmu(message)
         break
 
       // SC信息

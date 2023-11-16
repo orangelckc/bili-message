@@ -26,6 +26,7 @@ interface IMsg {
   id: string
   type: 'entry' | 'message' | 'gift' | 'like' | 'follow' | 'emoji'
   uname: string
+  uface?: string
   message: string
   medal: IUserMedal
 }

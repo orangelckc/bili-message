@@ -65,20 +65,20 @@ onMounted(() => {
           }"
           @before-enter="getUserMedal"
         >
-          <div v-if="currentUser?.medalCount" class="flex flex-wrap gap-1 p-2">
+          <div v-if="currentUser?.medalCount" class="flex flex-wrap gap1 p2">
             <div
               v-for="medal in currentUser.medals"
               :key="medal.medal_id"
-              class="min-w-80px"
+              class="min-w-[80px]"
             >
               <Medal :medal="medal" @click="changeMedal(medal)" />
             </div>
           </div>
-          <div v-else class="p-2">
+          <div v-else class="p2">
             <span>当前没有任何粉丝勋章</span>
           </div>
           <template #reference>
-            <div class="w-100px text-center">
+            <div class="w-[100px] text-center">
               <Medal :medal="currentMedal" />
             </div>
           </template>
@@ -104,11 +104,11 @@ onMounted(() => {
         </el-button>
         <el-tooltip content="置顶" placement="bottom">
           <el-button round :type="isFix ? 'danger' : ''" @click="handleFix">
-            <span class="i-carbon-pin h-5 w-5" />
+            <span class="i-carbon-pin h5 w5" />
           </el-button>
         </el-tooltip>
       </div>
-      <div class="my-1 cursor-move text-sm text-gray-200" data-tauri-drag-region>
+      <div class="my1 cursor-move text-sm text-gray-200" data-tauri-drag-region>
         —— 拖拽我移动位置吧 ——
       </div>
       <el-card
