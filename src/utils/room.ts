@@ -39,23 +39,23 @@ async function init_listener() {
           type: 'error',
           duration: 0,
         })
-        msgList.value.push({
+        msgList.value.push(Object.freeze({
           type: 'follow',
           uname: item.uname,
           message: `${item.uname} 关注了主播`,
           id: item.id,
           medal: item.medal,
-        })
+        }))
       }
       else if (item.msg_type === 'entry') {
         // 进入房间事件
-        msgList.value.push({
+        msgList.value.push(Object.freeze({
           type: 'entry',
           uname: item.uname,
           message: `${item.uname} 进入了直播间`,
           id: item.id,
           medal: item.medal,
-        })
+        }))
       }
     })
   })
@@ -68,29 +68,30 @@ async function init_listener() {
     data.forEach(async (item: any) => {
       const { uname, message, isEmoji, emoji, medal, uface } = item.barrage
 
-      const msg = {
+      const msg = Object.freeze({
         uname,
         uface,
         message: isEmoji ? emoji.url : message,
         type: isEmoji ? 'emoji' : 'message',
         id: item.id,
         medal,
-      }
+      })
 
       if (message) {
         msgList.value.push(msg as IMsg)
+
         ws.send(JSON.stringify(msg))
       }
 
       if (item.barrageType === 'like') {
         // 点赞事件
-        msgList.value.push({
+        msgList.value.push(Object.freeze({
           type: 'like',
           uname,
           message: `${uname} 点了个赞`,
           id: item.id,
           medal: item.medal,
-        })
+        }))
       }
     })
   })
@@ -104,13 +105,13 @@ async function init_listener() {
       const { uname, giftName, giftId } = item.barrage
 
       if (giftId !== 1) {
-        msgList.value.push({
+        msgList.value.push(Object.freeze({
           type: 'gift',
           uname,
           message: `感谢 ${uname} 赠送了 ${giftName}`,
           id: item.id,
           medal: item.medal,
-        })
+        }))
       }
     })
   })

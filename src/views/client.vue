@@ -29,16 +29,18 @@ onMounted(() => {
 
 <template>
   <div class="w-400px overflow-hidden rounded-lg">
-    <el-card
-      class="w-full"
-      :body-style="{
-        padding: '0',
-        margin: '0',
-        backgroundColor: 'rgba(0,0,0,0.7)',
+    <Danmu
+      mode="client"
+      :msg-list="msgList"
+      :custom-style="{
+        unameColor: 'orange',
+        unameFontSize: '18px',
+        msgColor: 'white',
+        msgFontSize: '18px',
+        msgGap: '8px',
+        msgBackground: 'linear-gradient(to right, #8A2BE2, #4B0082)',
       }"
-    >
-      <Danmu :msg-list="msgList" mode="client" @clear="msgList = []" />
-    </el-card>
+    />
   </div>
 </template>
 

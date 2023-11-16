@@ -5,6 +5,14 @@ import { connected } from '@/utils/room'
 const props = defineProps<{
   msgList: IMsg[]
   mode: 'host' | 'client'
+  customStyle?: {
+    unameColor?: string
+    unameFontSize?: string
+    msgColor?: string
+    msgFontSize?: string
+    msgGap?: string
+    msgBackground?: string
+  }
 }>()
 
 defineEmits(['clear'])
@@ -44,25 +52,46 @@ watch(autoScroll, (val) => {
         </el-button>
       </el-tooltip>
     </div>
-    <div v-for="item in msgList" :key="item.id" class="flex items-center gap1 text-sm">
-      <div v-if="item.type === 'emoji'" class="flex gap2 text-base">
+    <div
+      v-for="item in msgList" :key="item.id" class="flex flex-col justify-center gap-1 py-0 text-sm" :style="{
+        padding: `${customStyle?.msgGap} 0`,
+      }"
+    >
+      <div v-if="item.type === 'emoji'" class="flex items-center gap2">
         <div v-if="item.medal">
           <Medal :medal="item.medal" />
         </div>
-        <span class="text-amber">{{ item.uname }}: </span>
+        <span
+          class="text-base text-amber"
+          :style="{
+            color: customStyle?.unameColor,
+            fontSize: customStyle?.unameFontSize,
+          }"
+        >{{ item.uname }}: </span>
         <div v-if="item.type === 'emoji'">
           <img :src="item.message" alt="" class="min-h-6 w20">
         </div>
       </div>
-      <div v-else-if="item.type === 'message'" class="flex items-center text-base">
+      <div
+        v-else-if="item.type === 'message'" class="flex items-center text-base" :style="{
+          background: customStyle?.msgBackground,
+        }"
+      >
         <el-avatar v-if="item.uface" :src="item.uface" size="small" shape="circle" />
         <div>
           <Medal v-if="item.medal" :medal="item.medal" class="ml1" />
-          <span class="ml1 text-amber">{{ item.uname }}: </span>
           <span
-            :class="{
-              'text-blue-500': mode === 'host',
-              'text-white': mode === 'client',
+            class="ml1 text-base text-amber"
+            :style="{
+              color: customStyle?.unameColor,
+              fontSize: customStyle?.unameFontSize,
+            }"
+          >{{ item.uname }}: </span>
+          <span
+            class="text-base text-blue-500"
+            :style="{
+              color: customStyle?.msgColor,
+              fontSize: customStyle?.msgFontSize,
             }"
           >{{ item.message }}</span>
         </div>
