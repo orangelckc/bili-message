@@ -104,8 +104,8 @@ async function handleMessage(messages: any[]) {
         ? {
             level: info[3][0],
             medal_name: info[3][1],
-            medal_color_start: info[3][8],
-            medal_color_end: info[3][7],
+            medal_color_start: info[3][7],
+            medal_color_end: info[3][8],
             medal_color_border: info[3][9],
           }
         : undefined,

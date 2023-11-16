@@ -34,7 +34,7 @@ watch(autoScroll, (val) => {
   <div ref="danmuRef" class="danmu">
     <div v-if="mode === 'host'" class="fixed right-5 top-28 center gap-2">
       <el-tooltip content="自动滚动">
-        <el-button v-show="connected" :type="autoScroll ? 'primary' : 'info'" size="small" plain round @click="autoScroll = !autoScroll">
+        <el-button v-show="connected" :type="autoScroll ? 'primary' : 'info'" size="small" round plain @click="autoScroll = !autoScroll">
           <span class="i-carbon-auto-scroll h-4 w-4" />
         </el-button>
       </el-tooltip>
@@ -45,17 +45,18 @@ watch(autoScroll, (val) => {
       </el-tooltip>
     </div>
     <span v-for="item in msgList" :key="item.id" class="flex items-center gap-1 text-sm">
-      <div>
-        <Medal v-if="item.medal" :medal="item.medal" />
-      </div>
-      <div v-if="item.type === 'emoji'" class="flex items-center gap-2 text-base">
+      <div v-if="item.type === 'emoji'" class="flex gap-2 text-base">
+        <div v-if="item.medal">
+          <Medal :medal="item.medal" />
+        </div>
         <span class="text-amber">{{ item.uname }}: </span>
         <div v-if="item.type === 'emoji'">
           <img :src="item.message" alt="" class="min-h-6 w-20">
         </div>
       </div>
       <div v-else-if="item.type === 'message'" class="text-base">
-        <span class="text-amber">{{ item.uname }}: </span>
+        <Medal v-if="item.medal" :medal="item.medal" />
+        <span class="ml-1 text-amber">{{ item.uname }}: </span>
         <span
           :class="{
             'text-blue-500': mode === 'host',
