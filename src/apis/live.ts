@@ -109,6 +109,24 @@ function getMedalApi(page: number = 1) {
   })
 }
 
+// 佩戴粉丝勋章
+function wearMedalApi(medalId: number) {
+  const { currentUser } = useAppStore()
+  return request({
+    url: `${LIVE_URL_PREFIX}/xlive/web-room/v1/fansMedal/wear`,
+    method: 'POST',
+    data: {
+      medal_id: medalId,
+      csrf: currentUser?.csrf,
+      csrf_token: currentUser?.csrf,
+    },
+    headers: {
+      'cookie': currentUser?.cookie,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+}
+
 export {
   getLiveCodeApi,
   getLiveTokenApi,
@@ -116,4 +134,5 @@ export {
   sendMessageApi,
   getLiveStatusApi,
   getMedalApi,
+  wearMedalApi,
 }

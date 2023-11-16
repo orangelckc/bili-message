@@ -1,5 +1,5 @@
 import { getUserInfoApi } from '@/apis/bilibili'
-import { getMedalApi } from '@/apis/live'
+import { getMedalApi, wearMedalApi } from '@/apis/live'
 
 export const useAppStore = defineStore(
   'app',
@@ -84,6 +84,19 @@ export const useAppStore = defineStore(
         currentMedal.value = target
     }
 
+    // 佩戴粉丝勋章
+    async function wearMedal() {
+      if (!currentUser.value || !currentMedal.value)
+        return
+
+      const data = await wearMedalApi(currentMedal.value.medal_id) as any
+
+      ElMessage({
+        message: data.message,
+        type: data.code === 0 ? 'success' : 'error',
+      })
+    }
+
     return {
       currentUser,
       userList,
@@ -93,6 +106,7 @@ export const useAppStore = defineStore(
       currentMedal,
       refreshCurrentUser,
       getUserMedal,
+      wearMedal,
     }
   },
   {
