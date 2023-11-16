@@ -10,7 +10,7 @@ import { EDMType } from '@/utils/enums'
 import { connected, startWebsocket, stopWebsocket } from '@/utils/room'
 
 const { userList, room, isFix, currentMedal, currentUser, msgList } = storeToRefs(useAppStore())
-const { refreshCurrentUser, getUserMedal } = useAppStore()
+const { refreshCurrentUser, getUserMedal, wearMedal } = useAppStore()
 const popover = ref()
 
 const disabled = computed(() => {
@@ -38,6 +38,7 @@ async function handleSign() {
 function changeMedal(medal: IUserMedal) {
   currentMedal.value = medal
   popover.value?.hide()
+  wearMedal()
 }
 
 onMounted(() => {
@@ -139,7 +140,7 @@ onMounted(() => {
     }
 
     .sign{
-      @apply fixed bottom-12 w-40 bg-white flex justify-around items-center;
+      @apply fixed bottom-13 w-40 bg-white flex justify-around items-center;
     }
 
     .tip{
