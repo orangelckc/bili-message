@@ -4,7 +4,6 @@ import Account from '@/components/Account.vue'
 import Control from '@/components/Control.vue'
 import Danmu from '@/components/Danmu.vue'
 import Medal from '@/components/Medal.vue'
-import useWebsocket from '@/hooks/useWebsocket'
 import { EDMType } from '@/utils/enums'
 import { connected } from '@/utils/room'
 import { socket } from '@/utils/socket'
@@ -44,10 +43,7 @@ function handleClear() {
   })
 }
 
-onMounted(() => {
-  refreshCurrentUser()
-  useWebsocket().trigger()
-})
+onMounted(refreshCurrentUser)
 </script>
 
 <template>
@@ -119,6 +115,7 @@ onMounted(() => {
             </el-tooltip>
           </div>
         </Danmu>
+        <!-- <Danmu :msg-list="msgList" mode="host" /> -->
         <Chat />
       </el-card>
     </div>
