@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { VirtualList } from 'vue-tiny-virtual-list'
+
 import Medal from '@/components/Medal.vue'
 
 const props = defineProps<{
@@ -9,14 +11,14 @@ const props = defineProps<{
 
 const { autoScroll } = storeToRefs(useAppStore())
 
-const danmuRef = ref<HTMLElement>()
+const danmuRef: Ref<InstanceType<typeof VirtualList> | null> = ref(null)
 
 watch(() => props.msgList, () => {
   if (!danmuRef.value || !autoScroll.value)
     return
 
   nextTick(() => {
-    danmuRef.value!.scrollTop = danmuRef.value!.scrollHeight
+    danmuRef.value.scrollToBottom()
   })
 }, {
   deep: true,
@@ -24,64 +26,68 @@ watch(() => props.msgList, () => {
 
 watch(autoScroll, (val) => {
   if (val)
-    danmuRef.value!.scrollTop = danmuRef.value!.scrollHeight
+    danmuRef.value.scrollToBottom()
 })
 </script>
 
 <template>
-  <div
-    ref="danmuRef" class="danmu"
-    :style="{
-      gap: `${customStyle?.msgGap}px`,
-    }"
-  >
+  <div class="danmu">
     <slot />
-    <div
-      v-for="item in msgList" :key="item.id" class="flex flex-col justify-center px1 text-sm"
+    <VirtualList
+      ref="danmuRef" item-key="id" :list="msgList" :min-size="30" :fixed="false" :buffer="2"
     >
-      <div v-if="item.type === 'emoji'" class="flex items-center">
-        <div v-if="item.medal">
-          <Medal :medal="item.medal" />
-        </div>
-        <span
-          class="text-base text-amber"
+      <template #default="{ itemData }">
+        <div
+          class="p1 text-sm"
           :style="{
-            color: customStyle?.unameColor,
-            fontSize: `${customStyle?.unameFontSize}px`,
+            paddingBottom: `${customStyle?.msgGap}px`,
           }"
-        >{{ item.uname }}: </span>
-        <div v-if="item.type === 'emoji'">
-          <img :src="item.message" alt="" class="min-h-6 w20">
-        </div>
-      </div>
-      <div
-        v-else-if="item.type === 'message'" class="flex items-center text-base" :style="{
-          background: customStyle?.msgBackground,
-        }"
-      >
-        <el-avatar v-if="item.uface" :src="item.uface" size="small" shape="circle" />
-        <div>
-          <Medal v-if="item.medal" :medal="item.medal" class="ml1" />
-          <span
-            class="ml1 text-base text-amber"
-            :style="{
-              color: customStyle?.unameColor,
-              fontSize: `${customStyle?.unameFontSize}px`,
+        >
+          <div v-if="itemData.type === 'emoji'" class="flex items-center">
+            <div v-if="itemData.medal">
+              <Medal :medal="itemData.medal" />
+            </div>
+            <span
+              class="text-base text-amber"
+              :style="{
+                color: customStyle?.unameColor,
+                fontSize: `${customStyle?.unameFontSize}px`,
+              }"
+            >{{ itemData.uname }}: </span>
+            <div v-if="itemData.type === 'emoji'">
+              <img :src="itemData.message" alt="" class="min-h-6 w20">
+            </div>
+          </div>
+          <div
+            v-else-if="itemData.type === 'message'" class="flex items-center text-base" :style="{
+              background: customStyle?.msgBackground,
             }"
-          >{{ item.uname }}: </span>
-          <span
-            class="text-base text-blue-500"
-            :style="{
-              color: customStyle?.msgColor,
-              fontSize: `${customStyle?.msgFontSize}px`,
-            }"
-          >{{ item.message }}</span>
+          >
+            <el-avatar v-if="itemData.uface" :src="itemData.uface" size="small" shape="circle" />
+            <div>
+              <Medal v-if="itemData.medal" :medal="itemData.medal" class="ml1" />
+              <span
+                class="ml1 text-base text-amber"
+                :style="{
+                  color: customStyle?.unameColor,
+                  fontSize: `${customStyle?.unameFontSize}px`,
+                }"
+              >{{ itemData.uname }}: </span>
+              <span
+                class="text-base text-blue-500"
+                :style="{
+                  color: customStyle?.msgColor,
+                  fontSize: `${customStyle?.msgFontSize}px`,
+                }"
+              >{{ itemData.message }}</span>
+            </div>
+          </div>
+          <span v-else-if="itemData.type === 'gift'" class="text-red">{{ itemData.message }}</span>
+          <span v-else-if="itemData.type === 'like' || itemData.type === 'follow'" class="text-orange">{{ itemData.message }}</span>
+          <span v-else class="text-gray-400">{{ itemData.message }}</span>
         </div>
-      </div>
-      <span v-else-if="item.type === 'gift'" class="text-red">{{ item.message }}</span>
-      <span v-else-if="item.type === 'like' || item.type === 'follow'" class="text-orange">{{ item.message }}</span>
-      <span v-else class="text-gray-400">{{ item.message }}</span>
-    </div>
+      </template>
+    </VirtualList>
   </div>
 </template>
 
@@ -90,7 +96,6 @@ watch(autoScroll, (val) => {
   display: none;
 }
 .danmu{
-  @apply h-130 overflow-y-scroll w-full p-2 flex flex-col gap-2 relative;
-  scroll-behavior: smooth;
+  @apply h-130 w-full p-2 relative;
 }
 </style>
