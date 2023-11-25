@@ -1,6 +1,7 @@
 import { emit, listen, once } from '@tauri-apps/api/event'
 import { ElNotification } from 'element-plus'
 
+import { hxdEmoji, textEmoji } from './emoji'
 import { socket } from './socket'
 
 import type { UnlistenFn } from '@tauri-apps/api/event'
@@ -11,7 +12,7 @@ import * as EVENTS from '@/utils/events'
 const connected = ref(false)
 
 const unlisteners: UnlistenFn[] = []
-const emojiList = ref<any[]>([])
+const emojiList = ref<any[]>([textEmoji, hxdEmoji])
 
 async function init_listener() {
   const { msgList } = storeToRefs(useAppStore())
@@ -115,8 +116,7 @@ async function init_listener() {
 
 async function getEmojiList() {
   const { data } = await getEmojiApi()
-
-  emojiList.value = data.data
+  emojiList.value.push(...data.data)
 }
 
 async function startWebsocket() {

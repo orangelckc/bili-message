@@ -26,29 +26,29 @@ function calcColor(ori: number) {
 </script>
 
 <template>
-  <span
-    class="medal text-center"
+  <div
+    class="medal"
     :style="{
       borderColor: colors.border,
     }"
   >
-    <span
-      class="px-1"
+    <div
+      class="h-full center flex-1 px-1"
       :style="{
         background: `${medal ? `linear-gradient(to right, ${colors.start}, ${colors.end})` : 'white'}`,
         color: `${medal ? 'white' : 'gray'}`,
       }"
     >
       {{ medal?.medal_name || '未佩戴' }}
-    </span>
-    <span v-if="medal?.level" class="bg-white px-1 text-center font-medium text-gray-500" :class="`text-[${colors.end}]`">
+    </div>
+    <div v-if="medal?.level" class="center bg-white px-1 text-center font-medium text-gray-500" :class="`text-[${colors.end}]`">
       {{ medal.level }}
-    </span>
-  </span>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .medal{
-  @apply h-20px leading-20px text-xs hover:cursor-pointer rounded-sm border-solid border-1 hover:shadow;
+  @apply h-20px text-xs hover:cursor-pointer rounded-sm border-solid border-1 hover:shadow items-center inline-flex min-w-70px;
 }
 </style>
