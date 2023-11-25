@@ -110,6 +110,8 @@ async function handleMessage(messages: any[]) {
             medal_color_start: info[3][8],
             medal_color_end: info[3][7],
             medal_color_border: info[3][9],
+            room_id: info[3][3],
+            is_lighted: !!info[3][11],
           }
         : undefined,
       backgroundColor: '',

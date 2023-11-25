@@ -7,6 +7,9 @@ export const LOGIN_URL_PREFIX = 'https://passport.bilibili.com/x/passport-login/
 // 小破站直播 api 前缀
 export const LIVE_URL_PREFIX = 'https://api.live.bilibili.com'
 
+// 小破站直播间 api 前缀
+export const ROOM_URL_PREFIX = 'https://live.bilibili.com'
+
 // 直播长链接地址
 export const WEBSOCKET_URL = 'wss://broadcastlv.chat.bilibili.com/sub'
 
