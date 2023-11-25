@@ -64,7 +64,7 @@ watch(autoScroll, (val) => {
             }"
           >
             <el-avatar v-if="itemData.uface" :src="itemData.uface" size="small" shape="circle" />
-            <div>
+            <div class="inline-flex">
               <Medal v-if="itemData.medal" :medal="itemData.medal" class="ml1" />
               <span
                 class="ml1 text-base text-amber"
@@ -74,12 +74,13 @@ watch(autoScroll, (val) => {
                 }"
               >{{ itemData.uname }}: </span>
               <span
-                class="text-base text-blue-500"
+                class="inline-flex items-center text-base text-blue-500"
                 :style="{
                   color: customStyle?.msgColor,
                   fontSize: `${customStyle?.msgFontSize}px`,
                 }"
-              >{{ itemData.message }}</span>
+                v-html="itemData.message"
+              />
             </div>
           </div>
           <span v-else-if="itemData.type === 'gift'" class="text-red">{{ itemData.message }}</span>

@@ -22,24 +22,36 @@ async function handleSend() {
   msg.value = ''
 }
 
-function handleSendEmoji(value: string) {
-  sendMessageApi(value, EDMType.表情弹幕)
+function handleSendEmoji(emoji: any) {
+  const { emoticon_unique } = emoji
+  // 文字表情
+  if (emoticon_unique.startsWith('emoji_')) {
+    msg.value += emoji.emoji
+    return
+  }
+
+  sendMessageApi(emoticon_unique, EDMType.表情弹幕)
   emojiRef.value.hide()
 }
 </script>
 
 <template>
   <div class="chat">
-    <el-popover ref="emojiRef" placement="top" trigger="click" :width="300">
+    <el-popover ref="emojiRef" placement="top" trigger="click" :width="220">
       <template #reference>
         <el-button class="border-none!" plain :disabled="disabled">
           <span class="i-carbon-face-activated-add h-6 w-6" />
         </el-button>
       </template>
       <el-tabs v-model="activeTab">
-        <el-tab-pane v-for="tab in emojiList" :key="tab.pkg_id" :label="tab.pkg_name" class="h-30 overflow-y-scroll">
+        <el-tab-pane v-for="tab in emojiList" :key="tab.pkg_id" class="h-30 overflow-y-scroll">
+          <template #label>
+            <div class="h-8 w-8 center">
+              <img :src="tab.current_cover" :alt="tab.pkg_name">
+            </div>
+          </template>
           <div class="flex flex-wrap gap-3">
-            <div v-for="emoji in tab.emoticons" :key="emoji.emoticon_id" class="min-h-6 w-20 center cursor-pointer" @click="handleSendEmoji(emoji.emoticon_unique)">
+            <div v-for="emoji in tab.emoticons" :key="emoji.emoticon_id" class="min-h-6 w-20 center cursor-pointer" @click="handleSendEmoji(emoji)">
               <el-tooltip :content="emoji.emoji">
                 <img :src="emoji.url" :alt="emoji.emoji">
               </el-tooltip>
@@ -56,6 +68,9 @@ function handleSendEmoji(value: string) {
 </template>
 
 <style lang="scss" scoped>
+::-webkit-scrollbar {
+  display: none;
+}
 .chat{
   @apply center gap-2 px-2 py-3 border-t border-gray-200;
 }

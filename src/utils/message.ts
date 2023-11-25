@@ -119,6 +119,16 @@ async function handleMessage(messages: any[]) {
     if (nameColor)
       barrageInfo.backgroundColor = colorHexToRgba(nameColor, 0.3) as string
 
+    const extra = JSON.parse(info[0][15].extra)
+
+    // 替换emoji表情
+    if (extra.emots) {
+      for (const key in extra.emots) {
+        const reg = new RegExp(key.replace('[', '\\[').replace(']', '\\]'), 'gi')
+        barrageInfo.message = barrageInfo.message.replaceAll(reg, `<img style="width: 20px; height: 20px;" src="${extra.emots[key].url}" />`)
+      }
+    }
+
     barrageList.push({
       id,
       barrage: barrageInfo,
