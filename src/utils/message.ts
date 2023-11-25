@@ -1,4 +1,5 @@
 import { emit } from '@tauri-apps/api/event'
+import { dayjs } from 'element-plus'
 import { nanoid } from 'nanoid'
 
 import { MESSAGE_TYPE } from './constants'
@@ -115,6 +116,7 @@ async function handleMessage(messages: any[]) {
           }
         : undefined,
       backgroundColor: '',
+      time: dayjs().format('HH:mm:ss'),
     }
     const nameColor = barrageInfo.unameColor
 

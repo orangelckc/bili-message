@@ -54,7 +54,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-[400px] overflow-hidden rounded-lg">
+  <div class="w-full overflow-hidden rounded-lg">
     <Danmu
       mode="client"
       :msg-list="msgList"
