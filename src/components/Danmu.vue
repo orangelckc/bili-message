@@ -2,6 +2,7 @@
 import { VirtualList } from 'vue-tiny-virtual-list'
 
 import Medal from '@/components/Medal.vue'
+import { ROOM_URL_PREFIX } from '@/utils/constants'
 
 const props = defineProps<{
   msgList: IMsg[]
@@ -65,7 +66,18 @@ watch(autoScroll, (val) => {
           >
             <el-avatar v-if="itemData.uface" :src="itemData.uface" size="small" shape="circle" />
             <div class="inline-flex">
-              <Medal v-if="itemData.medal" :medal="itemData.medal" class="ml1" />
+              <el-tooltip
+                placement="top"
+                :width="80"
+                trigger="hover"
+                effect="light"
+              >
+                <template #content>
+                  <a :href="`${ROOM_URL_PREFIX}/${itemData.medal?.roomid}`" target="_blank" class="text-blue-400">去直播间
+                  </a>
+                  <Medal v-if="itemData.medal && itemData.meal.is_lighted" :medal="itemData.medal" class="ml1" />
+                </template>
+              </el-tooltip>
               <span
                 class="ml1 text-base text-amber"
                 :style="{

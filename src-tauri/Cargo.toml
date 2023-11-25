@@ -13,7 +13,7 @@ edition = "2021"
 tauri-build = { version = "1.4", features = [] }
 
 [dependencies]
-tauri = { version = "1.4", features = [ "clipboard-write-text", "window-start-dragging", "window-set-always-on-top", "http-all", "macos-private-api", "system-tray"] }
+tauri = { version = "1.4", features = [ "shell-open", "clipboard-write-text", "window-start-dragging", "window-set-always-on-top", "http-all", "macos-private-api", "system-tray"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tauri-plugin-localhost = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }

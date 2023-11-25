@@ -4,6 +4,7 @@ import Account from '@/components/Account.vue'
 import Control from '@/components/Control.vue'
 import Danmu from '@/components/Danmu.vue'
 import Medal from '@/components/Medal.vue'
+import { ROOM_URL_PREFIX } from '@/utils/constants'
 import { EDMType } from '@/utils/enums'
 import { connected } from '@/utils/room'
 import { socket } from '@/utils/socket'
@@ -82,7 +83,19 @@ onMounted(refreshCurrentUser)
           </div>
           <template #reference>
             <div class="h-full w-[100px] center">
-              <Medal :medal="currentMedal" />
+              <el-tooltip
+                placement="top"
+                :width="80"
+                trigger="hover"
+                effect="light"
+              >
+                <template #content>
+                  <span v-if="!currentMedal">点击更换勋章</span>
+                  <a v-else :href="`${ROOM_URL_PREFIX}/${currentMedal?.roomid}`" target="_blank" class="text-blue-400">去直播间
+                  </a>
+                </template>
+                <Medal :medal="currentMedal" />
+              </el-tooltip>
             </div>
           </template>
         </el-popover>
