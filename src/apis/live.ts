@@ -127,6 +127,22 @@ function wearMedalApi(medalId: number) {
   })
 }
 
+function unWearMedalApi() {
+  const { currentUser } = useAppStore()
+  return request({
+    url: `${LIVE_URL_PREFIX}/xlive/web-room/v1/fansMedal/take_off`,
+    method: 'POST',
+    data: {
+      csrf: currentUser?.csrf,
+      csrf_token: currentUser?.csrf,
+    },
+    headers: {
+      'cookie': currentUser?.cookie,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+}
+
 export {
   getLiveCodeApi,
   getLiveTokenApi,
@@ -135,4 +151,5 @@ export {
   getLiveStatusApi,
   getMedalApi,
   wearMedalApi,
+  unWearMedalApi,
 }

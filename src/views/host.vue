@@ -9,7 +9,7 @@ import { connected } from '@/utils/room'
 import { socket } from '@/utils/socket'
 
 const { userList, currentMedal, currentUser, msgList, autoScroll } = storeToRefs(useAppStore())
-const { refreshCurrentUser, getUserMedal, wearMedal } = useAppStore()
+const { refreshCurrentUser, getUserMedal, wearMedal, unWearMedal } = useAppStore()
 const popover = ref()
 
 const disabled = computed(() => {
@@ -30,9 +30,13 @@ async function handleSign() {
 }
 
 function changeMedal(medal: IUserMedal) {
-  currentMedal.value = medal
+  // 卸掉当前佩戴的勋章
+  if (currentMedal.value?.medal_id === medal.medal_id)
+    unWearMedal()
+  else
+    wearMedal(medal)
+
   popover.value?.hide()
-  wearMedal()
 }
 
 function handleClear() {
@@ -77,7 +81,7 @@ onMounted(refreshCurrentUser)
             <span>当前没有任何粉丝勋章</span>
           </div>
           <template #reference>
-            <div class="w-[100px] text-center">
+            <div class="h-full w-[100px] center">
               <Medal :medal="currentMedal" />
             </div>
           </template>

@@ -53,7 +53,6 @@ function useWebsocket() {
       uid: currentUser?.mid,
       roomid,
       protover: 2,
-      clientver: '1.14.3',
       type: 2,
       platform: 'web',
       key: data.token,
