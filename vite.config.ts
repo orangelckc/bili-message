@@ -12,7 +12,7 @@ export default defineConfig(async () => ({
     UnoCSS(),
     AutoImport({
       dts: './types/auto-imports.d.ts',
-      imports: ['vue', 'pinia', 'vue-router'],
+      imports: ['vue', 'pinia', 'vue-router', '@vueuse/core'],
       dirs: ['./src/stores'],
       eslintrc: {
         enabled: true,

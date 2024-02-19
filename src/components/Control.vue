@@ -10,6 +10,7 @@ import { socket } from '@/utils/socket'
 const { room, isFix, isBroadcast, customStyle } = storeToRefs(useAppStore())
 
 const drawer = ref(false)
+const { isOn, voices, voice, pattern } = storeToRefs(useSpeechStore())
 
 const demos = [
   {
@@ -90,20 +91,6 @@ function useDemo(demo: ICustomStyle) {
   })
 }
 
-// TODO 手动控制广播
-// async function toggleBroadcast() {
-//   if (isBroadcast.value) {
-//     // 开启广播
-//     console.info('开启广播')
-//     // await invoke('start_ws')
-//   }
-//   else {
-//     // 关闭广播
-//     console.info('关闭广播')
-//     // await invoke('stop_ws')
-//   }
-// }
-
 watch(connected, () => {
   isBroadcast.value = connected.value
 })
@@ -137,7 +124,20 @@ function handleStyleChange() {
     </el-tooltip>
   </div>
   <el-drawer v-model="drawer" title="广播弹幕配置" :with-header="true" direction="ltr" :modal="true" size="300">
-    <div class="center gap3">
+    <el-input v-model="pattern" placeholder="弹幕匹配规则">
+      <template #prepend>
+        语音模版
+      </template>
+    </el-input>
+    <div class="mt2 center gap2">
+      <el-select v-model="voice" class="flex-1" value-key="name">
+        <el-option v-for="item in voices" :key="item.lang" :label="item.name" :value="item" />
+      </el-select>
+      <el-tooltip :content="isOn ? '关闭弹幕语音' : '开启弹幕语音'" placement="bottom">
+        <el-switch v-model="isOn" active-color="#13ce66" />
+      </el-tooltip>
+    </div>
+    <div class="mt2 center gap3">
       <!-- <el-switch v-model="isBroadcast" active-color="#13ce66" @change="toggleBroadcast" /> -->
       <span class="i-carbon-connection-signal h5 w5" :class="isBroadcast ? 'bg-green' : 'bg-gray'" />
       <el-link type="primary" :disabled="!isBroadcast" @click="handleCopy">
@@ -185,7 +185,7 @@ function handleStyleChange() {
 </template>
 
 <style lang="scss" scoped>
-.room{
-  @apply flex items-center justify-between gap-3 rounded-md py-4;
+.room {
+  @apply flex items-center justify-between gap-1 rounded-md py-4;
 }
 </style>

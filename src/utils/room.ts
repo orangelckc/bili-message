@@ -79,6 +79,13 @@ async function init_listener() {
         const { isBroadcast } = storeToRefs(useAppStore())
         if (isBroadcast.value)
           socket.send(msg)
+
+        const { isOn, text, pattern } = storeToRefs(useSpeechStore())
+        const { play } = useSpeechStore()
+        if (isOn.value && msg.type === 'message') {
+          text.value = pattern.value.replace('{user}', uname).replace('{msg}', message)
+          play()
+        }
       }
 
       if (item.barrageType === 'like') {
@@ -143,6 +150,8 @@ async function startWebsocket() {
     msgList.value = []
     getEmojiList()
     init_listener()
+    const { init } = useSpeechStore()
+    init()
   })
 }
 
