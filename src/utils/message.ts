@@ -86,7 +86,7 @@ async function handleMessage(messages: any[]) {
   }
 
   const parseDanmu = async (message: any) => {
-    const { info, dm_v2 } = message
+    const { info } = message
 
     const id = nanoid()
     const { currentUser } = useAppStore()
@@ -96,7 +96,7 @@ async function handleMessage(messages: any[]) {
     const barrageInfo = {
       uid: info[2][0],
       uname: info[2][1],
-      uface: dm_v2 ? decodeDmV2(dm_v2) : null,
+      uface: info[0][15].user.base.face,
       message: info[1],
       isAnchor: info[2][0] === up_id,
       isManager: !!info[2][2], // 房管
