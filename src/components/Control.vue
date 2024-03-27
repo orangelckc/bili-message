@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-// import { invoke } from '@tauri-apps/api'
 import { writeText } from '@tauri-apps/api/clipboard'
-import { appWindow } from '@tauri-apps/api/window'
+import { WebviewWindow, appWindow } from '@tauri-apps/api/window'
 
 import { LOCAL_BROADCAST_URL } from '@/utils/constants'
 import { connected, startWebsocket, stopWebsocket } from '@/utils/room'
@@ -101,25 +100,49 @@ function handleStyleChange() {
     data: customStyle.value,
   })
 }
+
+async function openMusic() {
+  const win = WebviewWindow.getByLabel('music')
+  if (win) {
+    win.show()
+  }
+  else {
+    // eslint-disable-next-line no-new
+    new WebviewWindow('music', {
+      url: '/music',
+      title: '网易云音乐',
+      width: 800,
+      height: 600,
+      resizable: true,
+    })
+  }
+}
 </script>
 
 <template>
-  <div class="w-full center cursor-move pt3 text-sm text-gray-300 -mt-3" data-tauri-drag-region>
+  <div class="relative w-full center cursor-move pt3 text-sm text-gray-300 -mt-3" data-tauri-drag-region>
     —— 拖拽我移动位置吧 ——
+    <div class="fixed right-2 top-2">
+      <el-tooltip content="置顶" placement="bottom">
+        <el-button round :type="isFix ? 'danger' : ''" @click="handleFix">
+          <span class="i-carbon-pin h5 w5" />
+        </el-button>
+      </el-tooltip>
+    </div>
   </div>
   <div class="room">
     <el-input v-model="room" placeholder="直播间ID" :disabled="connected" class="flex-1" />
     <el-button plain :type="connected ? 'danger' : 'success'" @click="connected ? stopWebsocket() : startWebsocket()">
       {{ connected ? '断开监听' : '开启监听' }}
     </el-button>
-    <el-tooltip content="置顶" placement="bottom">
-      <el-button round :type="isFix ? 'danger' : ''" @click="handleFix">
-        <span class="i-carbon-pin h5 w5" />
-      </el-button>
-    </el-tooltip>
     <el-tooltip content="广播" placement="bottom">
       <el-button round :type="isBroadcast ? 'success' : 'info'" @click="drawer = true">
         <span class="i-carbon-connection-signal h5 w5" />
+      </el-button>
+    </el-tooltip>
+    <el-tooltip content="Music" placement="bottom">
+      <el-button round type="warning" @click="openMusic">
+        <span class="i-carbon-music h5 w5" />
       </el-button>
     </el-tooltip>
   </div>
