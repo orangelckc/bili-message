@@ -1,26 +1,25 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
-    redirect: '/host',
-    children: [
-      {
-        path: '/host',
-        name: 'Host',
-        component: () => import('@/views/host.vue'),
-      },
-      {
-        path: '/client',
-        name: 'Client',
-        component: () => import('@/views/client.vue'),
-      },
-    ],
+    path: '/host',
+    name: 'Host',
+    component: () => import('@/views/host.vue'),
+  },
+  {
+    path: '/client',
+    name: 'Client',
+    component: () => import('@/views/client.vue'),
+  },
+  {
+    path: '/music',
+    name: 'Music',
+    component: () => import('@/views/music.vue'),
   },
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 })
 
