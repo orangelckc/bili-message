@@ -82,7 +82,7 @@ watch(autoScroll, (val) => {
             }"
           >
             <div class="inline-flex items-center gap1">
-              <el-avatar v-if="itemData.uface" :src="itemData.uface" size="small" shape="circle" />
+              <el-avatar v-if="itemData.uface" :src="`${itemData.uface}@120w_120h_1c.avif`" size="small" shape="circle" />
               <el-tooltip
                 placement="top"
                 :width="80"
