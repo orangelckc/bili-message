@@ -27,6 +27,7 @@
     "protobufjs": "^7.2.5",
     "qrcode": "^1.5.3",
     "qs": "^6.11.2",
+    "tauri-plugin-context-menu": "^0.7.0",
     "tauri-plugin-websocket-api": "github:tauri-apps/tauri-plugin-websocket#v1",
     "vue": "^3.3.7",
     "vue-router": "^4.2.5",
@@ -60,6 +61,6 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*": "eslint --fix"
+    "*.{vue,ts,json}": "eslint --fix"
   }
 }

@@ -10,7 +10,7 @@ import request from '@/utils/request'
 export async function getVideoDetail(bvid: string) {
   const { currentUser } = useAppStore()
   if (!currentUser?.cookie || !currentUser?.csrf)
-    return
+    throw new Error('请先登录')
 
   const { data } = await request({
     url: `${BASE_URL_PREFIX}/x/web-interface/view`,
@@ -33,9 +33,14 @@ export async function getVideoDetail(bvid: string) {
   })
 
   const urls = [
-    ...res?.data.dash.audio.map((audio: any) => audio.baseUrl),
-    ...res?.data.dash.audio.map((audio: any) => audio.base_url),
+    res?.data.durl[0].url,
   ]
+
+  // TODO 音频有鉴权问题
+  // const urls = [
+  //   ...res?.data.dash.audio.map((audio: any) => audio.baseUrl),
+  //   ...res?.data.dash.audio.map((audio: any) => audio.base_url),
+  // ]
 
   return {
     name: data.title,
@@ -43,7 +48,7 @@ export async function getVideoDetail(bvid: string) {
     pic: data.pic,
     artist: data.owner.name,
     bvid: data.bvid,
-  }
+  } as ISong
 }
 
 /**
@@ -61,11 +66,10 @@ function getStreamDetail(query: {
 
   const params = {
     ...query,
-    qn: 0, // 画质
-    fourk: 0, // 是否4k
+    qn: 16, // 画质
     fnval: 16, // 格式 1/16/1040
     fnver: 0, // 格式版本
-    platform: 'pc', // 平台
+    platform: 'html5', // 平台
     gaia_source: 'pre-load',
     voice_balance: 1,
   }

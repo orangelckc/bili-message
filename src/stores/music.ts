@@ -1,14 +1,23 @@
 import { Howl } from 'howler'
 
+import { getVideoDetail } from '@/apis/music'
+
 export const useMusicStore = defineStore('music', () => {
-  const currentSong = ref<ISong>()
+  // 正在播放列表
   const playList = ref<ISong[]>([])
+  // 历史播放列表
+  const historyList = ref<ISong[]>([])
+  const currentSong = ref<ISong>({
+    name: '',
+    artist: '',
+    pic: '',
+    urls: [],
+    bvid: '',
+  })
   const isPlaying = ref(false)
   const currentTime = ref(0)
   const duration = ref(0)
   let player: Howl
-
-  const { currentUser } = storeToRefs(useAppStore())
 
   const playUrls = computed(() => {
     return currentSong.value?.urls || []
@@ -19,7 +28,30 @@ export const useMusicStore = defineStore('music', () => {
     isPlaying.value = false
     player.unload()
     clearInterval(timerInterval)
-    playNext()
+  }
+
+  const playByBvid = async (bvid: string) => {
+    if (player && player.state() !== 'unloaded')
+      stop()
+    const target = playList.value.find(item => item.bvid === bvid)
+    currentSong.value = target ?? await getVideoDetail(bvid)
+    setPlayer()
+  }
+
+  const addToHistoryList = () => {
+    const index = historyList.value.findIndex(item => item.bvid === currentSong.value.bvid)
+    if (index !== -1)
+      historyList.value.splice(index, 1)
+
+    historyList.value.unshift(currentSong.value)
+  }
+
+  const addToPlayList = () => {
+    const index = playList.value.findIndex(item => item.bvid === currentSong.value.bvid)
+    if (index !== -1)
+      return
+
+    playList.value.push(currentSong.value)
   }
 
   function setPlayer() {
@@ -35,9 +67,7 @@ export const useMusicStore = defineStore('music', () => {
       xhr: {
         method: 'GET',
         headers: {
-          'Referer': 'https://www.bilibili.com',
-          'User-Agent': 'Apifox/1.0.0 (https://apifox.com)',
-          'cookie': currentUser.value?.cookie || '',
+          Referer: 'https://www.bilibili.com',
         },
       },
     })
@@ -48,14 +78,19 @@ export const useMusicStore = defineStore('music', () => {
       player.play()
     })
 
-    player.on('loaderror', () => {
+    player.on('loaderror', async () => {
       ElMessage.error('音乐加载失败，加载替换链接')
-      playUrls.value.shift()
+      stop()
+      currentSong.value = await getVideoDetail(currentSong.value.bvid)
       setPlayer()
     })
 
     player.on('play', () => {
       isPlaying.value = true
+      // 添加历史播放记录
+      addToHistoryList()
+      // 添加到播放列表
+      addToPlayList()
       timerInterval = setInterval(() => {
         currentTime.value = Math.round(player.seek())
       }, 1000) as unknown as number
@@ -66,11 +101,12 @@ export const useMusicStore = defineStore('music', () => {
     })
 
     player.on('end', () => {
-      stop()
+      playNext()
     })
 
     player.on('playerror', () => {
       stop()
+      playNext()
     })
 
     player.on('stop', () => {
@@ -82,31 +118,32 @@ export const useMusicStore = defineStore('music', () => {
     })
   }
 
-  const playPrev = () => {
-    const index = playList.value.findIndex(item => item === currentSong.value)
-    if (index === 0) {
-      player.stop()
+  function playPrev() {
+    const index = playList.value.findIndex(item => item.bvid === currentSong.value.bvid)
+    if (index === 0)
       return
-    }
-    currentSong.value = playList.value[index - 1]
-    setPlayer()
+
+    const song = playList.value[index - 1]
+    playByBvid(song.bvid)
   }
 
   function playNext() {
-    const index = playList.value.findIndex(item => item === currentSong.value)
+    const index = playList.value.findIndex(item => item.bvid === currentSong.value.bvid)
     if (index === playList.value.length - 1) {
-      player.stop()
+      ElMessage.success('没有歌曲了')
+      isPlaying.value = false
+      clearInterval(timerInterval)
       return
     }
-    currentSong.value = playList.value[index + 1]
-    setPlayer()
+    const song = playList.value[index + 1]
+    playByBvid(song.bvid)
   }
 
   function togglePlay() {
     if (isPlaying.value)
       player.pause()
     else
-      player.play()
+      player.state() === 'unloaded' ? playByBvid(currentSong.value.bvid) : player.play()
   }
 
   function seek(time: number) {
@@ -116,20 +153,21 @@ export const useMusicStore = defineStore('music', () => {
 
   return {
     currentSong,
-    playList,
     isPlaying,
     currentTime,
     duration,
+    playList,
+    historyList,
     playPrev,
     playNext,
     togglePlay,
     seek,
-    setPlayer,
+    playByBvid,
   }
 },
 {
   persist: {
-    paths: ['playList'],
+    paths: ['playList', 'historyList'],
   },
 },
 )
