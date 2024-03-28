@@ -68,7 +68,7 @@
     "windows": [
       {
         "label": "main",
-        "url":"/host",
+        "url":"/music",
         "title": "bilibili弹幕机",
         "minWidth": 400,
         "maxWidth": 640,
