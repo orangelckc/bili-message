@@ -303,6 +303,8 @@
     "watchTriggerable": true,
     "watchWithFilter": true,
     "whenever": true,
-    "ElMessage": true
+    "ElMessage": true,
+    "usePlayer": true,
+    "useMusicStore": true
   }
 }

@@ -13,7 +13,7 @@ export default defineConfig(async () => ({
     AutoImport({
       dts: './types/auto-imports.d.ts',
       imports: ['vue', 'pinia', 'vue-router', '@vueuse/core'],
-      dirs: ['./src/stores'],
+      dirs: ['./src/stores', './src/composables'],
       eslintrc: {
         enabled: true,
         filepath: './types/.eslintrc-auto-import.json',
