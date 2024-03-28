@@ -1,16 +1,13 @@
 <script lang="ts" setup>
-import { getVideoDetail } from '@/apis/music'
+const emits = defineEmits(['change'])
 
-const { currentSong } = storeToRefs(useMusicStore())
-const { setPlayer } = useMusicStore()
 const input = ref('')
 
 async function searchMusic() {
   if (!input.value)
     return
 
-  currentSong.value = await getVideoDetail(input.value)
-  setPlayer()
+  emits('change', input.value)
 }
 </script>
 

@@ -20,6 +20,7 @@ fn main() {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_localhost::Builder::new(port).build())
+        .plugin(tauri_plugin_context_menu::init())
         .run(context)
         .expect("error while running tauri application");
 }

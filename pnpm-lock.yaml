@@ -47,6 +47,9 @@ dependencies:
   qs:
     specifier: ^6.11.2
     version: 6.11.2
+  tauri-plugin-context-menu:
+    specifier: ^0.7.0
+    version: 0.7.0
   tauri-plugin-websocket-api:
     specifier: github:tauri-apps/tauri-plugin-websocket#v1
     version: github.com/tauri-apps/tauri-plugin-websocket/b55e90e968b9020d1eb8de97c97655bfa002dfd8
@@ -3939,6 +3942,12 @@ packages:
       '@pkgr/utils': 2.4.2
       tslib: 2.6.2
     dev: true
+
+  /tauri-plugin-context-menu@0.7.0:
+    resolution: {integrity: sha512-NtFyhP2lQrUqs2ZWxw5j75p0K/3+5xPAckKh8yvpn0Bjq6WpKpBRli5chmcP44ltUoHBfXl2yRnpU14G1G5ucg==}
+    dependencies:
+      '@tauri-apps/api': 1.5.1
+    dev: false
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}

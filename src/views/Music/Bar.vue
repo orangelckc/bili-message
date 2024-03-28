@@ -19,7 +19,7 @@ function onChange(value: any) {
 
 <template>
   <div class="relative h20 w-full flex items-center border border-t-1 rounded-t-xl border-solid bg-white px5">
-    <div class="absolute left-0 right-0 z-2 px-3 -top-2">
+    <div class="absolute left-3 right-3 z-2 px-1 -top-2">
       <el-slider
         v-model="currentTime"
         :step="0.1"
