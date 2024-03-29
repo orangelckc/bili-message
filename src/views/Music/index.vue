@@ -5,6 +5,8 @@ import Bar from './Bar.vue'
 import List from './List.vue'
 import Search from './Search.vue'
 
+import type { UnlistenFn } from '@tauri-apps/api/event'
+
 const { playByBvid, addToPlayList } = useMusicStore()
 const { playList, historyList } = storeToRefs(useMusicStore())
 
@@ -18,8 +20,12 @@ function handleChange(val: any) {
   tab.value = val
 }
 
-onMounted(() => {
-  listen('danmaku-demand-music', ({ payload }) => {
+let listener: UnlistenFn
+onMounted(async () => {
+  if (listener)
+    listener()
+
+  listener = await listen('danmaku-demand-music', ({ payload }) => {
     addToPlayList(payload as string)
   })
 })
