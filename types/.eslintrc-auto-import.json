@@ -305,6 +305,7 @@
     "whenever": true,
     "ElMessage": true,
     "usePlayer": true,
-    "useMusicStore": true
+    "useMusicStore": true,
+    "useFavStore": true
   }
 }

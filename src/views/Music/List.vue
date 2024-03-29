@@ -1,15 +1,32 @@
 <script lang="ts" setup>
+import { open } from '@tauri-apps/api/shell'
 import { showMenu } from 'tauri-plugin-context-menu'
 
-const props = defineProps<{
+import type { Item } from 'tauri-plugin-context-menu/dist/types'
+
+const props = withDefaults(defineProps<{
   list: ISong[]
-}>()
+  showContextMenu?: boolean
+}>(), {
+  showContextMenu: true,
+})
 
 const emits = defineEmits(['change'])
 
 const showList = ref<ISong[]>([])
+const selectedSong = ref<ISong>()
 
 const { currentSong, isPlaying } = storeToRefs(useMusicStore())
+const { playNext } = useMusicStore()
+const { collectionOptions } = storeToRefs(useFavStore())
+const { addToCollection } = useFavStore()
+const subItems: Item[] = collectionOptions.value.map(option => ({
+  label: option.name,
+  event: () => {
+    if (selectedSong.value)
+      addToCollection(option.id, selectedSong.value)
+  },
+}))
 
 watchEffect(() => {
   showList.value = props.list
@@ -20,15 +37,33 @@ async function playMusic(item: ISong) {
 }
 
 function handleContextMenu(item: ISong) {
+  if (!props.showContextMenu)
+    return
+
+  selectedSong.value = item
+
   showMenu({
     items: [
       {
-        label: '删除',
-        disabled: false,
+        label: '删除歌曲',
         event: () => {
+          if (currentSong.value.bvid === item.bvid)
+            playNext()
+
           const index = showList.value.findIndex(i => i.bvid === item.bvid)
           showList.value.splice(index, 1)
         },
+      },
+      {
+        label: '打开视频',
+        event: () => {
+          const url = `https://www.bilibili.com/video/${item.bvid}`
+          open(url)
+        },
+      },
+      {
+        label: '加入歌单',
+        subitems: subItems,
       },
     ],
   })
@@ -63,6 +98,6 @@ function handleContextMenu(item: ISong) {
   </div>
 
   <div v-else class="h-full center">
-    <span class="text-2xl text-gray-400">No Music</span>
+    <span class="text-2xl text-gray-400">暂无音乐</span>
   </div>
 </template>
