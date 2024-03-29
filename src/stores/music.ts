@@ -30,12 +30,26 @@ export const useMusicStore = defineStore('music', () => {
     clearInterval(timerInterval)
   }
 
+  const addToPlayList = async (bvid: string) => {
+    const target = playList.value.find(item => item.bvid === bvid)
+    if (target)
+      return target
+
+    const song = await getVideoDetail(bvid)
+    playList.value.push(song)
+    return song
+  }
+
   const playByBvid = async (bvid: string) => {
+    currentTime.value = 0
     if (player && player.state() !== 'unloaded')
       stop()
-    const target = playList.value.find(item => item.bvid === bvid)
-    currentSong.value = target ?? await getVideoDetail(bvid)
-    setPlayer()
+
+    currentSong.value = await addToPlayList(bvid)
+
+    setTimeout(() => {
+      setPlayer()
+    }, 500)
   }
 
   const addToHistoryList = () => {
@@ -44,14 +58,6 @@ export const useMusicStore = defineStore('music', () => {
       historyList.value.splice(index, 1)
 
     historyList.value.unshift(currentSong.value)
-  }
-
-  const addToPlayList = () => {
-    const index = playList.value.findIndex(item => item.bvid === currentSong.value.bvid)
-    if (index !== -1)
-      return
-
-    playList.value.push(currentSong.value)
   }
 
   function setPlayer() {
@@ -74,7 +80,6 @@ export const useMusicStore = defineStore('music', () => {
 
     player.on('load', () => {
       duration.value = player.duration()
-      currentTime.value = 0
       player.play()
     })
 
@@ -89,8 +94,6 @@ export const useMusicStore = defineStore('music', () => {
       isPlaying.value = true
       // 添加历史播放记录
       addToHistoryList()
-      // 添加到播放列表
-      addToPlayList()
       timerInterval = setInterval(() => {
         currentTime.value = Math.round(player.seek())
       }, 1000) as unknown as number
@@ -161,6 +164,7 @@ export const useMusicStore = defineStore('music', () => {
     playPrev,
     playNext,
     togglePlay,
+    addToPlayList,
     seek,
     playByBvid,
   }

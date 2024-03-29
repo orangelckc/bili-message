@@ -76,6 +76,13 @@ async function init_listener() {
       if (message) {
         msgList.value.push(msg as IMsg)
 
+        // 是否是点歌弹幕
+        if (message.startsWith('点歌')) {
+          const bvid = message.split('点歌')[1].trim()
+          if (bvid.startsWith('BV') && bvid.length === 12)
+            emit('danmaku-demand-music', bvid)
+        }
+
         const { isBroadcast } = storeToRefs(useAppStore())
         if (isBroadcast.value)
           socket.send(msg)
