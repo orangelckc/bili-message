@@ -17,6 +17,7 @@ export const useMusicStore = defineStore('music', () => {
   const isPlaying = ref(false)
   const currentTime = ref(0)
   const duration = ref(0)
+  const currentVolume = ref(50)
   let player: Howl
 
   const playUrls = computed(() => {
@@ -76,6 +77,7 @@ export const useMusicStore = defineStore('music', () => {
           Referer: 'https://www.bilibili.com',
         },
       },
+      volume: currentVolume.value / 100,
     })
 
     player.on('load', () => {
@@ -154,6 +156,11 @@ export const useMusicStore = defineStore('music', () => {
     currentTime.value = Math.round(time)
   }
 
+  function setVolume(volume: number) {
+    currentVolume.value = volume
+    player.volume(volume / 100)
+  }
+
   return {
     currentSong,
     isPlaying,
@@ -161,12 +168,14 @@ export const useMusicStore = defineStore('music', () => {
     duration,
     playList,
     historyList,
+    currentVolume,
     playPrev,
     playNext,
     togglePlay,
     addToPlayList,
     seek,
     playByBvid,
+    setVolume,
   }
 },
 {

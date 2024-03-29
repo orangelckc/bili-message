@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-const { currentSong, isPlaying, duration, currentTime } = storeToRefs(useMusicStore())
-const { playPrev, playNext, togglePlay, seek } = useMusicStore()
+const { currentSong, isPlaying, duration, currentTime, currentVolume } = storeToRefs(useMusicStore())
+const { playPrev, playNext, togglePlay, seek, setVolume } = useMusicStore()
 
 function formattedTime(timeInSeconds: number) {
   const minutes = Math.floor(timeInSeconds / 60)
@@ -14,6 +14,10 @@ function formattedTime(timeInSeconds: number) {
 
 function onChange(value: any) {
   seek(value)
+}
+
+function changeVolume(value: any) {
+  setVolume(value)
 }
 </script>
 
@@ -39,10 +43,23 @@ function onChange(value: any) {
         {{ currentSong?.artist }}
       </span>
     </div>
-    <div class="ml-auto flex gap5">
-      <span class="btn i-carbon-skip-back" @click="playPrev" />
-      <span class="btn" :class="isPlaying ? 'i-carbon-pause' : 'i-carbon-play'" @click="togglePlay" />
-      <span class="btn i-carbon-skip-forward" @click="playNext" />
+    <div class="ml-auto center flex-col gap1">
+      <div class="flex gap5">
+        <span class="btn i-carbon-skip-back" @click="playPrev" />
+        <span class="btn" :class="isPlaying ? 'i-carbon-pause' : 'i-carbon-play'" @click="togglePlay" />
+        <span class="btn i-carbon-skip-forward" @click="playNext" />
+      </div>
+      <div class="w-full flex">
+        <!-- <span>音量</span> -->
+        <el-slider
+          v-model="currentVolume"
+          :step="1"
+          :max="100"
+          height="0"
+          size="small"
+          @change="changeVolume"
+        />
+      </div>
     </div>
   </div>
 </template>
