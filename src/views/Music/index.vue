@@ -12,9 +12,9 @@ const { playList, historyList } = storeToRefs(useMusicStore())
 
 const tab = ref('playing')
 
-function setSong(bvid: string) {
+const setSong = useThrottleFn((bvid: string) => {
   playByBvid(bvid)
-}
+}, 1000)
 
 function handleChange(val: any) {
   tab.value = val
