@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { listen } from '@tauri-apps/api/event'
+
 import Bar from './Bar.vue'
 import List from './List.vue'
 import Search from './Search.vue'
 
-const { playByBvid } = useMusicStore()
+const { playByBvid, addToPlayList } = useMusicStore()
 const { playList, historyList } = storeToRefs(useMusicStore())
 
 const tab = ref('playing')
@@ -15,6 +17,12 @@ function setSong(bvid: string) {
 function handleChange(val: any) {
   tab.value = val
 }
+
+onMounted(() => {
+  listen('danmaku-demand-music', ({ payload }) => {
+    addToPlayList(payload as string)
+  })
+})
 </script>
 
 <template>
@@ -23,7 +31,7 @@ function handleChange(val: any) {
     <div class="h30px center cursor-move text-sm text-gray-300" data-tauri-drag-region>
       —— 拖拽我移动位置吧 ——
     </div>
-    <el-tabs v-model="tab" class="flex-1 px3" type="card" :stretch="true" @tab-change="handleChange">
+    <el-tabs v-model="tab" type="card" :stretch="true" class="flex-1 overflow-auto px3" @tab-change="handleChange">
       <el-tab-pane label="正在播放" name="playing">
         <List :list="playList" @change="setSong" />
       </el-tab-pane>

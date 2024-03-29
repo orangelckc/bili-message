@@ -110,10 +110,11 @@ async function openMusic() {
     // eslint-disable-next-line no-new
     new WebviewWindow('music', {
       url: '/music',
-      title: '网易云音乐',
-      width: 800,
-      height: 600,
-      resizable: true,
+      title: '点歌机',
+      width: 360,
+      height: 700,
+      decorations: true,
+      resizable: false,
     })
   }
 }
