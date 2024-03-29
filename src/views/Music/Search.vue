@@ -17,6 +17,7 @@ async function searchMusic() {
       v-model.trim="input"
       placeholder="搜索音乐"
       size="large"
+      clearable
       @keydown.enter="searchMusic"
     >
       <template #prefix>
