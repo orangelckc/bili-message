@@ -4,6 +4,7 @@ import Account from '@/components/Account.vue'
 import Control from '@/components/Control.vue'
 import Danmu from '@/components/Danmu.vue'
 import Medal from '@/components/Medal.vue'
+import useWebsocket from '@/hooks/useWebsocket'
 import { ROOM_URL_PREFIX } from '@/utils/constants'
 import { EDMType } from '@/utils/enums'
 import { connected } from '@/utils/room'
@@ -48,7 +49,10 @@ function handleClear() {
   })
 }
 
-onMounted(refreshCurrentUser)
+onMounted(() => {
+  useWebsocket().trigger()
+  refreshCurrentUser()
+})
 </script>
 
 <template>
