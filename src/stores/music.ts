@@ -7,6 +7,8 @@ export const useMusicStore = defineStore('music', () => {
   const playList = ref<ISong[]>([])
   // 历史播放列表
   const historyList = ref<ISong[]>([])
+  // 歌单列表
+  const favList = ref<ISong[]>([])
   const currentSong = ref<ISong>({
     name: '',
     artist: '',
@@ -176,6 +178,7 @@ export const useMusicStore = defineStore('music', () => {
     duration,
     playList,
     historyList,
+    favList,
     currentVolume,
     playPrev,
     playNext,
@@ -188,7 +191,7 @@ export const useMusicStore = defineStore('music', () => {
 },
 {
   persist: {
-    paths: ['playList', 'historyList', 'currentVolume'],
+    paths: ['playList', 'historyList', 'favList', 'currentVolume'],
   },
 },
 )
