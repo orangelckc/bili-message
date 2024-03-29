@@ -5,3 +5,9 @@ interface ISong{
   artist: string
   bvid: string
 }
+
+interface ICollection{
+  songs: ISong[]
+  name: string
+  id: string
+}
