@@ -1,4 +1,4 @@
-import { Howl } from 'howler'
+import { Howl, Howler } from 'howler'
 
 import { getVideoDetail } from '@/apis/music'
 
@@ -15,19 +15,16 @@ export const useMusicStore = defineStore('music', () => {
     bvid: '',
   })
   const isPlaying = ref(false)
+  const isLoading = ref(false)
   const currentTime = ref(0)
   const duration = ref(0)
   const currentVolume = ref(50)
   let player: Howl
 
-  const playUrls = computed(() => {
-    return currentSong.value?.urls || []
-  })
-
   let timerInterval = 0
   const stop = () => {
     isPlaying.value = false
-    player.unload()
+    Howler.unload()
     clearInterval(timerInterval)
   }
 
@@ -62,31 +59,28 @@ export const useMusicStore = defineStore('music', () => {
   }
 
   function setPlayer() {
-    if (playUrls.value.length === 0) {
-      playNext()
-      return
-    }
-
+    isLoading.value = true
     player = new Howl({
-      src: playUrls.value[0] || [],
+      src: currentSong.value.urls,
+      format: ['mp4'],
       html5: true,
-      format: ['mp3', 'mp4', 'm4s'],
       xhr: {
         method: 'GET',
         headers: {
           Referer: 'https://www.bilibili.com',
         },
+        withCredentials: true,
       },
       volume: currentVolume.value / 100,
     })
 
-    player.on('load', () => {
+    player.once('load', () => {
       duration.value = player.duration()
+      isLoading.value = false
       player.play()
     })
 
-    player.on('loaderror', async () => {
-      ElMessage.error('音乐加载失败，加载替换链接')
+    player.once('loaderror', async () => {
       stop()
       currentSong.value = await getVideoDetail(currentSong.value.bvid)
       setPlayer()
@@ -105,11 +99,11 @@ export const useMusicStore = defineStore('music', () => {
       isPlaying.value = false
     })
 
-    player.on('end', () => {
+    player.once('end', () => {
       playNext()
     })
 
-    player.on('playerror', () => {
+    player.once('playerror', () => {
       stop()
       playNext()
     })
@@ -145,10 +139,24 @@ export const useMusicStore = defineStore('music', () => {
   }
 
   function togglePlay() {
-    if (isPlaying.value)
+    if (isPlaying.value) {
       player.pause()
-    else
-      player.state() === 'unloaded' ? playByBvid(currentSong.value.bvid) : player.play()
+    }
+    else {
+      if (isLoading.value)
+        return ElMessage.info('音乐正在加载中，请稍后...')
+      switch (player.state()) {
+        case 'unloaded':
+          playByBvid(currentSong.value.bvid)
+          break
+        case 'loaded':
+          player.play()
+          break
+        case 'loading':
+          ElMessage.info('音乐正在加载中，请稍后...')
+          break
+      }
+    }
   }
 
   function seek(time: number) {
@@ -180,7 +188,7 @@ export const useMusicStore = defineStore('music', () => {
 },
 {
   persist: {
-    paths: ['playList', 'historyList'],
+    paths: ['playList', 'historyList', 'currentVolume'],
   },
 },
 )
