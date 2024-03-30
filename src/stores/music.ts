@@ -130,8 +130,7 @@ export const useMusicStore = defineStore('music', () => {
     const index = playList.value.findIndex(item => item.bvid === currentSong.value.bvid)
     if (index === playList.value.length - 1) {
       ElMessage.success('没有歌曲了')
-      isPlaying.value = false
-      clearInterval(timerInterval)
+      stop()
       return
     }
     const song = playList.value[index + 1]
