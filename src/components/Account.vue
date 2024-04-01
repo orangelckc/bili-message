@@ -43,8 +43,8 @@ function handleExit() {
   <el-card
     shadow="hover" class="relative h-46 w-40 center"
   >
-    <el-tooltip content="退出登录">
-      <el-button v-if="user.mid" class="absolute right-0 top-0 border-none! text-red!" plain @click="handleExit">
+    <el-tooltip v-if="user.mid" content="退出登录">
+      <el-button class="absolute right-0 top-0 border-none! text-red!" plain @click="handleExit">
         <span class="i-carbon-close-outline text-lg" />
       </el-button>
     </el-tooltip>

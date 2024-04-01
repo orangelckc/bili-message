@@ -52,6 +52,7 @@ watch(autoScroll, (val) => {
           >
             <div v-if="itemData.medal">
               <el-tooltip
+                v-if="itemData.medal && itemData.medal.is_lighted"
                 placement="top"
                 :width="80"
                 trigger="hover"
@@ -61,7 +62,7 @@ watch(autoScroll, (val) => {
                   <a :href="`${ROOM_URL_PREFIX}/${itemData.medal?.room_id}`" target="_blank" class="text-blue-400">去直播间
                   </a>
                 </template>
-                <Medal v-if="itemData.medal && itemData.medal.is_lighted" :medal="itemData.medal" class="w24rpx" />
+                <Medal :medal="itemData.medal" class="w24rpx" />
               </el-tooltip>
             </div>
             <span
@@ -84,6 +85,7 @@ watch(autoScroll, (val) => {
             <div class="inline-flex items-center gap1">
               <el-avatar v-if="itemData.uface" :src="`${itemData.uface}@120w_120h_1c.avif`" size="small" shape="circle" />
               <el-tooltip
+                v-if="itemData.medal && itemData.medal.is_lighted"
                 placement="top"
                 :width="80"
                 trigger="hover"
@@ -93,7 +95,7 @@ watch(autoScroll, (val) => {
                   <a :href="`${ROOM_URL_PREFIX}/${itemData.medal?.room_id}`" target="_blank" class="text-blue-400">去直播间
                   </a>
                 </template>
-                <Medal v-if="itemData.medal && itemData.medal.is_lighted" :medal="itemData.medal" class="w24rpx" />
+                <Medal :medal="itemData.medal" class="w24rpx" />
               </el-tooltip>
               <div class="text-base text-amber">
                 {{ itemData.uname }}
