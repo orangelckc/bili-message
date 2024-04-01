@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { emit } from '@tauri-apps/api/event'
+import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
+import { dayjs } from 'element-plus'
 
 import { sendMessageApi } from '@/apis/live'
 import Account from '@/components/Account.vue'
@@ -52,7 +53,16 @@ function handleClear() {
 }
 
 function handleExport() {
-  emit('danmaku-cut-music')
+  const filename = `record-${dayjs().format('YYYY-MM-DD')}.txt`
+  const data: string[] = []
+  msgList.value.forEach((msg) => {
+    if (msg.type === 'message') {
+      const pureMessage = msg.message.replace(/<[^>]+>/g, '')
+      data.push(`${msg.time}  ${msg.uname}: ${pureMessage}`)
+    }
+  })
+  const str = data.join('\n')
+  writeTextFile(filename, str, { dir: BaseDirectory.Desktop })
 }
 
 onMounted(() => {
@@ -131,7 +141,7 @@ onMounted(() => {
         <Danmu :msg-list="msgList" mode="host">
           <div class="fixed right-5 top-28">
             <el-tooltip v-if="connected" content="自动滚动">
-              <el-button :type="autoScroll ? 'primary' : 'info'" size="small" plain round @click="autoScroll = !autoScroll">
+              <el-button :type="autoScroll ? 'primary' : 'info'" size="small" round plain @click="autoScroll = !autoScroll">
                 <span class="i-carbon-auto-scroll h4 w4" />
               </el-button>
             </el-tooltip>
