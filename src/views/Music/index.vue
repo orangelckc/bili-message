@@ -26,11 +26,15 @@ function handleChange(val: any) {
 }
 
 const listeners: UnlistenFn[] = []
-onMounted(async () => {
+function stopListeners() {
   if (listeners.length) {
     listeners.forEach(listener => listener())
     listeners.length = 0
   }
+}
+
+onMounted(async () => {
+  stopListeners()
 
   const listener1 = await listen('danmaku-demand-music', async ({ payload }) => {
     const { bvid, uname, uid } = payload as { bvid: string; uname: string; uid: number }
@@ -44,6 +48,10 @@ onMounted(async () => {
   })
 
   listeners.push(listener1, listener2)
+})
+
+onUnmounted(() => {
+  stopListeners()
 })
 </script>
 

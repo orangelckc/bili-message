@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { emit } from '@tauri-apps/api/event'
+
 import { sendMessageApi } from '@/apis/live'
 import Account from '@/components/Account.vue'
 import Control from '@/components/Control.vue'
@@ -47,6 +49,10 @@ function handleClear() {
     type: 'command',
     command: 'clear',
   })
+}
+
+function handleExport() {
+  emit('danmaku-cut-music')
 }
 
 onMounted(() => {
@@ -124,19 +130,23 @@ onMounted(() => {
       >
         <Danmu :msg-list="msgList" mode="host">
           <div class="fixed right-5 top-28">
-            <el-tooltip content="自动滚动">
-              <el-button v-show="connected" :type="autoScroll ? 'primary' : 'info'" size="small" round plain @click="autoScroll = !autoScroll">
+            <el-tooltip v-if="connected" content="自动滚动">
+              <el-button :type="autoScroll ? 'primary' : 'info'" size="small" plain round @click="autoScroll = !autoScroll">
                 <span class="i-carbon-auto-scroll h4 w4" />
               </el-button>
             </el-tooltip>
-            <el-tooltip content="清屏">
-              <el-button v-show="msgList.length" type="danger" size="small" plain round @click="handleClear">
+            <el-tooltip v-if="msgList.length" content="导出记录">
+              <el-button type="warning" size="small" plain round @click="handleExport">
+                <span class="i-carbon-document-export h4 w4" />
+              </el-button>
+            </el-tooltip>
+            <el-tooltip v-if="msgList.length" content="清屏">
+              <el-button type="danger" size="small" plain round @click="handleClear">
                 <span class="i-carbon-trash-can h4 w4" />
               </el-button>
             </el-tooltip>
           </div>
         </Danmu>
-        <!-- <Danmu :msg-list="msgList" mode="host" /> -->
         <Chat />
       </el-card>
     </div>
