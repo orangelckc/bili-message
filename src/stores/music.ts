@@ -7,6 +7,9 @@ export const useMusicStore = defineStore('music', () => {
   const playList = ref<ISong[]>([])
   // 历史播放列表
   const historyList = ref<ISong[]>([])
+  // 歌曲黑名单
+  const blockList = ref<ISong[]>([])
+  // 当前播放歌曲
   const currentSong = ref<ISong>({
     name: '',
     artist: '',
@@ -14,11 +17,14 @@ export const useMusicStore = defineStore('music', () => {
     urls: [],
     bvid: '',
   })
+
   const isPlaying = ref(false)
   const isLoading = ref(false)
   const currentTime = ref(0)
   const duration = ref(0)
   const currentVolume = ref(50)
+  const freeLimit = ref(5)
+
   let player: Howl
 
   let timerInterval = 0
@@ -183,7 +189,9 @@ export const useMusicStore = defineStore('music', () => {
     duration,
     playList,
     historyList,
+    blockList,
     currentVolume,
+    freeLimit,
     playPrev,
     playNext,
     togglePlay,
@@ -195,7 +203,7 @@ export const useMusicStore = defineStore('music', () => {
 },
 {
   persist: {
-    paths: ['playList', 'historyList', 'currentVolume'],
+    paths: ['playList', 'historyList', 'blockList', 'currentVolume', 'freeLimit'],
   },
 },
 )

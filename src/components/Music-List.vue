@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { emit } from '@tauri-apps/api/event'
 import { open } from '@tauri-apps/api/shell'
 import { showMenu } from 'tauri-plugin-context-menu'
 
@@ -83,6 +84,18 @@ function handleContextMenu(item: ISong) {
       {
         label: '加入歌单',
         subitems: subItems,
+      },
+      {
+        label: '加入黑名单',
+        event: () => {
+          if (currentSong.value.bvid === item.bvid)
+            playNext()
+
+          const index = showList.value.findIndex(i => i.bvid === item.bvid)
+          showList.value.splice(index, 1)
+
+          emit('add-to-block', item)
+        },
       },
     ],
   })

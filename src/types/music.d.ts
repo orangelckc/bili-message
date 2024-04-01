@@ -1,4 +1,4 @@
-interface ISong{
+interface ISong {
   urls: string[]
   name: string
   pic: string
@@ -6,8 +6,15 @@ interface ISong{
   bvid: string
 }
 
-interface ICollection{
+interface ICollection {
   songs: ISong[]
   name: string
   id: string
+}
+
+interface IDemandMusic {
+  bvid: string;
+  uname: string;
+  uid: number;
+  isFree: boolean
 }
