@@ -2,7 +2,7 @@
 import { nanoid } from 'nanoid'
 import { showMenu } from 'tauri-plugin-context-menu'
 
-import List from './List.vue'
+import List from '@/components/Music-List.vue'
 
 const emits = defineEmits(['change'])
 

@@ -29,7 +29,7 @@ interface IMsg {
   uface?: string
   message: string
   medal: IUserMedal
-  time: number
+  time?: number
 }
 
 interface IUserMedal {

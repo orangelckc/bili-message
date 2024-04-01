@@ -3,19 +3,21 @@ import { listen } from '@tauri-apps/api/event'
 
 import Bar from './Bar.vue'
 import Collection from './Collection.vue'
-import List from './List.vue'
 import Search from './Search.vue'
 
 import type { UnlistenFn } from '@tauri-apps/api/event'
 
 import { sendMessageApi } from '@/apis/live'
+import List from '@/components/Music-List.vue'
 import { EDMType } from '@/utils/enums'
 
 const { playByBvid, addToPlayList, playNext } = useMusicStore()
-const { playList, historyList } = storeToRefs(useMusicStore())
+const { playList, historyList, freeLimit, blockList } = storeToRefs(useMusicStore())
 const { currentUser } = storeToRefs(useAppStore())
 
 const tab = ref<'playing' | 'fav' | 'history'>('playing')
+// 点歌map
+const demandMap = new Map<number, number>()
 
 const setSong = useThrottleFn((bvid: string) => {
   playByBvid(bvid)
@@ -33,21 +35,48 @@ function stopListeners() {
   }
 }
 
+async function handleDemand(payload: IDemandMusic) {
+  const { bvid, uname, uid, isFree } = payload
+
+  const count = demandMap.get(uid) || 0
+
+  if (!isFree) {
+    // 防止重复点歌
+    if (count && count >= freeLimit.value) {
+      await sendMessageApi(`@${uname.slice(0, 7)} 今日点歌已达上限💔`, EDMType.普通弹幕)
+      return
+    }
+  }
+
+  // 黑名单校验
+  const block = blockList.value.find(item => item.bvid === bvid)
+  if (block) {
+    await sendMessageApi(`@${uname.slice(0, 8)} 换首歌吧😊`, EDMType.普通弹幕)
+    return
+  }
+
+  await addToPlayList(bvid)
+  demandMap.set(uid, count + 1)
+  if (+uid === currentUser.value?.mid)
+    return
+
+  await sendMessageApi(`@${uname.slice(0, 11)} 点歌成功❤️`, EDMType.普通弹幕)
+}
+
 onMounted(async () => {
   stopListeners()
 
   const listener1 = await listen('danmaku-demand-music', async ({ payload }) => {
-    const { bvid, uname, uid } = payload as { bvid: string; uname: string; uid: number }
-    await addToPlayList(bvid)
-    if (+uid === currentUser.value?.mid)
-      return
-    await sendMessageApi(`@${uname} 点歌成功❤️`, EDMType.普通弹幕)
+    handleDemand(payload as IDemandMusic)
   })
   const listener2 = await listen('danmaku-cut-music', () => {
     playNext()
   })
+  const listener3 = await listen('change-free-limit', ({ payload }) => {
+    freeLimit.value = Number(payload)
+  })
 
-  listeners.push(listener1, listener2)
+  listeners.push(listener1, listener2, listener3)
 })
 
 onUnmounted(() => {

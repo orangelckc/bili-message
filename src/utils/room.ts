@@ -80,8 +80,11 @@ async function init_listener() {
         // 是否是点歌弹幕
         if (message.startsWith('点歌')) {
           const bvid = message.split('点歌')[1].trim()
-          if (bvid.startsWith('BV') && bvid.length === 12)
-            emit('danmaku-demand-music', { bvid, uname, uid })
+          if (bvid.startsWith('BV') && bvid.length === 12) {
+            // 房管/牌牌点歌不计数
+            const isFree = isManager || +medal?.room_id === 24337535
+            emit('danmaku-demand-music', { bvid, uname, uid, isFree })
+          }
         }
 
         // 房管切歌
