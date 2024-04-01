@@ -62,20 +62,21 @@ function handleToList(collection: ICollection) {
         v-for="collection in collections"
         :key="collection.id"
         :name="collection.id"
-        @contextmenu.prevent="handleContextMenu(collection)"
       >
         <template #title>
-          <div v-if="isEdit && selected === collection.id">
-            <el-input v-model="collection.name" size="small" placeholder="歌单名称" @click.stop @keydown.enter.stop="isEdit = false" @blur.stop="isEdit = false" />
-          </div>
-          <div v-else class="flex items-center gap3">
-            <span>{{ collection.name }}</span>
-            <div class="cursor-pointer border border-gray rounded border-solid px-1 text-xs" @click.stop="handleToList(collection)">
-              加入播放列表
+          <div class="w-full" @contextmenu.prevent="handleContextMenu(collection)">
+            <div v-if="isEdit && selected === collection.id">
+              <el-input v-model="collection.name" size="small" placeholder="歌单名称" @click.stop @keydown.enter.stop="isEdit = false" @blur.stop="isEdit = false" />
+            </div>
+            <div v-else class="flex items-center gap3">
+              <span>{{ collection.name }}</span>
+              <div class="cursor-pointer border border-gray rounded border-solid px-1 text-xs" @click.stop="handleToList(collection)">
+                加入播放列表
+              </div>
             </div>
           </div>
         </template>
-        <List :list="collection.songs" :show-context-menu="false" @change="handleChange" />
+        <List :list="collection.songs" type="collection" @change="handleChange" />
       </el-collapse-item>
     </el-collapse>
     <div v-else class="center flex-1">
