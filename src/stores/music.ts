@@ -138,22 +138,30 @@ export const useMusicStore = defineStore('music', () => {
   }
 
   function togglePlay() {
+    if (playList.value.length === 0) {
+      ElMessage.info('播放列表为空，请先添加歌曲')
+      return
+    }
+
+    if (!currentSong.value?.bvid)
+      currentSong.value = playList.value[0]
+
     if (isPlaying.value) {
       player.pause()
     }
     else {
       if (isLoading.value)
         return ElMessage.info('音乐正在加载中，请稍后...')
-      switch (player.state()) {
-        case 'unloaded':
-          playByBvid(currentSong.value.bvid)
-          break
+      switch (player?.state()) {
         case 'loaded':
           player.play()
           break
         case 'loading':
           ElMessage.info('音乐正在加载中，请稍后...')
           break
+
+        default:
+          playByBvid(currentSong.value.bvid)
       }
     }
   }

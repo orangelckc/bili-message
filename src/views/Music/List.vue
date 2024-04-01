@@ -82,8 +82,8 @@ function handleContextMenu(item: ISong) {
     >
       <div class="relative w-full flex items-center">
         <el-avatar shape="square" :size="60" :src="`${item.pic}?@120w_120h_1c.avif`" />
-        <div class="ml2 flex flex-1 flex-col gap2">
-          <span class="line-clamp-1">
+        <div class="relative ml2 box-border flex flex-1 flex-col gap2 overflow-hidden">
+          <span :class="currentSong.bvid === item.bvid ? 'line-scroll' : 'line-clamp-1'" class="w-full">
             {{ item.name }}
           </span>
           <span class="text-sm">
@@ -101,3 +101,19 @@ function handleContextMenu(item: ISong) {
     <span class="text-2xl text-gray-400">暂无音乐</span>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.line-scroll{
+  white-space: nowrap;
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+</style>
