@@ -6,9 +6,9 @@ import type { Item } from 'tauri-plugin-context-menu/dist/types'
 
 const props = withDefaults(defineProps<{
   list: ISong[]
-  showContextMenu?: boolean
+  type?: 'collection' | 'list'
 }>(), {
-  showContextMenu: true,
+  type: 'list',
 })
 
 const emits = defineEmits(['change'])
@@ -37,10 +37,29 @@ async function playMusic(item: ISong) {
 }
 
 function handleContextMenu(item: ISong) {
-  if (!props.showContextMenu)
-    return
-
   selectedSong.value = item
+
+  if (props.type === 'collection') {
+    showMenu({
+      items: [
+        {
+          label: '删除歌曲',
+          event: () => {
+            const index = showList.value.findIndex(i => i.bvid === item.bvid)
+            showList.value.splice(index, 1)
+          },
+        },
+        {
+          label: '打开视频',
+          event: () => {
+            const url = `https://www.bilibili.com/video/${item.bvid}`
+            open(url)
+          },
+        },
+      ],
+    })
+    return
+  }
 
   showMenu({
     items: [
