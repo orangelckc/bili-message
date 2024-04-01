@@ -35,11 +35,11 @@ function changeVolume(value: any) {
       />
     </div>
     <el-avatar shape="square" :size="60" :src="currentSong?.pic" />
-    <div class="ml2 flex flex-1 flex-col justify-between truncate">
-      <span class="truncate">
+    <div class="relative mx2 box-border flex flex-1 flex-col justify-between overflow-hidden">
+      <span class="line-scroll">
         {{ currentSong?.name }}
       </span>
-      <span>
+      <span class="truncate">
         {{ currentSong?.artist }}
       </span>
     </div>
@@ -71,5 +71,19 @@ function changeVolume(value: any) {
 
 :deep(.el-slider__button){
   @apply w-2 h-2;
+}
+
+.line-scroll{
+  white-space: nowrap;
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 </style>
