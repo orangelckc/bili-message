@@ -61,7 +61,7 @@ async function init_listener() {
 
     const data = event.payload as object[]
     data.forEach(async (item: any) => {
-      const { uname, message, isEmoji, emoji, medal, uface, time } = item.barrage
+      const { uname, message, isEmoji, emoji, medal, uface, time, isManager, uid } = item.barrage
 
       const msg = {
         uname,
@@ -71,6 +71,7 @@ async function init_listener() {
         id: item.id,
         medal,
         time,
+        isManager,
       }
 
       if (message) {
@@ -80,8 +81,12 @@ async function init_listener() {
         if (message.startsWith('点歌')) {
           const bvid = message.split('点歌')[1].trim()
           if (bvid.startsWith('BV') && bvid.length === 12)
-            emit('danmaku-demand-music', bvid)
+            emit('danmaku-demand-music', { bvid, uname, uid })
         }
+
+        // 房管切歌
+        if (isManager && message === '切歌')
+          emit('danmaku-cut-music')
 
         const { isBroadcast } = storeToRefs(useAppStore())
         if (isBroadcast.value)

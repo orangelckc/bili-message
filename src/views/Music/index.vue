@@ -8,8 +8,12 @@ import Search from './Search.vue'
 
 import type { UnlistenFn } from '@tauri-apps/api/event'
 
-const { playByBvid, addToPlayList } = useMusicStore()
+import { sendMessageApi } from '@/apis/live'
+import { EDMType } from '@/utils/enums'
+
+const { playByBvid, addToPlayList, playNext } = useMusicStore()
 const { playList, historyList } = storeToRefs(useMusicStore())
+const { currentUser } = storeToRefs(useAppStore())
 
 const tab = ref<'playing' | 'fav' | 'history'>('playing')
 
@@ -21,14 +25,25 @@ function handleChange(val: any) {
   tab.value = val
 }
 
-let listener: UnlistenFn
+const listeners: UnlistenFn[] = []
 onMounted(async () => {
-  if (listener)
-    listener()
+  if (listeners.length) {
+    listeners.forEach(listener => listener())
+    listeners.length = 0
+  }
 
-  listener = await listen('danmaku-demand-music', ({ payload }) => {
-    addToPlayList(payload as string)
+  const listener1 = await listen('danmaku-demand-music', async ({ payload }) => {
+    const { bvid, uname, uid } = payload as { bvid: string; uname: string; uid: number }
+    await addToPlayList(bvid)
+    if (+uid === currentUser.value?.mid)
+      return
+    await sendMessageApi(`@${uname} 点歌成功❤️`, EDMType.普通弹幕)
   })
+  const listener2 = await listen('danmaku-cut-music', () => {
+    playNext()
+  })
+
+  listeners.push(listener1, listener2)
 })
 </script>
 
