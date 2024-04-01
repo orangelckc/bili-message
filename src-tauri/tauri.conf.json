@@ -35,6 +35,13 @@
       "clipboard": {
         "all": false,
         "writeText": true
+      },
+      "fs": {
+        "all": false,
+        "writeFile": true,
+        "scope": [
+          "$DESKTOP/**"
+        ]
       }
     },
     "bundle": {
