@@ -1,19 +1,14 @@
 <script lang="ts" setup>
-import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
-import { dayjs } from 'element-plus'
-
 import { sendMessageApi } from '@/apis/live'
 import Account from '@/components/Account.vue'
 import Control from '@/components/Control.vue'
-import Danmu from '@/components/Danmu.vue'
+import HostDanmu from '@/components/Danmu/Host.vue'
 import Medal from '@/components/Medal.vue'
 import useWebsocket from '@/hooks/useWebsocket'
 import { ROOM_URL_PREFIX } from '@/utils/constants'
 import { EDMType } from '@/utils/enums'
-import { connected } from '@/utils/room'
-import { socket } from '@/utils/socket'
 
-const { userList, currentMedal, currentUser, msgList, autoScroll } = storeToRefs(useAppStore())
+const { userList, currentMedal, currentUser } = storeToRefs(useAppStore())
 const { refreshCurrentUser, getUserMedal, wearMedal, unWearMedal } = useAppStore()
 const popover = ref()
 
@@ -42,27 +37,6 @@ function changeMedal(medal: IUserMedal) {
     wearMedal(medal)
 
   popover.value?.hide()
-}
-
-function handleClear() {
-  msgList.value = []
-  socket.send({
-    type: 'command',
-    command: 'clear',
-  })
-}
-
-function handleExport() {
-  const filename = `record-${dayjs().format('YYYY-MM-DD')}.txt`
-  const data: string[] = []
-  msgList.value.forEach((msg) => {
-    if (msg.type === 'message') {
-      const pureMessage = msg.message.replace(/<[^>]+>/g, '')
-      data.push(`${msg.time}  ${msg.uname}: ${pureMessage}`)
-    }
-  })
-  const str = data.join('\n')
-  writeTextFile(filename, str, { dir: BaseDirectory.Desktop })
 }
 
 onMounted(() => {
@@ -138,25 +112,7 @@ onMounted(() => {
           margin: '0',
         }"
       >
-        <Danmu :msg-list="msgList" mode="host">
-          <div class="fixed right-5 top-28">
-            <el-tooltip v-if="connected" content="自动滚动">
-              <el-button :type="autoScroll ? 'primary' : 'info'" size="small" round plain @click="autoScroll = !autoScroll">
-                <span class="i-carbon-auto-scroll h4 w4" />
-              </el-button>
-            </el-tooltip>
-            <el-tooltip v-if="msgList.length" content="导出记录">
-              <el-button type="warning" size="small" plain round @click="handleExport">
-                <span class="i-carbon-document-export h4 w4" />
-              </el-button>
-            </el-tooltip>
-            <el-tooltip v-if="msgList.length" content="清屏">
-              <el-button type="danger" size="small" plain round @click="handleClear">
-                <span class="i-carbon-trash-can h4 w4" />
-              </el-button>
-            </el-tooltip>
-          </div>
-        </Danmu>
+        <HostDanmu />
         <Chat />
       </el-card>
     </div>

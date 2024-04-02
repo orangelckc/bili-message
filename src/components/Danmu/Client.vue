@@ -6,7 +6,6 @@ import { ROOM_URL_PREFIX } from '@/utils/constants'
 
 const props = defineProps<{
   msgList: IMsg[]
-  mode: 'host' | 'client'
   customStyle?: ICustomStyle
 }>()
 
