@@ -11,8 +11,6 @@ declare module 'vue' {
     Chat: typeof import('./../src/components/Chat.vue')['default']
     Client: typeof import('./../src/components/Danmu/Client.vue')['default']
     Control: typeof import('./../src/components/Control.vue')['default']
-    copy: typeof import('./../src/components/Danmu/Host copy.vue')['default']
-    Danmu: typeof import('./../src/components/Danmu.vue')['default']
     DanmuDrawer: typeof import('./../src/components/Drawer/Danmu-Drawer.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -38,5 +36,7 @@ declare module 'vue' {
     QRCode: typeof import('./../src/components/QRCode.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SampleA: typeof import('./../src/components/Danmu/SampleA.vue')['default']
+    SampleB: typeof import('./../src/components/Danmu/SampleB.vue')['default']
   }
 }

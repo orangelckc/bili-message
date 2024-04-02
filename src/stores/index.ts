@@ -42,7 +42,11 @@ export const useAppStore = defineStore(
       msgFontSize: 18,
       msgGap: 20,
       msgBackground: 'linear-gradient(to right, #8A2BE2, #4B0082)',
+      showMedal: false,
     })
+
+    // 默认选中的弹幕类型
+    const defaultSample = ref('A')
 
     // 刷新当前用户信息
     async function refreshCurrentUser() {
@@ -146,11 +150,12 @@ export const useAppStore = defineStore(
       unWearMedal,
       autoScroll,
       customStyle,
+      defaultSample,
     }
   },
   {
     persist: {
-      paths: ['currentUser', 'userList', 'room', 'currentMedal', 'autoScroll', 'isFix', 'customStyle'],
+      paths: ['currentUser', 'userList', 'room', 'currentMedal', 'autoScroll', 'isFix', 'customStyle', 'defaultSample'],
     },
   },
 )

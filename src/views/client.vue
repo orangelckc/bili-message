@@ -5,8 +5,9 @@ import { LOCAL_WEBSOCKET_URL } from '@/utils/constants'
 const msgList = ref<IMsg[]>([])
 let ws: WebSocket
 
-const { customStyle } = useAppStore()
+const { customStyle, defaultSample } = useAppStore()
 const newStyle = ref(customStyle)
+const newSample = ref(defaultSample)
 
 async function init_listener() {
   ws = new WebSocket(LOCAL_WEBSOCKET_URL)
@@ -23,6 +24,10 @@ async function init_listener() {
 
     try {
       const data = JSON.parse(e.data)
+      if (data.type === 'sample') {
+        newSample.value = data.data
+        return
+      }
       if (data.type === 'config') {
         newStyle.value = data.data
         return
@@ -58,6 +63,7 @@ onMounted(() => {
     <ClientDanmu
       :msg-list="msgList"
       :custom-style="newStyle"
+      :sample="newSample"
     />
   </div>
 </template>
