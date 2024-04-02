@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import Danmu from '@/components/Danmu.vue'
+import ClientDanmu from '@/components/Danmu/Client.vue'
 import { LOCAL_WEBSOCKET_URL } from '@/utils/constants'
 
 const msgList = ref<IMsg[]>([])
@@ -55,8 +55,7 @@ onMounted(() => {
 
 <template>
   <div class="w-full overflow-hidden rounded-lg">
-    <Danmu
-      mode="client"
+    <ClientDanmu
       :msg-list="msgList"
       :custom-style="newStyle"
     />

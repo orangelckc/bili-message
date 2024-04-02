@@ -9,7 +9,9 @@ declare module 'vue' {
   export interface GlobalComponents {
     Account: typeof import('./../src/components/Account.vue')['default']
     Chat: typeof import('./../src/components/Chat.vue')['default']
+    Client: typeof import('./../src/components/Danmu/Client.vue')['default']
     Control: typeof import('./../src/components/Control.vue')['default']
+    copy: typeof import('./../src/components/Danmu/Host copy.vue')['default']
     Danmu: typeof import('./../src/components/Danmu.vue')['default']
     DanmuDrawer: typeof import('./../src/components/Drawer/Danmu-Drawer.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
@@ -29,6 +31,7 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    Host: typeof import('./../src/components/Danmu/Host.vue')['default']
     Medal: typeof import('./../src/components/Medal.vue')['default']
     MusicDrawer: typeof import('./../src/components/Drawer/Music-Drawer.vue')['default']
     MusicList: typeof import('./../src/components/Music-List.vue')['default']
