@@ -24,12 +24,12 @@ interface ILogin {
 
 interface IMsg {
   id: string
-  type: 'entry' | 'message' | 'gift' | 'like' | 'follow' | 'emoji'|'config'
+  type: 'entry' | 'message' | 'gift' | 'like' | 'follow' | 'emoji' | 'config'
   uname: string
   uface?: string
   message: string
-  medal: IUserMedal
-  time?: number
+  medal?: IUserMedal
+  time?: number | string
 }
 
 interface IUserMedal {
@@ -55,10 +55,11 @@ interface IUserMedal {
 }
 
 interface ICustomStyle {
-    unameColor?: string
-    unameFontSize?: number
-    msgColor?: string
-    msgFontSize?: number
-    msgGap?: number
-    msgBackground?: string
-  }
+  unameColor?: string
+  unameFontSize?: number
+  msgColor?: string
+  msgFontSize?: number
+  msgGap?: number
+  msgBackground?: string
+  showMedal: boolean
+}

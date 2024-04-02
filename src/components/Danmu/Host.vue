@@ -98,7 +98,7 @@ watch(autoScroll, (val) => {
           </div>
           <div v-else-if="itemData.type === 'message'" class="flex flex-col gap1">
             <div class="inline-flex items-center gap1">
-              <el-avatar v-if="itemData.uface" :src="`${itemData.uface}@120w_120h_1c.avif`" size="small" shape="circle" />
+              <el-avatar v-if="itemData.uface" :src="itemData.uface" size="small" shape="circle" />
               <el-tooltip
                 v-if="itemData.medal && itemData.medal.is_lighted"
                 placement="top"

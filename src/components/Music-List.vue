@@ -113,7 +113,7 @@ function handleContextMenu(item: ISong) {
       @contextmenu.prevent="handleContextMenu(item)"
     >
       <div class="relative w-full flex items-center">
-        <el-avatar shape="square" :size="60" :src="`${item.pic}?@120w_120h_1c.avif`" />
+        <el-avatar shape="square" :size="60" :src="`${item.pic}?@200w_200h_1c.avif`" />
         <div class="relative ml2 box-border flex flex-1 flex-col gap2 overflow-hidden">
           <span :class="currentSong.bvid === item.bvid ? 'line-scroll' : 'line-clamp-1'" class="w-full">
             {{ item.name }}

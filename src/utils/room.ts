@@ -65,7 +65,7 @@ async function init_listener() {
 
       const msg = {
         uname,
-        uface,
+        uface: `${uface}@300w_300h_1c.avif`,
         message: isEmoji ? emoji.url : message,
         type: isEmoji ? 'emoji' : 'message',
         id: item.id,
