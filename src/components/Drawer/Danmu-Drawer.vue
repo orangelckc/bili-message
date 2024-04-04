@@ -12,14 +12,14 @@ const props = defineProps<{
 
 const emits = defineEmits(['update:modelValue'])
 
-const danmaku = ref<IMsg>({
+const danmaku: IMsg = {
   id: 'Sp96GuKWs9ZbUGa6JrK7H',
   type: 'message',
   uname: '用户昵称',
   message: '测试弹幕<img style="width: 20px; height: 20px;" src="http://i0.hdslb.com/bfs/live/816402551e6ce30d08b37a917f76dea8851fe529.png" />',
   time: '00:00:29',
   uface: 'https://i1.hdslb.com/bfs/face/1fedc000ed0efc646e0dec26c4e9f66334c0e0de.jpg@100w_100h_1c.avif',
-})
+}
 
 const trigger = computed({
   get() {
@@ -63,6 +63,10 @@ function useDemo(id: string) {
   socket.send({
     type: 'sample',
     data: id,
+  })
+  socket.send({
+    type: 'config',
+    data: customStyle.value,
   })
 }
 </script>
