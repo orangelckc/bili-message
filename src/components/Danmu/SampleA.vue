@@ -1,66 +1,57 @@
 <script lang="ts" setup>
-import Medal from '@/components/Medal.vue'
-
-defineProps<{
+const props = defineProps<{
   danmaku: IMsg
   customStyle?: ICustomStyle
 }>()
+
+const baseStyle: ICustomStyle = {
+  avatarSize: 100,
+  unameColor: 'rgba(255, 255, 255, 0.8)',
+  unameFontSize: 16,
+  msgColor: 'rgba(255, 255, 255, 0.9)',
+  msgFontSize: 20,
+  msgBackground: 'rgba(0, 0, 0, 0.5)',
+  showMedal: false,
+}
+const showStyle = computed(() => {
+  return {
+    ...baseStyle,
+    ...props.customStyle,
+  }
+})
 </script>
 
 <template>
-  <div
-    class="p1 text-sm"
-    :style="{
-      paddingBottom: `${customStyle?.msgGap}px`,
-    }"
-  >
+  <div class="content">
+    <el-avatar :size="Number(showStyle.avatarSize)" :src="danmaku.uface" class="avatar-shadow" />
     <div
-      v-if="danmaku.type === 'emoji'" class="flex items-center"
+      class="rounded-b-xl rounded-r-xl px-4 py-2"
       :style="{
-        background: customStyle?.msgBackground,
+        background: showStyle.msgBackground || 'rgba(0, 0, 0, 0.5)',
       }"
     >
-      <div v-if="danmaku.medal && danmaku.medal.is_lighted">
-        <Medal :medal="danmaku.medal" class="w24rpx" />
-      </div>
-      <span
-        class="text-base text-amber"
-        :style="{
-          color: customStyle?.unameColor,
-          fontSize: `${customStyle?.unameFontSize}px`,
-        }"
-      >{{ danmaku.uname }} </span>
       <div v-if="danmaku.type === 'emoji'">
-        <img :src="danmaku.message" alt="" class="ml1 min-h-6 w14">
-      </div>
-    </div>
-    <div
-      v-else-if="danmaku.type === 'message'" class="flex flex-col gap1"
-      :style="{
-        background: customStyle?.msgBackground,
-      }"
-    >
-      <div class="inline-flex items-center gap1">
-        <el-avatar v-if="danmaku.uface" :src="danmaku.uface" size="small" shape="circle" />
-        <Medal v-if="danmaku.medal && danmaku.medal.is_lighted" :medal="danmaku.medal" class="w24rpx" />
-        <div class="text-base text-amber">
-          {{ danmaku.uname }}
-        </div>
-        <div class="ml2 text-xs text-gray/200">
-          {{ danmaku.time }}
-        </div>
+        <img :src="danmaku.message" alt="" class="ml1 h-12">
       </div>
       <div
-        class="ml2 inline-flex items-center text-base text-blue-500"
+        v-else
+        class="text-shadow-3px-3px-3px-#000 inline-flex items-center font-semibold leading-relaxed"
         :style="{
-          color: customStyle?.msgColor,
-          fontSize: `${customStyle?.msgFontSize}px`,
+          color: showStyle.msgColor,
+          fontSize: `${showStyle.msgFontSize}px`,
         }"
         v-html="danmaku.message"
       />
     </div>
-    <span v-else-if="danmaku.type === 'gift'" class="text-red">{{ danmaku.message }}</span>
-    <span v-else-if="danmaku.type === 'like' || danmaku.type === 'follow'" class="text-orange">{{ danmaku.message }}</span>
-    <span v-else class="text-gray-400">{{ danmaku.message }}</span>
   </div>
 </template>
+
+<style scoped land="scss">
+.content{
+  @apply w-full flex gap3;
+
+  .avatar-shadow {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+}
+</style>

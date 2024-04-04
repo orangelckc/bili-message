@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import { VirtualList } from 'vue-tiny-virtual-list'
 
-import SampleA from './SampleA.vue'
-import SampleB from './SampleB.vue'
+import { demos } from './config'
 
 const props = defineProps<{
   msgList: IMsg[]
   customStyle?: ICustomStyle
   sample: string
 }>()
+
+const demo = computed(() => {
+  return demos.find(item => item.id === props.sample) || demos[0]
+})
 
 const { autoScroll } = storeToRefs(useAppStore())
 
@@ -44,8 +47,14 @@ watch(autoScroll, (val) => {
             paddingBottom: `${customStyle?.msgGap}px`,
           }"
         >
-          <SampleA v-if="sample === 'A'" :danmaku="itemData" :custom-style="customStyle" />
-          <SampleB v-if="sample === 'B'" :danmaku="itemData" :custom-style="customStyle" />
+          <component
+            :is="demo.component"
+            :custom-style="{
+              ...demo.baseStyle,
+              ...customStyle,
+            }"
+            :danmaku="itemData"
+          />
         </div>
       </template>
     </VirtualList>
@@ -57,6 +66,6 @@ watch(autoScroll, (val) => {
   display: none;
 }
 .danmu{
-  @apply h-130 w-full p-2 relative;
+  @apply h-100vh w-full p-2 relative;
 }
 </style>
