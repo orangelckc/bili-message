@@ -1,6 +1,6 @@
 [package]
 name = "bili-message"
-version = "1.2.3"
+version = "1.2.4"
 description = "bilibili弹幕机"
 authors = ["半糖人类"]
 license = "MIT"
@@ -13,7 +13,8 @@ edition = "2021"
 tauri-build = { version = "1.4", features = [] }
 
 [dependencies]
-tauri = { version = "1.4", features = [ "fs-write-file",
+tauri = { version = "1.4", features = [
+  "fs-write-file",
   "window-show",
   "window-create",
   "shell-open",
