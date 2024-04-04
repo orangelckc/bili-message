@@ -18,12 +18,7 @@ const showStyle = computed(() => {
   return Object.assign({}, baseStyle, props.customStyle)
 })
 
-const baseColor = ref('0, 0, 0') // 黑色
 const background = computed(() => {
-  return `linear-gradient(to right, rgba(${baseColor.value}, 0.9) 0%, rgba(${baseColor.value}, 0.9) 66%, rgba(${baseColor.value}, 0.6) 80%, rgba(${baseColor.value},0.4) 100%)`
-})
-
-watchEffect(() => {
   if (props.customStyle?.msgBackground) {
     // 如果是#开头的颜色值，转换为rgb
     if (props.customStyle.msgBackground.startsWith('#')) {
@@ -33,9 +28,13 @@ watchEffect(() => {
         ?.map(x => Number.parseInt(x, 16))
         .join(', ')
 
-      baseColor.value = color || '0, 0, 0'
+      return `linear-gradient(to right, rgba(${color}, 0.9) 0%, rgba(${color}, 0.9) 66%, rgba(${color}, 0.6) 80%, rgba(${color},0.4) 100%)`
     }
+    return props.customStyle.msgBackground
   }
+
+  const color = '0, 0, 0'
+  return `linear-gradient(to right, rgba(${color}, 0.9) 0%, rgba(${color}, 0.9) 66%, rgba(${color}, 0.6) 80%, rgba(${color},0.4) 100%)`
 })
 </script>
 
@@ -62,7 +61,7 @@ watchEffect(() => {
     </div>
     <div
       v-else
-      class="text-shadow-3px-3px-3px-#000 inline-flex items-center font-bold"
+      class="text-shadow-3px-3px-3px-#000 inline-flex items-center font-bold leading-relaxed"
       :style="{
         color: showStyle.msgColor,
         fontSize: `${showStyle.msgFontSize}px`,

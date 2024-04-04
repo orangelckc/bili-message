@@ -36,6 +36,7 @@ export const useAppStore = defineStore(
 
     // 自定义样式
     const customStyle = ref<ICustomStyle>({
+      avatarSize: 40,
       unameColor: 'orange',
       unameFontSize: 18,
       msgColor: 'white',

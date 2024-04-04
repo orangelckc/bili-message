@@ -55,6 +55,7 @@ interface IUserMedal {
 }
 
 interface ICustomStyle {
+  avatarSize?: number
   unameColor?: string
   unameFontSize?: number
   msgColor?: string
