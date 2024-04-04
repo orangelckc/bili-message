@@ -31,7 +31,7 @@ function handleStyleChange() {
 }
 
 async function handleCopy() {
-  await writeText(LOCAL_BROADCAST_URL)
+  await writeText(`${LOCAL_BROADCAST_URL}/danmu`)
   ElMessage.success('复制成功, 链接可直接在OBS中使用')
 }
 
