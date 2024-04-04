@@ -6,8 +6,19 @@ const props = defineProps<{
   customStyle?: ICustomStyle
 }>()
 
-const baseColor = ref('0, 0, 0') // 黑色
+const baseStyle: ICustomStyle = {
+  unameColor: 'rgba(255, 255, 255, 0.8)',
+  unameFontSize: 16,
+  msgColor: 'rgba(255, 255, 255, 0.9)',
+  msgFontSize: 20,
+  msgBackground: '0, 0, 0',
+  showMedal: false,
+}
+const showStyle = computed(() => {
+  return Object.assign({}, baseStyle, props.customStyle)
+})
 
+const baseColor = ref('0, 0, 0') // 黑色
 const background = computed(() => {
   return `linear-gradient(to right, rgba(${baseColor.value}, 0.9) 0%, rgba(${baseColor.value}, 0.9) 66%, rgba(${baseColor.value}, 0.6) 80%, rgba(${baseColor.value},0.4) 100%)`
 })
@@ -34,7 +45,12 @@ watchEffect(() => {
       <img v-if="danmaku?.uface" :src="danmaku.uface" class="h-full w-full">
     </div>
     <div class="mb3 flex items-center gap3">
-      <span class="text-base text-white/80">{{ props.danmaku.uname }}</span>
+      <span
+        :style="{
+          color: showStyle.unameColor,
+          fontSize: `${showStyle.unameFontSize}px`,
+        }"
+      >{{ props.danmaku.uname }}</span>
 
       <div v-if="danmaku.medal && danmaku.medal.is_lighted && customStyle?.showMedal">
         <Medal :medal="danmaku.medal" class="w24px" />
@@ -46,7 +62,11 @@ watchEffect(() => {
     </div>
     <div
       v-else
-      class="text-shadow-3px-3px-3px-#000 inline-flex items-center text-xl font-bold text-white/90"
+      class="text-shadow-3px-3px-3px-#000 inline-flex items-center font-bold"
+      :style="{
+        color: showStyle.msgColor,
+        fontSize: `${showStyle.msgFontSize}px`,
+      }"
       v-html="danmaku.message"
     />
   </div>
