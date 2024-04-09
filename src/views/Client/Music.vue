@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import BackgroundRender from '@/components/Background.vue'
 import { LOCAL_WEBSOCKET_URL } from '@/utils/constants'
 import { formattedTime } from '@/utils/tools'
 
@@ -98,8 +99,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="relative center overflow-hidden bg-black/40 p4 text-white/90">
-    <div v-if="currentSong" class="relative min-h-60 w-full center gap4">
+  <div class="relative center overflow-hidden rounded-lg bg-black/10 p4 text-white/90">
+    <div v-if="currentSong" class="relative w-full center gap4">
       <div class="relative h30 w30 center flex-col gap4">
         <img
           src="@/assets/needle.png"
@@ -121,7 +122,7 @@ onMounted(() => {
       <div class="flex flex-1 flex-col overflow-hidden">
         <div class="center justify-between">
           <div class="flex items-end gap2">
-            <span class="text-2xl font-bold text-white/80">
+            <span class="text-xl font-bold text-white/80">
               正在播放
             </span>
             <span class="text-sm text-white/50">
@@ -133,14 +134,14 @@ onMounted(() => {
           </span>
         </div>
 
-        <span class="my6 box-border w-full truncate text-3xl">
+        <span class="my6 box-border w-full truncate text-2xl">
           {{ currentSong?.name }}
         </span>
 
         <div class="w-full flex gap3 overflow-hidden rounded-lg bg-black/30 p4">
           <div class="relative flex-1">
             <div class="scroll-list absolute left-0 right-0 top-0 flex flex-1 flex-col gap3 overflow-hidden truncate">
-              <span v-for="(song, index) in songList" :key="song.bvid" class="flex gap2">
+              <span v-for="(song, index) in songList" :key="song.bvid" class="flex items-center gap2">
                 <span class="text-sm text-white/40">{{ index + 1 }}</span>
                 <span class="text-lg text-white/70"> {{ song.name }}</span>
               </span>
