@@ -6,7 +6,7 @@ import { formattedTime } from '@/utils/tools'
 let ws: WebSocket
 const currentTime = ref(0)
 const currentSong = ref<ISong>()
-const isPaused = ref(false)
+const isPaused = ref(true)
 const songList = ref<ISong[]>([])
 
 async function init_listener() {
@@ -49,7 +49,7 @@ async function init_listener() {
         }
         case 'end':{
           // 结束
-          isPaused.value = false
+          isPaused.value = true
           break
         }
         case 'demand':{
@@ -80,14 +80,22 @@ const showTime = computed(() => {
     return formattedTime(0)
 
   const rest = currentSong.value?.duration - currentTime.value
-  return formattedTime(rest)
+
+  return formattedTime(Math.max(0, rest))
+})
+
+const showName = computed(() => {
+  if (!currentSong.value)
+    return '暂无歌曲'
+
+  return currentSong.value.name
 })
 
 const rotate = computed(() => {
   if (!currentSong.value)
     return -30
 
-  if (Math.floor(currentSong.value.duration) === currentTime.value)
+  if (currentTime.value >= currentSong.value.duration - 3)
     return -30
 
   return 0
@@ -100,7 +108,7 @@ onMounted(() => {
 
 <template>
   <div class="relative center overflow-hidden rounded-lg bg-black/10 p4 text-white/90">
-    <div v-if="currentSong" class="relative w-full center gap4">
+    <div class="relative w-full center gap4">
       <div class="relative h30 w30 center flex-col gap4">
         <img
           src="@/assets/needle.png"
@@ -134,25 +142,28 @@ onMounted(() => {
           </span>
         </div>
 
-        <span class="my6 box-border w-full truncate text-2xl">
-          {{ currentSong?.name }}
+        <span
+          class="my6 box-border w-full text-2xl"
+          :class="{
+            'line-scroll': showName.length > 10,
+          }"
+        >
+          {{ showName }}
         </span>
 
         <div class="w-full flex gap3 overflow-hidden rounded-lg bg-black/30 p4">
           <div class="relative flex-1">
-            <div class="scroll-list absolute left-0 right-0 top-0 flex flex-1 flex-col gap3 overflow-hidden truncate">
+            <div v-if="songList.length" class="scroll-list absolute left-0 right-0 top-0 flex flex-1 flex-col gap3 overflow-hidden truncate">
               <span v-for="(song, index) in songList" :key="song.bvid" class="flex items-center gap2">
                 <span class="text-sm text-white/40">{{ index + 1 }}</span>
                 <span class="text-lg text-white/70"> {{ song.name }}</span>
               </span>
             </div>
+            <span v-else class="text-lg text-white/70"> 弹幕点歌格式：点歌+空格+BV号</span>
           </div>
           <span class="text-xl font-semibold text-white/30">即将播放</span>
         </div>
       </div>
-    </div>
-    <div v-else>
-      <span>暂无歌曲</span>
     </div>
     <BackgroundRender
       :album-image-url="backgroundImage"
@@ -164,7 +175,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .line-scroll{
   white-space: nowrap;
-  animation: marquee 8s linear infinite;
+  animation: marquee 10s linear infinite;
 }
 
 @keyframes marquee {
@@ -177,7 +188,7 @@ onMounted(() => {
 }
 
 .rotate-disc {
-  transition-delay: 200ms;
+  transition-delay: 2s;
   animation: spin 3s linear infinite;
 }
 
