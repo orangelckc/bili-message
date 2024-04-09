@@ -114,7 +114,7 @@ function decodeB64(str: string) {
 
 // 转换弹幕v2(目前只有头像数据)
 // 因为不知道dm_v2的结构，理论上是包含弹幕的所有信息
-export function decodeDmV2(str: string) {
+function _decodeDmV2(str: string) {
   const buffer = decodeB64(str)
   const message = DanmakuMessageV2.decode(buffer)
   return DanmakuMessageV2.toObject(message, {
@@ -124,4 +124,14 @@ export function decodeDmV2(str: string) {
   })['user']['face']
 }
 
-export { encode, decode, colorHexToRgba }
+function formattedTime(timeInSeconds: number) {
+  const minutes = Math.floor(timeInSeconds / 60)
+  const seconds = Math.floor(timeInSeconds % 60)
+
+  const formattedMinutes = String(minutes).padStart(2, '0')
+  const formattedSeconds = String(seconds).padStart(2, '0')
+
+  return `${formattedMinutes}:${formattedSeconds}`
+}
+
+export { encode, decode, colorHexToRgba, formattedTime }

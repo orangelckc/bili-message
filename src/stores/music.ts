@@ -1,6 +1,7 @@
 import { Howl, Howler } from 'howler'
 
 import { getVideoDetail } from '@/apis/music'
+import { useSocket } from '@/utils/socket'
 
 export const useMusicStore = defineStore('music', () => {
   // 正在播放列表
@@ -16,12 +17,12 @@ export const useMusicStore = defineStore('music', () => {
     pic: '',
     urls: [],
     bvid: '',
+    duration: 0,
   })
 
   const isPlaying = ref(false)
   const isLoading = ref(false)
   const currentTime = ref(0)
-  const duration = ref(0)
   const currentVolume = ref(50)
   const freeLimit = ref(5)
 
@@ -40,7 +41,13 @@ export const useMusicStore = defineStore('music', () => {
       return target
 
     const song = await getVideoDetail(bvid)
+    song.pic = song.pic.replace('http://', 'https://')
     playList.value.push(song)
+    useSocket({
+      type: 'music',
+      command: 'demand',
+      data: song,
+    })
     return song
   }
 
@@ -81,7 +88,7 @@ export const useMusicStore = defineStore('music', () => {
     })
 
     player.once('load', () => {
-      duration.value = player.duration()
+      currentSong.value.duration = player.duration()
       isLoading.value = false
       player.play()
     })
@@ -98,15 +105,41 @@ export const useMusicStore = defineStore('music', () => {
       addToHistoryList()
       timerInterval = setInterval(() => {
         currentTime.value = Math.round(player.seek())
+        useSocket({
+          type: 'music',
+          command: 'update',
+          data: currentTime.value,
+        })
       }, 1000) as unknown as number
+      useSocket({
+        type: 'music',
+        command: 'play',
+        data: currentSong.value,
+      })
+      const idx = playList.value.findIndex(item => item.bvid === currentSong.value.bvid)
+      // 返回10首歌曲
+      const list = playList.value.slice(idx + 1, idx + 11)
+      useSocket({
+        type: 'music',
+        command: 'sync',
+        data: list,
+      })
     })
 
     player.on('pause', () => {
       isPlaying.value = false
+      useSocket({
+        type: 'music',
+        command: 'pause',
+      })
     })
 
     player.once('end', () => {
       playNext()
+      useSocket({
+        type: 'music',
+        command: 'end',
+      })
     })
 
     player.once('playerror', () => {
@@ -116,6 +149,10 @@ export const useMusicStore = defineStore('music', () => {
 
     player.on('stop', () => {
       stop()
+      useSocket({
+        type: 'music',
+        command: 'end',
+      })
     })
 
     player.on('seek', () => {
@@ -186,7 +223,6 @@ export const useMusicStore = defineStore('music', () => {
     currentSong,
     isPlaying,
     currentTime,
-    duration,
     playList,
     historyList,
     blockList,
