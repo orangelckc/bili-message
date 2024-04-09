@@ -16,7 +16,7 @@ import {
 import handleMessage from '@/utils/message'
 import { decode, encode } from '@/utils/tools'
 
-let websocket: WebSocket
+let websocket: WebSocket | null = null
 let timer = null as any
 
 function useWebsocket() {
@@ -46,6 +46,9 @@ function useWebsocket() {
 
   // 发送连接信息
   const onConnect = async (roomid: number) => {
+    if (!websocket)
+      return
+
     // 连接前获取key
     const { data } = await getLiveTokenApi()
     const { currentUser } = useAppStore()
@@ -76,6 +79,9 @@ function useWebsocket() {
 
   // 接收弹幕信息
   const onMessage = async (msgEvent: any) => {
+    if (!websocket)
+      return
+
     if (websocket.readyState === 3)
       return websocket.close()
 
@@ -98,12 +104,16 @@ function useWebsocket() {
     }
   }
 
+  // 关闭长链接
+  const closeWebsocket = () => {
+    timer && clearInterval(timer)
+    websocket && websocket?.close()
+    websocket = null
+  }
+
   // 开启长链接
   const openWebsocket = (roomid: number) => {
-    if (timer) {
-      clearInterval(timer)
-      timer = null
-    }
+    closeWebsocket()
 
     websocket = new WebSocket(WEBSOCKET_URL)
 
@@ -116,19 +126,11 @@ function useWebsocket() {
     websocket.onerror = () => openWebsocket(roomid)
   }
 
-  // 关闭长链接
-  const closeWebsocket = () => {
-    websocket && websocket.close()
-    if (websocket.readyState !== 3)
-      websocket.close()
-  }
-
   const trigger = async () => {
     await listen<string>(OPEN_WEBSOCKET_EVENT, async (event) => {
-      const roomid = event.payload
+      closeWebsocket()
 
-      if (websocket)
-        closeWebsocket()
+      const roomid = event.payload
 
       openWebsocket(Number.parseInt(roomid))
     })

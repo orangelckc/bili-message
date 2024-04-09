@@ -18,13 +18,11 @@ async function init_listener() {
   const { msgList } = storeToRefs(useAppStore())
 
   // 清空监听
-  unlisteners.forEach(unlisten => unlisten())
+  unlisteners.forEach(unlistener => unlistener())
   unlisteners.length = 0
 
   // 监听关注事件/进入房间事件
   const entryListener = await listen(EVENTS.WELCOME_EVENT, (event) => {
-    unlisteners.push(entryListener)
-
     const data = event.payload as object[]
     data.forEach(async (item: any) => {
       if (item.msg_type === 'follow') {
@@ -54,11 +52,10 @@ async function init_listener() {
       }
     })
   })
+  unlisteners.push(entryListener)
 
   // 监听弹幕事件
   const danmuListener = await listen(EVENTS.BARRAGE_MESSAGE_EVENT, (event) => {
-    unlisteners.push(danmuListener)
-
     const data = event.payload as object[]
     data.forEach(async (item: any) => {
       const { uname, message, isEmoji, emoji, medal, uface, time, isManager, uid } = item.barrage
@@ -98,7 +95,9 @@ async function init_listener() {
         const { isOn, text, pattern } = storeToRefs(useSpeechStore())
         const { play } = useSpeechStore()
         if (isOn.value && msg.type === 'message') {
-          text.value = pattern.value.replace('{user}', uname).replace('{msg}', message)
+          // 去除message中的表情
+          const pureText = message.replace(/<[^>]+>/g, '')
+          text.value = pattern.value.replace('{user}', uname).replace('{msg}', pureText)
           play()
         }
       }
@@ -115,11 +114,10 @@ async function init_listener() {
       }
     })
   })
+  unlisteners.push(danmuListener)
 
   // 监听礼物事件
   const giftListener = await listen(EVENTS.GIFT_EVENT, (event) => {
-    unlisteners.push(giftListener)
-
     const data = event.payload as object[]
     data.forEach(async (item: any) => {
       const { uname, giftName, giftId } = item.barrage
@@ -135,6 +133,7 @@ async function init_listener() {
       }
     })
   })
+  unlisteners.push(giftListener)
 }
 
 async function getEmojiList() {
