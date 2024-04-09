@@ -1,16 +1,8 @@
 <script lang="ts" setup>
-const { currentSong, isPlaying, duration, currentTime, currentVolume } = storeToRefs(useMusicStore())
+import { formattedTime } from '@/utils/tools'
+
+const { currentSong, isPlaying, currentTime, currentVolume } = storeToRefs(useMusicStore())
 const { playPrev, playNext, togglePlay, seek, setVolume } = useMusicStore()
-
-function formattedTime(timeInSeconds: number) {
-  const minutes = Math.floor(timeInSeconds / 60)
-  const seconds = Math.floor(timeInSeconds % 60)
-
-  const formattedMinutes = String(minutes).padStart(2, '0')
-  const formattedSeconds = String(seconds).padStart(2, '0')
-
-  return `${formattedMinutes}:${formattedSeconds}`
-}
 
 function onChange(value: any) {
   seek(value)
@@ -27,7 +19,7 @@ function changeVolume(value: any) {
       <el-slider
         v-model="currentTime"
         :step="0.1"
-        :max="duration"
+        :max="currentSong.duration"
         height="0"
         size="small"
         :format-tooltip="formattedTime"

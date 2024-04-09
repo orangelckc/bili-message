@@ -4,6 +4,7 @@ interface ISong {
   pic: string
   artist: string
   bvid: string
+  duration: number
 }
 
 interface ICollection {
