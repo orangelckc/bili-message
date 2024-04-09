@@ -11,10 +11,9 @@ const { room, isFix, isBroadcast } = storeToRefs(useAppStore())
 const danmuDrawer = ref(false)
 const musicDrawer = ref(false)
 
-function handleFix() {
-  isFix.value = !isFix.value
+watchEffect(() => {
   appWindow.setAlwaysOnTop(isFix.value)
-}
+})
 
 watch(connected, () => {
   isBroadcast.value = connected.value
@@ -45,7 +44,7 @@ async function openMusic() {
     —— 拖拽我移动位置吧 ——
     <div class="fixed right-2 top-2">
       <el-tooltip content="置顶" placement="bottom">
-        <el-button round :type="isFix ? 'danger' : ''" @click="handleFix">
+        <el-button round :type="isFix ? 'danger' : ''" @click=" isFix = !isFix">
           <span class="i-carbon-pin h5 w5" />
         </el-button>
       </el-tooltip>
