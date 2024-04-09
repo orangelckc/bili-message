@@ -182,6 +182,7 @@
     "useEventListener": true,
     "useEventSource": true,
     "useEyeDropper": true,
+    "useFavStore": true,
     "useFavicon": true,
     "useFetch": true,
     "useFileDialog": true,
@@ -212,6 +213,7 @@
     "useMouse": true,
     "useMouseInElement": true,
     "useMousePressed": true,
+    "useMusicStore": true,
     "useMutationObserver": true,
     "useNavigatorLanguage": true,
     "useNetwork": true,
@@ -303,9 +305,6 @@
     "watchTriggerable": true,
     "watchWithFilter": true,
     "whenever": true,
-    "ElMessage": true,
-    "usePlayer": true,
-    "useMusicStore": true,
-    "useFavStore": true
+    "ElMessage": true
   }
 }

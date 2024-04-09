@@ -11,18 +11,18 @@ export default defineConfig(async () => ({
     vue(),
     UnoCSS(),
     AutoImport({
-      dts: './types/auto-imports.d.ts',
+      dts: 'src/types/auto-imports.d.ts',
       imports: ['vue', 'pinia', 'vue-router', '@vueuse/core'],
       dirs: ['./src/stores', './src/composables'],
       eslintrc: {
         enabled: true,
-        filepath: './types/.eslintrc-auto-import.json',
+        filepath: 'src/types/.eslintrc-auto-import.json',
         globalsPropValue: true,
       },
       resolvers: [ElementPlusResolver()],
     }),
     Components({
-      dts: './types/components.d.ts',
+      dts: 'src/types/components.d.ts',
       resolvers: [ElementPlusResolver()],
     }),
   ],
