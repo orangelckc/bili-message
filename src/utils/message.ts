@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid'
 import { MESSAGE_TYPE } from './constants'
 import { LIVE_END_EVENT, LIVE_START_EVENT, WATCHED_CHANGE_EVENT } from './events'
 
-import { colorHexToRgba, decodeDmV2 } from '@/utils/tools'
+import { colorHexToRgba } from '@/utils/tools'
 
 // 格式化弹幕信息
 async function handleMessage(messages: any[]) {

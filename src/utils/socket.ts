@@ -51,4 +51,6 @@ class Socket {
 // 本地socket仅用于向外发出消息
 const socket = new (singletonProxy(Socket))()
 
-export { socket }
+export function useSocket(data: SocketMessage) {
+  socket.send(data)
+}

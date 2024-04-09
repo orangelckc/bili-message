@@ -1,5 +1,7 @@
 import { emit, listen } from '@tauri-apps/api/event'
 
+import type { UnlistenFn } from '@tauri-apps/api/event'
+
 import { getLiveTokenApi } from '@/apis/live'
 import { WEBSOCKET_URL } from '@/utils/constants'
 import {
@@ -126,15 +128,17 @@ function useWebsocket() {
     websocket.onerror = () => openWebsocket(roomid)
   }
 
+  const unListeners: UnlistenFn[] = []
   const trigger = async () => {
-    await listen<string>(OPEN_WEBSOCKET_EVENT, async (event) => {
+    const startListener = await listen<string>(OPEN_WEBSOCKET_EVENT, async (event) => {
       closeWebsocket()
 
       const roomid = event.payload
 
       openWebsocket(Number.parseInt(roomid))
     })
-    await listen(CLOSE_WEBSOCKET_EVENT, closeWebsocket)
+    const stopListener = await listen(CLOSE_WEBSOCKET_EVENT, closeWebsocket)
+    unListeners.push(startListener, stopListener)
   }
 
   return { trigger }
