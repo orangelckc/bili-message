@@ -20,6 +20,11 @@ const routes = [
         name: 'Client-Music',
         component: () => import('@/views/Client/Music.vue'),
       },
+      {
+        path: 'background',
+        name: 'Client-Background',
+        component: () => import('@/views/Client/Background.vue'),
+      },
     ],
   },
   {
