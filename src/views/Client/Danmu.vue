@@ -24,24 +24,34 @@ async function init_listener() {
 
     try {
       const data = JSON.parse(e.data)
-      if (data.type === 'sample') {
-        newSample.value = data.data
-        return
-      }
-      if (data.type === 'config') {
-        newStyle.value = data.data
-        return
-      }
 
-      if (data.type === 'command') {
-        switch (data.command) {
-          case 'clear':
-            msgList.value = []
-            break
+      if (data.type !== 'danmu')
+        return
+
+      const command = data.command as SocketDanmuCommand
+      const msg = data.data as any
+      switch (command) {
+        case 'sample':{
+          // 切换样例
+          newSample.value = msg
+          break
+        }
+        case 'config':{
+          // 更新样式
+          newStyle.value = msg
+          break
+        }
+        case 'clear':{
+          // 清空弹幕
+          msgList.value = []
+          break
+        }
+        case 'send':{
+          // 捕获弹幕
+          msgList.value.push(msg as IMsg)
+          break
         }
       }
-
-      msgList.value.push(data as IMsg)
     }
     catch (error) {
       ElMessage.success(e.data)

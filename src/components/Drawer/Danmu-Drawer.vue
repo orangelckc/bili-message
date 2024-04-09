@@ -3,7 +3,7 @@ import { writeText } from '@tauri-apps/api/clipboard'
 
 import { danmaku, demos } from '@/components/Danmu/config'
 import { LOCAL_BROADCAST_URL } from '@/utils/constants'
-import { socket } from '@/utils/socket'
+import { useSocket } from '@/utils/socket'
 
 const props = defineProps<{
   modelValue: boolean
@@ -24,8 +24,9 @@ const { isOn, voices, voice, pattern } = storeToRefs(useSpeechStore())
 const { isBroadcast, customStyle, defaultSample } = storeToRefs(useAppStore())
 
 function handleStyleChange() {
-  socket.send({
-    type: 'config',
+  useSocket({
+    type: 'danmu',
+    command: 'config',
     data: customStyle.value,
   })
 }
@@ -37,12 +38,15 @@ async function handleCopy() {
 
 function useDemo(id: string) {
   defaultSample.value = id
-  socket.send({
-    type: 'sample',
+  useSocket({
+    type: 'danmu',
+    command: 'sample',
     data: id,
   })
-  socket.send({
-    type: 'config',
+
+  useSocket({
+    type: 'danmu',
+    command: 'config',
     data: customStyle.value,
   })
 }

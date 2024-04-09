@@ -2,7 +2,7 @@ import { emit, listen, once } from '@tauri-apps/api/event'
 import { ElNotification } from 'element-plus'
 
 import { hxdEmoji, textEmoji } from './emoji'
-import { socket } from './socket'
+import { useSocket } from './socket'
 
 import type { UnlistenFn } from '@tauri-apps/api/event'
 
@@ -89,8 +89,13 @@ async function init_listener() {
           emit('danmaku-cut-music')
 
         const { isBroadcast } = storeToRefs(useAppStore())
-        if (isBroadcast.value)
-          socket.send(msg)
+        if (isBroadcast.value) {
+          useSocket({
+            type: 'danmu',
+            command: 'send',
+            data: msg,
+          })
+        }
 
         const { isOn, text, pattern } = storeToRefs(useSpeechStore())
         const { play } = useSpeechStore()

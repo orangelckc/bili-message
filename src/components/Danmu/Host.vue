@@ -6,7 +6,7 @@ import { VirtualList } from 'vue-tiny-virtual-list'
 import Medal from '@/components/Medal.vue'
 import { ROOM_URL_PREFIX } from '@/utils/constants'
 import { connected } from '@/utils/room'
-import { socket } from '@/utils/socket'
+import { useSocket } from '@/utils/socket'
 
 const { autoScroll } = storeToRefs(useAppStore())
 const { msgList } = storeToRefs(useAppStore())
@@ -15,8 +15,8 @@ const danmuRef: Ref<InstanceType<typeof VirtualList> | null> = ref(null)
 
 function handleClear() {
   msgList.value = []
-  socket.send({
-    type: 'command',
+  useSocket({
+    type: 'danmu',
     command: 'clear',
   })
 }
