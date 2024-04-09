@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { emit } from '@tauri-apps/api/event'
+
 import { sendMessageApi } from '@/apis/live'
 import Account from '@/components/Account.vue'
 import Control from '@/components/Control.vue'
@@ -7,6 +9,7 @@ import Medal from '@/components/Medal.vue'
 import useWebsocket from '@/hooks/useWebsocket'
 import { ROOM_URL_PREFIX } from '@/utils/constants'
 import { EDMType } from '@/utils/enums'
+import { CLOSE_WEBSOCKET_EVENT } from '@/utils/events'
 
 const { userList, currentMedal, currentUser } = storeToRefs(useAppStore())
 const { refreshCurrentUser, getUserMedal, wearMedal, unWearMedal } = useAppStore()
@@ -42,6 +45,10 @@ function changeMedal(medal: IUserMedal) {
 onMounted(() => {
   useWebsocket().trigger()
   refreshCurrentUser()
+})
+
+onUnmounted(() => {
+  emit(CLOSE_WEBSOCKET_EVENT)
 })
 </script>
 
