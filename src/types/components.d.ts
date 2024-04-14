@@ -14,6 +14,7 @@ declare module 'vue' {
     Control: typeof import('./../components/Control.vue')['default']
     DanmuDrawer: typeof import('./../components/Drawer/Danmu-Drawer.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
+    ElBadge: typeof import('element-plus/es')['ElBadge']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCollapse: typeof import('element-plus/es')['ElCollapse']
