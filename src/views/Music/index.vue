@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { listen } from '@tauri-apps/api/event'
+import { showMenu } from 'tauri-plugin-context-menu'
 
 import Bar from './Bar.vue'
 import Collection from './Collection.vue'
@@ -63,6 +64,19 @@ async function handleDemand(payload: IDemandMusic) {
   await sendMessageApi(`@${uname.slice(0, 11)} 点歌成功❤️`, EDMType.普通弹幕)
 }
 
+function handleContextMenu() {
+  showMenu({
+    items: [
+      {
+        label: '清空列表',
+        event: () => {
+          playList.value = []
+        },
+      },
+    ],
+  })
+}
+
 onMounted(async () => {
   stopListeners()
 
@@ -88,7 +102,14 @@ onUnmounted(() => {
   <div class="relative h-100vh flex flex-col">
     <Search @change="setSong" />
     <el-tabs v-model="tab" type="card" :stretch="true" class="px3" @tab-change="handleChange">
-      <el-tab-pane label="正在播放" name="playing" />
+      <el-tab-pane name="playing">
+        <template #label>
+          <div class="flex select-none items-center" @contextmenu.prevent="handleContextMenu">
+            <span>正在播放</span>
+            <el-badge v-show="playList.length" :value="playList.length" class="ml1" />
+          </div>
+        </template>
+      </el-tab-pane>
       <el-tab-pane label="我的歌单" name="fav" />
       <el-tab-pane label="播放历史" name="history" />
     </el-tabs>
