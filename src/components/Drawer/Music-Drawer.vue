@@ -23,8 +23,12 @@ const trigger = computed({
   },
 })
 
-async function handleCopy() {
+async function handleCopyMusic() {
   await writeText(`${LOCAL_BROADCAST_URL}/music`)
+  ElMessage.success('复制成功, 链接可直接在OBS中使用')
+}
+async function handleCopyBackground() {
+  await writeText(`${LOCAL_BROADCAST_URL}/background`)
   ElMessage.success('复制成功, 链接可直接在OBS中使用')
 }
 
@@ -55,8 +59,11 @@ onUnmounted(() => {
     <div class="h-full flex flex-col gap3">
       <div class="center gap3">
         <span class="i-carbon-music h5 w5" :class="isBroadcast ? 'bg-green' : 'bg-gray'" />
-        <el-link type="primary" :disabled="!isBroadcast" @click="handleCopy">
+        <el-link type="primary" :disabled="!isBroadcast" @click="handleCopyMusic">
           复制音乐URL
+        </el-link>
+        <el-link type="primary" :disabled="!isBroadcast" @click="handleCopyBackground">
+          复制背景URL
         </el-link>
       </div>
       <el-input v-model="freeLimit" placeholder="数量">
