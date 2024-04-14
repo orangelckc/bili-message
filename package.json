@@ -19,6 +19,7 @@
     "@vueuse/core": "^10.7.2",
     "axios": "^1.6.0",
     "axios-tauri-api-adapter": "^0.2.0",
+    "colorthief": "^2.4.0",
     "element-plus": "^2.4.1",
     "howler": "^2.2.4",
     "nanoid": "^5.0.2",

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import BackgroundRender from '@/components/Background.vue'
+// import BackgroundRender from '@/components/Background.vue'
 import { LOCAL_WEBSOCKET_URL } from '@/utils/constants'
 import { formattedTime } from '@/utils/tools'
 
@@ -165,10 +165,10 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <BackgroundRender
+    <!-- <BackgroundRender
       :album-image-url="backgroundImage"
       class="absolute inset-0 -z-1"
-    />
+    /> -->
   </div>
 </template>
 
