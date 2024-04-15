@@ -57,12 +57,7 @@ export const useMusicStore = defineStore('music', () => {
     const song = await getVideoDetail(bvid)
     song.pic = song.pic.replace('http://', 'https://')
     playList.value.push(song)
-    // 通知点歌成功
-    useSocket({
-      type: 'music',
-      command: 'demand',
-      data: song,
-    })
+
     // 通知更新播放列表
     const idx = playList.value.findIndex(item => item.bvid === currentSong.value.bvid)
     useSocket({

@@ -11,6 +11,7 @@ import type { UnlistenFn } from '@tauri-apps/api/event'
 import { sendMessageApi } from '@/apis/live'
 import List from '@/components/Music-List.vue'
 import { EDMType } from '@/utils/enums'
+import { useSocket } from '@/utils/socket'
 
 const { playByBvid, addToPlayList, playNext, getBvidByKeyword } = useMusicStore()
 const { playList, historyList, freeLimit, blockList } = storeToRefs(useMusicStore())
@@ -62,7 +63,19 @@ async function handleDemand(payload: IDemandMusic) {
     return
   }
 
-  await addToPlayList(bvid)
+  const demandSong = await addToPlayList(bvid)
+
+  // 通知点歌成功
+  let tip = `${uname} 点歌：${demandSong.name}`
+  if (!isFree)
+    tip += `，目前已点 ${count + 1} / ${freeLimit.value} 首`
+
+  useSocket({
+    type: 'music',
+    command: 'demand',
+    data: tip,
+  })
+
   demandMap.set(uid, count + 1)
   if (+uid === currentUser.value?.mid)
     return

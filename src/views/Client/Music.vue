@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 // import BackgroundRender from '@/components/Background.vue'
+import { Transition } from 'vue'
+
 import { LOCAL_WEBSOCKET_URL } from '@/utils/constants'
 import { formattedTime } from '@/utils/tools'
 
@@ -8,6 +10,15 @@ const currentTime = ref(0)
 const currentSong = ref<ISong>()
 const isPaused = ref(true)
 const songList = ref<ISong[]>([])
+const tip = ref('')
+const showNotification = ref(false)
+
+watch(tip, () => {
+  showNotification.value = true
+  setTimeout(() => {
+    showNotification.value = false
+  }, 10000)
+})
 
 async function init_listener() {
   ws = new WebSocket(LOCAL_WEBSOCKET_URL)
@@ -54,6 +65,7 @@ async function init_listener() {
         }
         case 'demand':{
           // 点歌
+          tip.value = msg
           break
         }
         case 'sync':{
@@ -108,6 +120,23 @@ onMounted(() => {
 
 <template>
   <div class="relative center overflow-hidden rounded-lg bg-black/10 p4 text-white/90">
+    <Transition name="slide">
+      <div
+        v-if="showNotification"
+        class="fixed left-0 right-20 top-10px z-9 flex items-center justify-end"
+      >
+        <div class="w-1/2 flex items-center overflow-hidden rounded-lg bg-black/10 px30px py10px">
+          <span
+            class="text-2xl text-white/90"
+            :class="{
+              'line-scroll': tip.length > 10,
+            }"
+          >
+            {{ tip }}
+          </span>
+        </div>
+      </div>
+    </Transition>
     <div class="relative w-full center gap4">
       <div class="relative h30 w30 center flex-col gap4">
         <img
@@ -182,11 +211,12 @@ onMounted(() => {
 .line-scroll{
   white-space: nowrap;
   animation: marquee 10s linear infinite;
+  animation-delay: 1.5s;
 }
 
 @keyframes marquee {
   0% {
-    transform: translateX(200px);
+    transform: translateX(30px);
   }
   100% {
     transform: translateX(-100%);
@@ -210,5 +240,22 @@ onMounted(() => {
 @keyframes scroll {
   0% { transform: translateY(0); }
   100% { transform: translateY(-100%); }
+}
+
+.slide-enter-active {
+  animation: slideDown 0.8s;
+}
+.slide-leave-active {
+  animation: slideUp 0.8s;
+}
+
+@keyframes slideDown {
+  0% { transform: translateY(-150%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-150%); }
 }
 </style>
