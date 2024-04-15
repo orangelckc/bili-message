@@ -5,7 +5,11 @@ interface IUser {
   cookie?: string;
   csrf?: string;
   medals: IUserMedal[],
-  medalCount: number
+  medalCount: number,
+  wbi_img: {
+    img_url: string
+    sub_url: string
+  };
 }
 
 interface IAccess {

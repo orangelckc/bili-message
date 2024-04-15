@@ -12,7 +12,7 @@ import { sendMessageApi } from '@/apis/live'
 import List from '@/components/Music-List.vue'
 import { EDMType } from '@/utils/enums'
 
-const { playByBvid, addToPlayList, playNext } = useMusicStore()
+const { playByBvid, addToPlayList, playNext, getBvidByKeyword } = useMusicStore()
 const { playList, historyList, freeLimit, blockList } = storeToRefs(useMusicStore())
 const { currentUser } = storeToRefs(useAppStore())
 
@@ -37,7 +37,7 @@ function stopListeners() {
 }
 
 async function handleDemand(payload: IDemandMusic) {
-  const { bvid, uname, uid, isFree } = payload
+  const { demand, uname, uid, isFree } = payload
 
   const count = demandMap.get(uid) || 0
 
@@ -48,6 +48,12 @@ async function handleDemand(payload: IDemandMusic) {
       return
     }
   }
+
+  let bvid
+  if (demand.startsWith('BV') && demand.length === 12)
+    bvid = demand
+  else
+    bvid = await getBvidByKeyword(demand)
 
   // 黑名单校验
   const block = blockList.value.find(item => item.bvid === bvid)

@@ -1,6 +1,6 @@
 import { Howl, Howler } from 'howler'
 
-import { getVideoDetail } from '@/apis/music'
+import { getVideoDetail, searchKeyword } from '@/apis/music'
 import { useSocket } from '@/utils/socket'
 
 export const useMusicStore = defineStore('music', () => {
@@ -35,6 +35,20 @@ export const useMusicStore = defineStore('music', () => {
     clearInterval(timerInterval)
   }
 
+  const getBvidByKeyword = async (query: string) => {
+    query = query.trim()
+    const { data } = await searchKeyword(query)
+
+    // 获取播放量最大的视频返回
+    const target = data.result.filter((item: any) => item.type === 'video')
+      .sort((a: any, b: any) => b.play - a.play)
+
+    if (!target)
+      ElMessage.error('未搜索到相关视频')
+
+    return target[0].bvid
+  }
+
   const addToPlayList = async (bvid: string) => {
     const target = playList.value.find(item => item.bvid === bvid)
     if (target)
@@ -43,11 +57,23 @@ export const useMusicStore = defineStore('music', () => {
     const song = await getVideoDetail(bvid)
     song.pic = song.pic.replace('http://', 'https://')
     playList.value.push(song)
+    // 通知点歌成功
     useSocket({
       type: 'music',
       command: 'demand',
       data: song,
     })
+    // 通知更新播放列表
+    const idx = playList.value.findIndex(item => item.bvid === currentSong.value.bvid)
+    useSocket({
+      type: 'music',
+      command: 'sync',
+      data: playList.value.slice(idx + 1, idx + 11),
+    })
+
+    if (!isPlaying.value)
+      playNext()
+
     return song
   }
 
@@ -235,6 +261,7 @@ export const useMusicStore = defineStore('music', () => {
     seek,
     playByBvid,
     setVolume,
+    getBvidByKeyword,
   }
 },
 {

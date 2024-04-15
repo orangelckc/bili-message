@@ -73,7 +73,7 @@ async function init_listener() {
   }
 }
 
-const backgroundImage = computed(() => currentSong.value?.pic || '')
+// const backgroundImage = computed(() => currentSong.value?.pic || '')
 
 const showTime = computed(() => {
   if (!currentSong.value)
@@ -153,7 +153,13 @@ onMounted(() => {
 
         <div class="w-full flex gap3 overflow-hidden rounded-lg bg-black/30 p4">
           <div class="relative flex-1">
-            <div v-if="songList.length" class="scroll-list absolute left-0 right-0 top-0 flex flex-1 flex-col gap3 overflow-hidden truncate">
+            <div
+              v-if="songList.length"
+              class="absolute left-0 right-0 top-0 flex flex-1 flex-col gap3 overflow-hidden truncate"
+              :class="{
+                'scroll-list': songList.length > 1,
+              }"
+            >
               <span v-for="(song, index) in songList" :key="song.bvid" class="flex items-center gap2">
                 <span class="text-sm text-white/40">{{ index + 1 }}</span>
                 <span class="text-lg text-white/70"> {{ song.name }}</span>
