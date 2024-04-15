@@ -1,7 +1,13 @@
 import axios from 'axios'
 import axiosTauriApiAdapter from 'axios-tauri-api-adapter'
 
-const client = axios.create({ adapter: axiosTauriApiAdapter })
+const client = axios.create({
+  adapter: axiosTauriApiAdapter,
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+    'Referer': 'https://www.bilibili.com/',
+  },
+})
 
 client.interceptors.request.use(
   (config) => {
