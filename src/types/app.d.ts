@@ -12,6 +12,11 @@ interface IUser {
   }
 }
 
+interface IRoom {
+  roomid: number
+  uname: string
+}
+
 interface IAccess {
   uid: number
   cookie?: string
