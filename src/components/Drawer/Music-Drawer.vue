@@ -55,7 +55,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <el-drawer v-model="trigger" title="点歌配置" :with-header="true" direction="ltr" :modal="true" size="300" @close="trigger = false">
+  <el-drawer v-model="trigger" class="rounded-lg" title="点歌配置" :with-header="true" direction="ltr" :modal="true" size="300" @close="trigger = false">
     <div class="h-full flex flex-col gap3">
       <div class="center gap3">
         <span class="i-carbon-music h5 w5" :class="isBroadcast ? 'bg-green' : 'bg-gray'" />

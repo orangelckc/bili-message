@@ -132,7 +132,7 @@ onUnmounted(() => {
 }
 
 .container{
-  @apply h-screen p-4 flex justify-around gap-4 w-full;
+  @apply h-screen p-4 flex justify-around gap-4 w-full border border-gray-200 border-solid rounded-lg bg-white;
   .left{
     @apply relative <sm:hidden;
 
@@ -150,7 +150,6 @@ onUnmounted(() => {
   }
   .right{
     @apply relative w-120 flex flex-col items-center;
-
   }
 }
 </style>
