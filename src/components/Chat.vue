@@ -1,9 +1,12 @@
 <script lang="ts" setup>
+import { dayjs } from 'element-plus'
+import { nanoid } from 'nanoid'
+
 import { sendMessageApi } from '@/apis/live'
 import { EDMType } from '@/utils/enums'
 import { connected, emojiList } from '@/utils/room'
 
-const { currentUser } = storeToRefs(useAppStore())
+const { currentUser, msgList, currentMedal } = storeToRefs(useAppStore())
 
 const emojiRef = ref()
 const activeTab = ref('0')
@@ -15,9 +18,22 @@ async function handleSend() {
   if (!msg.value.trim())
     return
 
-  const res = await sendMessageApi(msg.value.trim(), EDMType.普通弹幕)
+  const res = await sendMessageApi(msg.value.trim(), EDMType.普通弹幕) as any
   if (!res)
     return
+
+  // 含有屏蔽词, 添加到弹幕列表，但是划线显示
+  if (res.msg === 'f' || res.message === 'f') {
+    msgList.value.push({
+      id: nanoid(),
+      type: 'message-banned',
+      uname: currentUser.value?.uname || '',
+      uface: currentUser.value?.face || '',
+      message: msg.value,
+      time: dayjs().format('HH:mm:ss'),
+      medal: currentMedal.value,
+    })
+  }
 
   msg.value = ''
 }

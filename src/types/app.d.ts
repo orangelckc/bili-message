@@ -28,7 +28,7 @@ interface ILogin {
 
 interface IMsg {
   id: string
-  type: 'entry' | 'message' | 'gift' | 'like' | 'follow' | 'emoji' | 'config'
+  type: 'entry' | 'message' | 'message-banned' | 'gift' | 'like' | 'follow' | 'emoji' | 'config'
   uname: string
   uface?: string
   message: string
