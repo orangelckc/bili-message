@@ -58,7 +58,7 @@ async function init_listener() {
   const danmuListener = await listen(EVENTS.BARRAGE_MESSAGE_EVENT, (event) => {
     const data = event.payload as object[]
     data.forEach(async (item: any) => {
-      const { uname, message, isEmoji, emoji, medal, uface, time, isManager, uid } = item.barrage
+      const { uname, message, isEmoji, emoji, medal, uface, time, isManager, uid, isAnchor } = item.barrage
 
       const msg = {
         uname,
@@ -69,6 +69,7 @@ async function init_listener() {
         medal,
         time,
         isManager,
+        isAnchor,
       }
 
       if (message) {
@@ -77,14 +78,16 @@ async function init_listener() {
         // 是否是点歌弹幕
         if (message.startsWith('点歌')) {
           const { room } = storeToRefs(useAppStore())
-          const demand = message.split('点歌')[1].trim()
-          // 房管/牌牌点歌不计数
-          const isFree = isManager || +medal?.room_id === +(room.value || 0)
-          emit('danmaku-demand-music', { demand, uname, uid, isFree })
+          const demand = message.split(/点歌\s+/)[1]
+          if (demand && demand.length) {
+            // 主播/房管/牌牌点歌不计数
+            const isFree = isManager || isAnchor || +medal?.room_id === +(room.value || 0)
+            emit('danmaku-demand-music', { demand, uname, uid, isFree })
+          }
         }
 
         // 房管切歌
-        if (isManager && message === '切歌')
+        if ((isManager || isAnchor) && message === '切歌')
           emit('danmaku-cut-music')
 
         const { isBroadcast } = storeToRefs(useAppStore())
