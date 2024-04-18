@@ -39,7 +39,7 @@ watch(() => msgList.value, () => {
     return
 
   nextTick(() => {
-    danmuRef.value.scrollToBottom()
+    danmuRef.value?.scrollToBottom()
   })
 }, {
   deep: true,
@@ -47,7 +47,7 @@ watch(() => msgList.value, () => {
 
 watch(autoScroll, (val) => {
   if (val)
-    danmuRef.value.scrollToBottom()
+    danmuRef.value?.scrollToBottom()
 })
 </script>
 
@@ -96,7 +96,9 @@ watch(autoScroll, (val) => {
               <img :src="itemData.message" alt="" class="ml1 min-h-6 w14">
             </div>
           </div>
-          <div v-else-if="itemData.type === 'message'" class="flex flex-col gap1">
+          <div
+            v-else-if="itemData.type.startsWith('message')" class="flex flex-col gap1"
+          >
             <div class="inline-flex items-center gap1">
               <el-avatar v-if="itemData.uface" :src="itemData.uface" size="small" shape="circle" />
               <el-tooltip
@@ -119,7 +121,11 @@ watch(autoScroll, (val) => {
                 {{ itemData.time }}
               </div>
             </div>
-            <div class="ml2 inline-flex items-center text-base text-blue-500" v-html="itemData.message" />
+            <div
+              class="ml2 inline-flex items-center text-base text-blue-500" :class="{
+                'line-through text-gray/80': itemData.type === 'message-banned',
+              }" v-html="itemData.message"
+            />
           </div>
           <span v-else-if="itemData.type === 'gift'" class="text-red">{{ itemData.message }}</span>
           <span v-else-if="itemData.type === 'like' || itemData.type === 'follow'" class="text-orange">{{ itemData.message }}</span>

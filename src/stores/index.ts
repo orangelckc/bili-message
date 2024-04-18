@@ -14,6 +14,10 @@ export const useAppStore = defineStore(
       face: '',
       medals: [],
       medalCount: 0,
+      wbi_img: {
+        img_url: '',
+        sub_url: '',
+      },
     }])
 
     // 当前的房间号
