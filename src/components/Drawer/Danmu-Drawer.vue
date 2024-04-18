@@ -53,7 +53,7 @@ function useDemo(id: string) {
 </script>
 
 <template>
-  <el-drawer v-model="trigger" title="广播弹幕配置" :with-header="true" direction="ltr" :modal="true" size="300" @close="trigger = false">
+  <el-drawer v-model="trigger" class="rounded-lg" title="广播弹幕配置" :with-header="true" direction="ltr" :modal="true" size="300" @close="trigger = false">
     <div class="h-full flex flex-col">
       <el-input v-model="pattern" placeholder="弹幕匹配规则">
         <template #prepend>

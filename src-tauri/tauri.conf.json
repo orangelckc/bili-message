@@ -84,7 +84,8 @@
         "maxHeight": 700,
         "height": 700,
         "alwaysOnTop": false,
-        "decorations": false
+        "decorations": false,
+        "transparent": true
       }
     ],
     "systemTray": {
