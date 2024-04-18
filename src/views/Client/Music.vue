@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 // import BackgroundRender from '@/components/Background.vue'
-import { Transition } from 'vue'
 
 import { LOCAL_WEBSOCKET_URL } from '@/utils/constants'
 import { formattedTime } from '@/utils/tools'

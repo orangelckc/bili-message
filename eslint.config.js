@@ -1,8 +1,8 @@
-module.exports = {
-  extends: [
-    '@antfu',
-    '@unocss',
-  ],
+import antfu from '@antfu/eslint-config'
+
+export default antfu({
+  extends: ['@unocss'],
+  ignores: ['*.scss', 'src-tauri/**/*', 'src/assets/**/*', 'bun.lockb', '*.yml'],
   rules: {
     'no-console': ['error', { allow: ['info', 'warn', 'error', 'group', 'groupEnd'] }],
     'import/order': [
@@ -17,5 +17,5 @@ module.exports = {
       },
     ],
   },
-  ignorePatterns: ['*.scss', 'src-tauri/**/*', 'src/assets/**/*', 'bun.lockb', '*.yml'],
-}
+},
+)

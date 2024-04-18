@@ -14,8 +14,8 @@ interface ICollection {
 }
 
 interface IDemandMusic {
-  demand: string;
-  uname: string;
-  uid: number;
+  demand: string
+  uname: string
+  uid: number
   isFree: boolean
 }

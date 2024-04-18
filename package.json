@@ -7,7 +7,7 @@
     "dev": "pnpm run build:icon && vite",
     "build": "pnpm run build:icon && vite build",
     "build:icon": "tauri icon ./src-tauri/assets/icon.png",
-    "lint": "eslint . --fix",
+    "lint": "eslint ./src --fix",
     "preview": "vite preview",
     "prepare": "pnpm simple-git-hooks",
     "tauri": "tauri"

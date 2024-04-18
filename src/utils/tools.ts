@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { decode as b64dec, length as b64len } from '@protobufjs/base64'
 import pako from 'pako'
 import { Field, Type } from 'protobufjs'
@@ -17,10 +15,7 @@ function readInt(buffer: any, start: number, length: number) {
   return result
 }
 
-function writeInt(buffer: any,
-  start: number,
-  length: number,
-  value: number) {
+function writeInt(buffer: any, start: number, length: number, value: number) {
   let i = 0
   while (i < length) {
     buffer[start + i] = value / 256 ** (length - i - 1)
@@ -121,7 +116,7 @@ function _decodeDmV2(str: string) {
     longs: String,
     enums: String,
     bytes: String,
-  })['user']['face']
+  }).user.face
 }
 
 function formattedTime(timeInSeconds: number) {

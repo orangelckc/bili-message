@@ -258,10 +258,8 @@ export const useMusicStore = defineStore('music', () => {
     setVolume,
     getBvidByKeyword,
   }
-},
-{
+}, {
   persist: {
     paths: ['playList', 'historyList', 'blockList', 'currentVolume', 'freeLimit'],
   },
-},
-)
+})
