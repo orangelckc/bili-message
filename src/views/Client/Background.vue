@@ -21,7 +21,7 @@ class Circle {
   private VelX: number
   private VelY: number
   private Radius: number
-  private RGB: { r: number; g: number; b: number }
+  private RGB: { r: number, g: number, b: number }
 
   constructor(ctx: CanvasRenderingContext2D, x: number, y: number, Velx: number, Vely: number, radius: number, rgb: [number, number, number]) {
     this.ctx = ctx

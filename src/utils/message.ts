@@ -81,7 +81,9 @@ async function handleMessage(messages: any[]) {
     const id = nanoid()
 
     welcomeList.push({
-      id, ...data, msg_type: 'vip_entry',
+      id,
+      ...data,
+      msg_type: 'vip_entry',
     })
   }
 

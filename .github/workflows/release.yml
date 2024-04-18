@@ -6,7 +6,7 @@ on:
   push:
     # 匹配特定标签 (refs/tags)
     tags:
-      - "v*" # 推送事件匹配 v*, 例如 v1.0，v20.15.10 等来触发工作流
+      - 'v*' # 推送事件匹配 v*, 例如 v1.0，v20.15.10 等来触发工作流
   workflow_dispatch:
 
 jobs:
@@ -69,14 +69,14 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: "./src-tauri -> target"
+          workspaces: ./src-tauri -> target
 
       # 获取 pnpm 缓存
       - name: Sync node version and setup cache
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: pnpm
 
       # 安装依赖, 前端打包
       - name: Install app dependencies and build web
@@ -91,6 +91,6 @@ jobs:
         with:
           tagName: ${{ github.ref_name }}
           releaseName: 哔哩哔哩-简单弹幕机 ${{ needs.create-release.outputs.APP_VERSION }}
-          releaseBody: ""
+          releaseBody: ''
           releaseDraft: true
           prerelease: false
