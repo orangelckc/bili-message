@@ -6,7 +6,8 @@ import MusicDrawer from './Drawer/Music-Drawer.vue'
 
 import { connected, startWebsocket, stopWebsocket } from '@/utils/room'
 
-const { room, isFix, isBroadcast } = storeToRefs(useAppStore())
+const { room, isFix, isBroadcast, roomList } = storeToRefs(useAppStore())
+const { deleteRoom } = useAppStore()
 
 const danmuDrawer = ref(false)
 const musicDrawer = ref(false)
@@ -51,7 +52,28 @@ async function openMusic() {
     </div>
   </div>
   <div class="room">
-    <el-input v-model="room" placeholder="直播间ID" :disabled="connected" class="flex-1" />
+    <el-select
+      v-model.trim="room"
+      class="flex-1"
+      filterable
+      allow-create
+      :reserve-keyword="false"
+      :disabled="connected"
+      placeholder="直播间ID"
+    >
+      <el-option
+        v-for="item in roomList"
+        :key="item.roomid"
+        :label="item.roomid"
+        :value="item.roomid"
+      >
+        <div class="flex justify-between items-center w-full gap2">
+          <span class="truncate">{{ item.uname }}</span>
+          <span class="i-carbon-close-outline text-red h4 w4 cursor-pointer" @click.stop="deleteRoom(item.roomid)" />
+        </div>
+      </el-option>
+    </el-select>
+
     <el-button plain :type="connected ? 'danger' : 'success'" @click="connected ? stopWebsocket() : startWebsocket()">
       {{ connected ? '断开监听' : '开启监听' }}
     </el-button>
@@ -72,6 +94,6 @@ async function openMusic() {
 
 <style lang="scss" scoped>
 .room {
-  @apply flex items-center justify-between gap-1 rounded-md py-4;
+  @apply flex items-center justify-between gap-1 rounded-md py-4 w-full;
 }
 </style>

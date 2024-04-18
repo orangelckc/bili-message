@@ -160,7 +160,16 @@ async function startWebsocket() {
     return
   }
 
-  room.value = +roomid
+  const { addRoom } = useAppStore()
+
+  const info: IRoom = {
+    roomid: +data.by_room_ids[`${roomid}`].room_id,
+    uname: data.by_room_ids[`${roomid}`].uname,
+  }
+
+  room.value = info.roomid
+  addRoom(info)
+
   emit(EVENTS.OPEN_WEBSOCKET_EVENT, `${roomid}`)
   once(EVENTS.CONNECT_SUCCESS_EVENT, () => {
     ElNotification({

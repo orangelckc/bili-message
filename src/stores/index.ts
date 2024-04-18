@@ -22,6 +22,19 @@ export const useAppStore = defineStore(
 
     // 当前的房间号
     const room = ref<number>()
+    const roomList = ref<IRoom[]>([])
+
+    const addRoom = (info: IRoom) => {
+      const target = roomList.value.find(item => item.roomid === info.roomid)
+      if (!target)
+        roomList.value.push(info)
+    }
+
+    const deleteRoom = (roomid: number) => {
+      const index = roomList.value.findIndex(item => item.roomid === roomid)
+      if (index !== -1)
+        roomList.value.splice(index, 1)
+    }
 
     // 信息列表
     const msgList = ref<IMsg[]>([])
@@ -156,11 +169,14 @@ export const useAppStore = defineStore(
       autoScroll,
       customStyle,
       defaultSample,
+      roomList,
+      addRoom,
+      deleteRoom,
     }
   },
   {
     persist: {
-      paths: ['currentUser', 'userList', 'room', 'currentMedal', 'autoScroll', 'isFix', 'customStyle', 'defaultSample'],
+      paths: ['currentUser', 'userList', 'room', 'currentMedal', 'autoScroll', 'isFix', 'customStyle', 'defaultSample', 'roomList'],
     },
   },
 )
