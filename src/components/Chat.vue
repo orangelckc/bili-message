@@ -60,7 +60,11 @@ function handleSendEmoji(emoji: any) {
         </el-tab-pane>
       </el-tabs>
     </el-popover>
-    <el-input v-model="msg" placeholder="发送一条弹幕吧" class="flex-1" :disabled="disabled" @keyup.enter="handleSend" />
+    <el-input
+      v-model="msg" placeholder="发送一条弹幕吧" class="flex-1" :disabled="disabled" :maxlength="20"
+      show-word-limit clearable
+      @keyup.enter="handleSend"
+    />
     <el-button round type="primary" :disabled="disabled" @click="handleSend">
       <span class="i-carbon-send-alt h-6 w-6" />
     </el-button>
