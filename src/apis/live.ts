@@ -53,7 +53,7 @@ function getEmojiApi() {
 }
 
 // 发送消息
-function sendMessageApi(message: string, type: EDMType) {
+function sendMessageApi(message: string, type: EDMType, replyMid = 0) {
   const { currentUser, room, currentMedal } = useAppStore()
   const data = {
     roomid: type === EDMType.打卡专用 ? `${currentMedal?.roomid}` : `${room}`,
@@ -65,6 +65,8 @@ function sendMessageApi(message: string, type: EDMType) {
     mode: '1',
     fontsize: '25',
     rnd: Math.floor(Date.now() / 1000).toString(),
+    reply_mid: `${replyMid}`,
+    reply_attr: '0',
     csrf: currentUser?.csrf,
     csrf_token: currentUser?.csrf,
   }

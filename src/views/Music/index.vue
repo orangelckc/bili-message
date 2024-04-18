@@ -45,7 +45,7 @@ async function handleDemand(payload: IDemandMusic) {
   if (!isFree) {
     // 防止重复点歌
     if (count && count >= freeLimit.value) {
-      await sendMessageApi(`@${uname.slice(0, 7)} 今日点歌已达上限💔`, EDMType.普通弹幕)
+      await sendMessageApi(`今日点歌已达上限💔，加入粉丝团可以点更多哦～`, EDMType.普通弹幕, uid)
       return
     }
   }
@@ -59,7 +59,7 @@ async function handleDemand(payload: IDemandMusic) {
   // 黑名单校验
   const block = blockList.value.find(item => item.bvid === bvid)
   if (block) {
-    await sendMessageApi(`@${uname.slice(0, 8)} 换首歌吧😊`, EDMType.普通弹幕)
+    await sendMessageApi(`主播不爱听这首，换首歌吧😊`, EDMType.普通弹幕, uid)
     return
   }
 
@@ -80,7 +80,7 @@ async function handleDemand(payload: IDemandMusic) {
   if (+uid === currentUser.value?.mid)
     return
 
-  await sendMessageApi(`@${uname.slice(0, 11)} 点歌成功❤️`, EDMType.普通弹幕)
+  await sendMessageApi(`点歌成功❤️`, EDMType.普通弹幕, uid)
 }
 
 function handleContextMenu() {

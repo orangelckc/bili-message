@@ -100,7 +100,7 @@ async function handleMessage(messages: any[]) {
       uname: info[2][1],
       uface: info[0][15].user.base.face,
       message: info[1],
-      isAnchor: info[2][0] === up_id,
+      isAnchor: +info[2][0] === up_id, // 是否主播本人
       isManager: !!info[2][2], // 房管
       isGuard: info[7], // 舰队成员，1-总督，2-提督，3-舰长
       isEmoji: !!info[0][12], // 弹幕类型，0-文字，1-emoji
