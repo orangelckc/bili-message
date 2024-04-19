@@ -49,6 +49,17 @@ function handleSendEmoji(emoji: any) {
   sendMessageApi(emoticon_unique, EDMType.表情弹幕)
   emojiRef.value.hide()
 }
+
+/**
+ * 判断图片长宽比，如果是长方形的 w 就返回长一点
+ * 宽度 / 高度 在1.1以内，返回w-7
+ * @param emoji
+ */
+function getEmojiWidth(emoji): string {
+  if (emoji.width === 0 || emoji.height === 0)
+    return 'w-7'
+  return emoji.width / emoji.height >= 1.1 ? 'w-16' : 'w-7'
+}
 </script>
 
 <template>
@@ -66,8 +77,12 @@ function handleSendEmoji(emoji: any) {
               <img :src="tab.current_cover" :alt="tab.pkg_name">
             </div>
           </template>
-          <div class="flex flex-wrap gap-3">
-            <div v-for="emoji in tab.emoticons" :key="emoji.emoticon_id" class="min-h-6 w-20 center cursor-pointer" @click="handleSendEmoji(emoji)">
+          <div class="flex flex-wrap justify-center gap-3">
+            <div
+              v-for="emoji in tab.emoticons" :key="emoji.emoticon_id" class="min-h-6 center cursor-pointer"
+              :class="getEmojiWidth(emoji)"
+              @click="handleSendEmoji(emoji)"
+            >
               <el-tooltip :content="emoji.emoji">
                 <img :src="emoji.url" :alt="emoji.emoji">
               </el-tooltip>
@@ -91,7 +106,8 @@ function handleSendEmoji(emoji: any) {
 ::-webkit-scrollbar {
   display: none;
 }
-.chat{
+
+.chat {
   @apply center gap-2 px-2 py-3 border-t border-gray-200;
 }
 </style>
