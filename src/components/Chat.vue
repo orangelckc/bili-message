@@ -56,9 +56,16 @@ function handleSendEmoji(emoji: any) {
  * @param emoji
  */
 function getEmojiWidth(emoji): string {
+  // 1、判断是否为 emoji 表情
   if (emoji.width === 0 || emoji.height === 0)
     return 'w-7'
-  return emoji.width / emoji.height >= 1.1 ? 'w-16' : 'w-7'
+
+  // 2、如果是长方形直接return
+  if (emoji.width / emoji.height >= 1.1)
+    return 'w-22'
+
+  // 3、说明是正方形且有宽高，是装扮表情
+  return 'w-14'
 }
 </script>
 
