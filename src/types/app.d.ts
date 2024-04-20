@@ -32,6 +32,7 @@ interface ILogin {
 }
 
 interface IMsg {
+  uid?: number
   id: string
   type: 'entry' | 'message' | 'message-banned' | 'gift' | 'like' | 'follow' | 'emoji' | 'config'
   uname: string
@@ -56,7 +57,7 @@ interface IUserMedal {
   medal_id: number
   next_intimacy: number
   today_feed: number
-  roomid: number
+  room_id: number
   status: number
   target_id: number
   target_name: string

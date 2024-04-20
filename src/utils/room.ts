@@ -61,6 +61,7 @@ async function init_listener() {
       const { uname, message, isEmoji, emoji, medal, uface, time, isManager, uid, isAnchor } = item.barrage
 
       const msg = {
+        uid,
         uname,
         uface: `${uface}@300w_300h_1c.avif`,
         message: isEmoji ? emoji.url : message,

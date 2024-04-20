@@ -56,7 +56,7 @@ function getEmojiApi() {
 function sendMessageApi(message: string, type: EDMType, replyMid = 0) {
   const { currentUser, room, currentMedal } = useAppStore()
   const data = {
-    roomid: type === EDMType.打卡专用 ? `${currentMedal?.roomid}` : `${room}`,
+    roomid: type === EDMType.打卡专用 ? `${currentMedal?.room_id}` : `${room}`,
     msg: message,
     dm_type: type === EDMType.打卡专用 ? '0' : type,
     bubble: '0',

@@ -6,14 +6,18 @@ import { sendMessageApi } from '@/apis/live'
 import { EDMType } from '@/utils/enums'
 import { connected, emojiList } from '@/utils/room'
 
-const { currentUser, msgList, currentMedal } = storeToRefs(useAppStore())
+const { currentUser, msgList, currentMedal, replyTo } = storeToRefs(useAppStore())
 
 const emojiRef = ref()
 const activeTab = ref('0')
 const msg = ref('')
+const inputRef = ref()
 let isPrevent = false
 
 const disabled = computed(() => !connected.value || !currentUser.value)
+const placeholder = computed(() => {
+  return replyTo.value ? `@ ${replyTo.value?.uname}（ESC取消）` : '发送一条弹幕吧~'
+})
 
 async function handleSend() {
   if (isPrevent) {
@@ -24,13 +28,16 @@ async function handleSend() {
   if (!msg.value.trim())
     return
 
-  const res = await sendMessageApi(msg.value.trim(), EDMType.普通弹幕) as any
+  const replyUid = replyTo.value?.uid || 0
+
+  const res = await sendMessageApi(msg.value.trim(), EDMType.普通弹幕, replyUid) as any
   if (!res)
     return
 
   // 含有屏蔽词, 添加到弹幕列表，但是划线显示
   if (res.msg === 'f' || res.message === 'f') {
     msgList.value.push({
+      uid: currentUser.value?.mid || 0,
       id: nanoid(),
       type: 'message-banned',
       uname: currentUser.value?.uname || '',
@@ -42,6 +49,7 @@ async function handleSend() {
   }
 
   msg.value = ''
+  replyTo.value = null
 }
 
 function handleSendEmoji(emoji: any) {
@@ -80,13 +88,18 @@ function handleCompositionEnd() {
     isPrevent = false
   }, 100)
 }
+
+watch(replyTo, (newVal) => {
+  if (newVal)
+    inputRef.value.focus()
+})
 </script>
 
 <template>
   <div class="chat">
     <el-popover ref="emojiRef" placement="top" trigger="click" :width="220">
       <template #reference>
-        <el-button class="border-none!" plain :disabled="disabled">
+        <el-button class="border-none! w-4" plain :disabled="disabled">
           <span class="i-carbon-face-activated-add h-6 w-6" />
         </el-button>
       </template>
@@ -112,13 +125,17 @@ function handleCompositionEnd() {
       </el-tabs>
     </el-popover>
     <el-input
-      v-model="msg" placeholder="发送一条弹幕吧" class="flex-1" :disabled="disabled" :maxlength="20"
+      ref="inputRef"
+      v-model="msg"
+      :placeholder="placeholder"
+      class="flex-1" :disabled="disabled" :maxlength="20"
       show-word-limit clearable
       @compositionend="handleCompositionEnd"
       @keyup.enter="handleSend"
+      @keyup.esc="replyTo = null"
     />
-    <el-button round type="primary" :disabled="disabled" @click="handleSend">
-      <span class="i-carbon-send-alt h-6 w-6" />
+    <el-button type="primary" :disabled="disabled" class="w-3" @click="handleSend">
+      <span class="i-carbon-send-alt h-5 w-5" />
     </el-button>
   </div>
 </template>
@@ -130,5 +147,9 @@ function handleCompositionEnd() {
 
 .chat {
   @apply center gap-2 px-2 py-3 border-t border-gray-200;
+}
+
+:deep(.el-input-group__prepend){
+  @apply px1
 }
 </style>
