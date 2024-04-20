@@ -2065,21 +2065,3 @@ export const textEmoji = {
   unlock_need_gift: 0,
   current_cover: 'http://i0.hdslb.com/bfs/live/4428c84e694fbf4e0ef6c06e958d9352c3582740.png',
 }
-
-// 小九表情包
-export const xiaojiuEmoji = {
-  pkg_name: '小九表情',
-  pkg_id: 127693,
-  emoticons: [
-    { emoji: '饿了', url: 'http://i0.hdslb.com/bfs/live/5afa85fd7da7ceba8ba75aa85d2d6562c569ab10.png', emoticon_unique: 'room_25184987_38565' },
-    { emoji: '哈哈哈', url: 'http://i0.hdslb.com/bfs/live/e84f7481e19e2552a1274218785c79593322df09.png', emoticon_unique: 'room_25184987_38566' },
-    { emoji: '噗', url: 'http://i0.hdslb.com/bfs/live/221063f1b2bd285dd623cc0292481949cc3769ac.png', emoticon_unique: 'room_25184987_38568' },
-    { emoji: '烦躁', url: 'http://i0.hdslb.com/bfs/live/ccb81f8c14872cd085f536ec20d073b0cd1a56f2.png', emoticon_unique: 'room_25184987_38569' },
-    { emoji: '切', url: 'http://i0.hdslb.com/bfs/live/cc0da4b00990e9ea48b29c6d4a082ee07dc235a0.png', emoticon_unique: 'room_25184987_38570' },
-    { emoji: '扎心', url: 'http://i0.hdslb.com/bfs/live/52dc843ebd1fe01635f2a616a9f7fc08b6ba1ca2.png', emoticon_unique: 'room_25184987_38571' },
-    { emoji: '泪流满面', url: 'http://i0.hdslb.com/bfs/live/91b2434c0e68e0dfd0bcaee456d73fd1cf8418e6.png', emoticon_unique: 'room_25184987_38572' },
-    { emoji: '记仇', url: 'http://i0.hdslb.com/bfs/live/923eef9da9d8a7e36822a3e4e678ee9d52b3382c.png', emoticon_unique: 'room_25184987_38573' },
-    { emoji: '看你', url: 'http://i0.hdslb.com/bfs/live/6ef846e3b8efd47f18d43d8c3479b4a846f9e9ad.png', emoticon_unique: 'room_25184987_38574' },
-    { emoji: '打你哦', url: 'http://i0.hdslb.com/bfs/live/735c99685fedb4e887f96677ec4298e451622b64.png', emoticon_unique: 'room_25184987_48232' },
-  ],
-}
