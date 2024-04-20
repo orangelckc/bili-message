@@ -94,6 +94,12 @@ async function setUserInfo(access: IAccess) {
     face: 'vite.svg',
     csrf: access.csrf,
     cookie: access.cookie,
+    medalCount: 0,
+    medals: [],
+    wbi_img: {
+      img_url: '',
+      sub_url: '',
+    },
   }
 
   // 写入到第一位

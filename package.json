@@ -10,7 +10,8 @@
     "lint": "eslint ./src --fix",
     "preview": "vite preview",
     "prepare": "pnpm simple-git-hooks",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "check": "pnpm vue-tsc"
   },
   "dependencies": {
     "@applemusic-like-lyrics/core": "^0.1.3",

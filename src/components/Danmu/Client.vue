@@ -22,7 +22,7 @@ watch(() => props.msgList, () => {
     return
 
   nextTick(() => {
-    danmuRef.value.scrollToBottom()
+    danmuRef.value?.scrollToBottom()
   })
 }, {
   deep: true,
@@ -30,7 +30,7 @@ watch(() => props.msgList, () => {
 
 watch(autoScroll, (val) => {
   if (val)
-    danmuRef.value.scrollToBottom()
+    danmuRef.value?.scrollToBottom()
 })
 </script>
 
