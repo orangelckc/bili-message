@@ -145,7 +145,11 @@ async function init_listener() {
 
 async function getEmojiList() {
   const { data } = await getEmojiApi()
-  emojiList.value.push(...data.data)
+  emojiList.value = [
+    textEmoji,
+    hxdEmoji,
+    ...data.data,
+  ]
 }
 
 async function startWebsocket() {
