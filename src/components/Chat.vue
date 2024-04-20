@@ -11,10 +11,16 @@ const { currentUser, msgList, currentMedal } = storeToRefs(useAppStore())
 const emojiRef = ref()
 const activeTab = ref('0')
 const msg = ref('')
+let isPrevent = false
 
 const disabled = computed(() => !connected.value || !currentUser.value)
 
 async function handleSend() {
+  if (isPrevent) {
+    isPrevent = false
+    return
+  }
+
   if (!msg.value.trim())
     return
 
@@ -67,6 +73,13 @@ function getEmojiWidth(emoji: any): string {
   // 3、说明是正方形且有宽高，是装扮表情
   return 'w-14'
 }
+
+function handleCompositionEnd() {
+  isPrevent = true
+  setTimeout(() => {
+    isPrevent = false
+  }, 100)
+}
 </script>
 
 <template>
@@ -101,6 +114,7 @@ function getEmojiWidth(emoji: any): string {
     <el-input
       v-model="msg" placeholder="发送一条弹幕吧" class="flex-1" :disabled="disabled" :maxlength="20"
       show-word-limit clearable
+      @compositionend="handleCompositionEnd"
       @keyup.enter="handleSend"
     />
     <el-button round type="primary" :disabled="disabled" @click="handleSend">
