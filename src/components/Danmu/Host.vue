@@ -3,8 +3,8 @@ import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
 import { dayjs } from 'element-plus'
 import { VirtualList } from 'vue-tiny-virtual-list'
 
-import Medal from '@/components/Medal.vue'
-import { ROOM_URL_PREFIX } from '@/utils/constants'
+import HostItem from './HostItem.vue'
+
 import { connected } from '@/utils/room'
 import { useSocket } from '@/utils/socket'
 
@@ -74,63 +74,7 @@ watch(autoScroll, (val) => {
       ref="danmuRef" item-key="id" :list="msgList" :min-size="30" :fixed="false" :buffer="2"
     >
       <template #default="{ itemData }">
-        <div class="p1 text-sm">
-          <div v-if="itemData.type === 'emoji'" class="flex items-center">
-            <div v-if="itemData.medal">
-              <el-tooltip
-                v-if="itemData.medal && itemData.medal.is_lighted"
-                placement="top"
-                :width="80"
-                trigger="hover"
-                effect="light"
-              >
-                <template #content>
-                  <a :href="`${ROOM_URL_PREFIX}/${itemData.medal?.room_id}`" target="_blank" class="text-blue-400">去直播间
-                  </a>
-                </template>
-                <Medal :medal="itemData.medal" class="w24rpx" />
-              </el-tooltip>
-            </div>
-            <span class="text-base text-amber">{{ itemData.uname }} </span>
-            <div v-if="itemData.type === 'emoji'">
-              <img :src="itemData.message" alt="" class="ml1 min-h-6 w14">
-            </div>
-          </div>
-          <div
-            v-else-if="itemData.type.startsWith('message')" class="flex flex-col gap1"
-          >
-            <div class="inline-flex items-center gap1">
-              <el-avatar v-if="itemData.uface" :src="itemData.uface" size="small" shape="circle" />
-              <el-tooltip
-                v-if="itemData.medal && itemData.medal.is_lighted"
-                placement="top"
-                :width="80"
-                trigger="hover"
-                effect="light"
-              >
-                <template #content>
-                  <a :href="`${ROOM_URL_PREFIX}/${itemData.medal?.room_id}`" target="_blank" class="text-blue-400">去直播间
-                  </a>
-                </template>
-                <Medal :medal="itemData.medal" class="w24rpx" />
-              </el-tooltip>
-              <div class="text-base text-amber">
-                {{ itemData.uname }}
-              </div>
-              <div class="ml2 text-xs text-gray/200">
-                {{ itemData.time }}
-              </div>
-            </div>
-            <div
-              class="ml2 inline-flex items-center text-base text-blue-500" :class="{
-                'line-through text-gray/80': itemData.type === 'message-banned',
-              }" v-html="itemData.message"
-            />
-          </div>
-          <span v-else-if="itemData.type === 'gift'" class="text-red">{{ itemData.message }}</span>
-          <span v-else-if="itemData.type === 'like' || itemData.type === 'follow'" class="text-orange">{{ itemData.message }}</span>
-          <span v-else class="text-gray-400">{{ itemData.message }}</span>
-        </div>
+        <HostItem :item-data="itemData" />
       </template>
     </VirtualList>
   </div>

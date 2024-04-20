@@ -51,6 +51,12 @@ export const useAppStore = defineStore(
     // 当前佩戴的粉丝勋章
     const currentMedal = ref<IUserMedal>()
 
+    // 当前回复的用户
+    const replyTo = ref<{
+      uid: number
+      uname: string
+    } | null>(null)
+
     // 自定义样式
     const customStyle = ref<ICustomStyle>({
       avatarSize: 40,
@@ -172,6 +178,7 @@ export const useAppStore = defineStore(
       roomList,
       addRoom,
       deleteRoom,
+      replyTo,
     }
   },
   {

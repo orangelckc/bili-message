@@ -32,6 +32,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     Host: typeof import('./../components/Danmu/Host.vue')['default']
+    HostItem: typeof import('./../components/Danmu/HostItem.vue')['default']
     Medal: typeof import('./../components/Medal.vue')['default']
     MusicDrawer: typeof import('./../components/Drawer/Music-Drawer.vue')['default']
     MusicList: typeof import('./../components/Music-List.vue')['default']
