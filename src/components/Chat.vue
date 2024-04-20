@@ -55,7 +55,7 @@ function handleSendEmoji(emoji: any) {
  * 宽度 / 高度 在1.1以内，返回w-7
  * @param emoji
  */
-function getEmojiWidth(emoji): string {
+function getEmojiWidth(emoji: any): string {
   // 1、判断是否为 emoji 表情
   if (emoji.width === 0 || emoji.height === 0)
     return 'w-7'
@@ -84,7 +84,7 @@ function getEmojiWidth(emoji): string {
               <img :src="tab.current_cover" :alt="tab.pkg_name">
             </div>
           </template>
-          <div class="flex flex-wrap justify-center gap-3">
+          <div class="flex flex-wrap gap-3">
             <div
               v-for="emoji in tab.emoticons" :key="emoji.emoticon_id" class="min-h-6 center cursor-pointer"
               :class="getEmojiWidth(emoji)"
