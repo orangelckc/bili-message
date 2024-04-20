@@ -13,7 +13,7 @@ function handleAt() {
     return
 
   replyTo.value = {
-    uid: props.itemData.uid,
+    uid: props.itemData?.uid || 0,
     uname: props.itemData.uname,
   }
 }
