@@ -35,6 +35,7 @@ interface IMsg {
   uid?: number
   id: string
   type: 'entry' | 'message' | 'message-banned' | 'gift' | 'like' | 'follow' | 'emoji' | 'config'
+  isSafe?: boolean
   uname: string
   uface?: string
   message: string

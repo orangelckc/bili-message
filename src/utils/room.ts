@@ -58,13 +58,14 @@ async function init_listener() {
   const danmuListener = await listen(EVENTS.BARRAGE_MESSAGE_EVENT, (event) => {
     const data = event.payload as object[]
     data.forEach(async (item: any) => {
-      const { uname, message, isEmoji, emoji, medal, uface, time, isManager, uid, isAnchor } = item.barrage
+      const { uname, message, isEmoji, emoji, medal, uface, time, isManager, uid, isAnchor, isSafe } = item.barrage
 
       const msg = {
         uid,
         uname,
         uface: `${uface}@300w_300h_1c.avif`,
         message: isEmoji ? emoji.url : message,
+        isSafe,
         type: isEmoji ? 'emoji' : 'message',
         id: item.id,
         medal,

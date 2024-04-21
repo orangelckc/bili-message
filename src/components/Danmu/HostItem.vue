@@ -84,10 +84,14 @@ function handleAt() {
         </div>
       </div>
       <div
-        class="ml2 inline-flex items-center text-base text-blue-500" :class="{
+        class="ml2 inline-flex items-center text-base text-blue-500"
+        :class="{
           'line-through text-gray/80': itemData.type === 'message-banned',
-        }" v-html="itemData.message"
-      />
+        }"
+      >
+        <div v-if="itemData.isSafe" v-html="itemData.message" />
+        <div v-else v-text="itemData.message" />
+      </div>
     </div>
     <span v-else-if="itemData.type === 'gift'" class="text-red">{{ itemData.message }}</span>
     <span v-else-if="itemData.type === 'like' || itemData.type === 'follow'" class="text-orange">{{ itemData.message }}</span>

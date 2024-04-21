@@ -60,14 +60,16 @@ const background = computed(() => {
       <img :src="danmaku.message" alt="" class="ml1 h-12">
     </div>
     <div
-      v-else
+      v-if="danmaku.type === 'message'"
       class="text-shadow-3px-3px-3px-#000 inline-flex items-center font-bold leading-relaxed"
       :style="{
         color: showStyle.msgColor,
         fontSize: `${showStyle.msgFontSize}px`,
       }"
-      v-html="danmaku.message"
-    />
+    >
+      <div v-if="danmaku.isSafe" v-html="danmaku.message" />
+      <div v-else v-text="danmaku.message" />
+    </div>
   </div>
 </template>
 
