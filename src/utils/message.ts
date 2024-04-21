@@ -1,4 +1,5 @@
 import { emit } from '@tauri-apps/api/event'
+import DOMPurify from 'dompurify'
 import { dayjs } from 'element-plus'
 import { nanoid } from 'nanoid'
 
@@ -95,11 +96,16 @@ async function handleMessage(messages: any[]) {
 
     const up_id = currentUser?.mid
 
+    const originMsg = info[1]
+    const sanitizedMsg = DOMPurify.sanitize(originMsg)
+    const isSafe = sanitizedMsg.length
+
     const barrageInfo = {
       uid: info[2][0],
       uname: info[2][1],
       uface: info[0][15].user.base.face,
-      message: info[1],
+      message: isSafe ? sanitizedMsg : originMsg,
+      isSafe, // 是否安全，XSS过滤
       isAnchor: +info[2][0] === up_id, // 是否主播本人
       isManager: !!info[2][2], // 房管
       isGuard: info[7], // 舰队成员，1-总督，2-提督，3-舰长
