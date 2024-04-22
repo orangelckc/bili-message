@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { emit } from '@tauri-apps/api/event'
 
+import Updater from './Updater.vue'
+
 import { sendMessageApi } from '@/apis/live'
 import Account from '@/components/Account.vue'
 import Control from '@/components/Control.vue'
@@ -14,6 +16,7 @@ import { CLOSE_WEBSOCKET_EVENT } from '@/utils/events'
 const { userList, currentMedal, currentUser } = storeToRefs(useAppStore())
 const { refreshCurrentUser, getUserMedal, wearMedal, unWearMedal } = useAppStore()
 const popover = ref()
+const updaterRef = ref()
 
 const disabled = computed(() => {
   if (!currentMedal.value)
@@ -105,10 +108,16 @@ onUnmounted(() => {
         </el-button>
       </div>
       <div class="tip">
-        <span>
-          <a href="https://space.bilibili.com/405579368" target="_blank" class="text-blue-400">@半糖人类</a> 出品
-        </span>
+        <a href="https://space.bilibili.com/405579368" target="_blank" class="text-blue-400">@半糖人类</a>&nbsp; 出品
+        <el-tooltip
+          placement="top"
+          trigger="hover"
+          content="检查更新"
+        >
+          <span class="i-carbon-update-now w4 h4 ml3 text-gray/80 cursor-pointer" @click="emit('check-update')" />
+        </el-tooltip>
       </div>
+      <Updater ref="updaterRef" />
     </div>
     <div class="right">
       <Control />
@@ -145,7 +154,7 @@ onUnmounted(() => {
     }
 
     .tip{
-      @apply fixed bottom-4 text-sm text-gray-400 font-bold left-10;
+      @apply fixed bottom-4 text-sm text-gray-400 font-bold left-10 inline-flex items-center;
     }
   }
   .right{
