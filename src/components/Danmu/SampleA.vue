@@ -35,13 +35,13 @@ const showStyle = computed(() => {
       </div>
       <div
         v-if="danmaku.type === 'message'"
-        class="text-shadow-3px-3px-3px-#000 inline-flex items-center font-semibold leading-relaxed"
+        class="text-shadow-3px-3px-3px-#000 font-semibold leading-relaxed"
         :style="{
           color: showStyle.msgColor,
           fontSize: `${showStyle.msgFontSize}px`,
         }"
       >
-        <div v-if="danmaku.isSafe" v-html="danmaku.message" />
+        <div v-if="danmaku.isSafe" class="inline-flex flex-wrap items-center" v-html="danmaku.message" />
         <div v-else v-text="danmaku.message" />
       </div>
     </div>
