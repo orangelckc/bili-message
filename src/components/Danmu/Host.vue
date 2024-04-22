@@ -8,8 +8,7 @@ import HostItem from './HostItem.vue'
 import { connected } from '@/utils/room'
 import { useSocket } from '@/utils/socket'
 
-const { autoScroll } = storeToRefs(useAppStore())
-const { msgList } = storeToRefs(useAppStore())
+const { msgList, autoScroll } = storeToRefs(useAppStore())
 
 const danmuRef: Ref<InstanceType<typeof VirtualList> | null> = ref(null)
 
