@@ -58,7 +58,8 @@
       },
       "targets": [
         "msi",
-        "dmg"
+        "dmg",
+        "updater"
       ],
       "windows": {
         "certificateThumbprint": null,
@@ -71,6 +72,14 @@
     },
     "security": {
       "csp": null
+    },
+    "updater": {
+      "active": true,
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEEwQkI0RkY5OTRBNzZFQzEKUldUQmJxZVUrVSs3b0xUY2RBZHNFbGwzQ2dONzBsQ3Y0aEFVem9mUDVBNlN5MFJUMHVNbVIrQ1gK",
+      "endpoints": [
+        "https://updater.finde.fun/update/{{target}}/{{arch}}/{{current_version}}"
+      ]
     },
     "windows": [
       {

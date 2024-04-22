@@ -2,7 +2,11 @@
   "name": "bilibili-message",
   "type": "module",
   "version": "1.2.6",
-  "private": true,
+  "private": false,
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/orangelckc/bili-message"
+  },
   "scripts": {
     "dev": "pnpm run build:icon && vite",
     "build": "pnpm run build:icon && vite build",
