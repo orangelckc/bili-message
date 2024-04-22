@@ -45,7 +45,7 @@ async function handleDemand(payload: IDemandMusic) {
   if (!isFree) {
     // 防止重复点歌
     if (count && count >= freeLimit.value) {
-      await sendMessageApi(`今日点歌已达上限💔，加入粉丝团可以点更多哦～`, EDMType.普通弹幕, uid)
+      await sendMessageApi(`今日点歌已达上限💔，带个牌牌来点吧～`, EDMType.普通弹幕, uid)
       return
     }
   }
