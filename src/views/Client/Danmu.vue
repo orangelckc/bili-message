@@ -13,6 +13,7 @@ async function init_listener() {
   ws = new WebSocket(LOCAL_WEBSOCKET_URL)
 
   ws.onopen = () => {
+    ws.send('sync-config')
     setInterval(() => {
       ws.send('client-ping')
     }, 30 * 1000)

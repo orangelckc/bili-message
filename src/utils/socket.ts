@@ -32,6 +32,23 @@ class Socket {
       }, 30 * 1000)
     }
 
+    this.ws.onmessage = (e) => {
+      // 同步客户端弹幕样式初始化
+      if (e.data === 'sync-config') {
+        const { defaultSample, customStyle } = useAppStore()
+        this.send({
+          type: 'danmu',
+          command: 'sample',
+          data: defaultSample,
+        })
+        this.send({
+          type: 'danmu',
+          command: 'config',
+          data: customStyle,
+        })
+      }
+    }
+
     this.ws.onerror = () => {
       const { isBroadcast } = storeToRefs(useAppStore())
       ElNotification({
