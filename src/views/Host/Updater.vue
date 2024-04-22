@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { getVersion } from '@tauri-apps/api/app'
 import { listen } from '@tauri-apps/api/event'
-import { relaunch } from '@tauri-apps/api/process'
 import {
   installUpdate,
   onUpdaterEvent,
   checkUpdate as tauriCheckUpdate,
 } from '@tauri-apps/api/updater'
-import { dayjs } from 'element-plus'
 
 const visible = ref(false)
 
@@ -16,12 +14,19 @@ const isDownload = ref(false)
 const updateManifest = ref<any>({})
 const currentVersion = ref('')
 
-async function checkUpdate() {
+const showTime = computed(() => {
+  if (!updateManifest.value?.date)
+    return ''
+
+  return updateManifest.value.date.split(' ')[0]
+})
+
+async function checkUpdate(silent = true) {
   try {
     const updateInfo = await tauriCheckUpdate()
 
     if (!updateInfo.shouldUpdate) {
-      ElMessage.success('已经是最新版本')
+      !silent && ElMessage.success('已经是最新版本')
       return
     }
 
@@ -34,7 +39,7 @@ async function checkUpdate() {
   }
   catch (error) {
     console.error(error)
-    ElMessage.error('检查更新失败，请稍后再试或手动下载最新版本')
+    !silent && ElMessage.error('检查更新失败，请稍后再试或手动下载最新版本')
   }
 }
 
@@ -42,21 +47,6 @@ async function handleInstall() {
   isDownload.value = true
 
   installUpdate()
-
-  await onUpdaterEvent(({ status }) => {
-    switch (status) {
-      case 'DONE':
-        ElMessage.success('更新成功，即将重启')
-        handleCancel()
-        relaunch()
-        break
-
-      case 'ERROR':
-        ElMessage.error('更新失败，请手动下载最新版本')
-        handleCancel()
-        break
-    }
-  })
 }
 
 function handleCancel() {
@@ -67,7 +57,23 @@ function handleCancel() {
 onMounted(async () => {
   checkUpdate()
   currentVersion.value = `v${await getVersion()}`
-  listen('check-update', checkUpdate)
+  listen('check-update', () => {
+    checkUpdate(false)
+  })
+  const stopListen = await onUpdaterEvent(({ status }) => {
+    switch (status) {
+      case 'DONE':
+        ElMessage.success('更新成功，请关闭后重启应用')
+        handleCancel()
+        stopListen()
+        break
+
+      case 'ERROR':
+        ElMessage.error('更新失败，请手动下载最新版本')
+        handleCancel()
+        break
+    }
+  })
 })
 </script>
 
@@ -76,7 +82,7 @@ onMounted(async () => {
     <div>
       发现新版本：{{ currentVersion }} -> {{ updateManifest.version }}
     </div>
-    <div>更新时间：{{ dayjs(updateManifest.date).format('YYYY-MM-DD') }}</div>
+    <div>更新时间：{{ showTime }}</div>
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" :disabled="isDownload" @click="handleInstall">
