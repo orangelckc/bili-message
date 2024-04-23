@@ -1,3 +1,5 @@
+# Bili-Message bilibili简单弹幕机
+
 ## 简介
 
 Bili-message是一个集成弹幕显示和点歌相关功能的应用程序，功能强大，是bilibili主播不可或缺的小帮手。
@@ -9,6 +11,13 @@ Bili-message是一个集成弹幕显示和点歌相关功能的应用程序，�
 ## 下载
 
 - [Mac](https://github.com/orangelckc/bili-message/releases/latest)
+
+MacOS 也可支持 homebrew 安装
+
+```shell
+brew tap orangelckc/bili-message
+brew install bili-message
+```
 
 - [Windows](https://github.com/orangelckc/bili-message/releases/latest)
 
@@ -102,7 +111,7 @@ Bili-message是一个集成弹幕显示和点歌相关功能的应用程序，�
 
 ### 弹幕显示区域
 
-<img src='./images/input.png' width='400px' height='auto'/>  
+<img src='./images/input.png' width='400px' height='auto'/>
 
 ### 广播弹幕配置界面
 
