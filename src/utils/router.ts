@@ -32,6 +32,34 @@ const routes = [
     name: 'Music',
     component: () => import('@/views/Music/index.vue'),
   },
+  {
+    path: '/setting',
+    name: 'Setting',
+    component: () => import('@/views/Setting/index.vue'),
+    redirect: '/setting/danmu',
+    children: [
+      {
+        path: 'danmu',
+        name: 'Setting-Danmu',
+        component: () => import('@/views/Setting/Danmu.vue'),
+      },
+      {
+        path: 'speech',
+        name: 'Setting-Speech',
+        component: () => import('@/views/Setting/Speech.vue'),
+      },
+      {
+        path: 'music',
+        name: 'Setting-Music',
+        component: () => import('@/views/Setting/Music.vue'),
+      },
+      {
+        path: 'about',
+        name: 'Setting-About',
+        component: () => import('@/views/Setting/About.vue'),
+      },
+    ],
+  },
 ]
 
 const router = createRouter({

@@ -1,16 +1,11 @@
 <script lang="ts" setup>
-import { WebviewWindow, appWindow } from '@tauri-apps/api/window'
-
-import DanmuDrawer from './Drawer/Danmu-Drawer.vue'
-import MusicDrawer from './Drawer/Music-Drawer.vue'
+import { appWindow } from '@tauri-apps/api/window'
 
 import { connected, startWebsocket, stopWebsocket } from '@/utils/room'
+import { openWindow } from '@/utils/window'
 
 const { room, isFix, isBroadcast, roomList } = storeToRefs(useAppStore())
 const { deleteRoom } = useAppStore()
-
-const danmuDrawer = ref(false)
-const musicDrawer = ref(false)
 
 watchEffect(() => {
   appWindow.setAlwaysOnTop(isFix.value)
@@ -19,25 +14,6 @@ watchEffect(() => {
 watch(connected, () => {
   isBroadcast.value = connected.value
 })
-
-async function openMusic() {
-  musicDrawer.value = true
-  const win = WebviewWindow.getByLabel('music')
-  if (win) {
-    win.show()
-  }
-  else {
-    // eslint-disable-next-line no-new
-    new WebviewWindow('music', {
-      url: '/music',
-      title: '点歌机',
-      width: 360,
-      height: 700,
-      decorations: true,
-      resizable: false,
-    })
-  }
-}
 </script>
 
 <template>
@@ -77,19 +53,17 @@ async function openMusic() {
     <el-button plain :type="connected ? 'danger' : 'success'" @click="connected ? stopWebsocket() : startWebsocket()">
       {{ connected ? '断开监听' : '开启监听' }}
     </el-button>
-    <el-tooltip content="广播" placement="bottom">
-      <el-button round :type="isBroadcast ? 'success' : 'info'" @click="danmuDrawer = true">
-        <span class="i-carbon-connection-signal h5 w5" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip content="Music" placement="bottom">
-      <el-button round type="warning" @click="openMusic">
+    <el-tooltip content="点歌机" placement="bottom">
+      <el-button round type="warning" @click="openWindow('music')">
         <span class="i-carbon-music h5 w5" />
       </el-button>
     </el-tooltip>
+    <el-tooltip content="控制面板" placement="bottom">
+      <el-button round type="primary" @click="openWindow('setting')">
+        <span class="i-carbon-settings h5 w5" />
+      </el-button>
+    </el-tooltip>
   </div>
-  <DanmuDrawer v-model="danmuDrawer" />
-  <MusicDrawer v-model="musicDrawer" />
 </template>
 
 <style lang="scss" scoped>
