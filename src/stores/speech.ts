@@ -18,6 +18,7 @@ export const useSpeechStore = defineStore('speech', () => {
 
   function init() {
     if (speech.isSupported.value) {
+      voices.value = []
       setTimeout(() => {
         synth = window.speechSynthesis
         voices.value = synth.getVoices().filter(voice => voice.lang.includes('zh'))
