@@ -95,7 +95,7 @@ onUnmounted(() => {
               >
                 <template #content>
                   <span v-if="!currentMedal">点击更换勋章</span>
-                  <a v-else :href="`${ROOM_URL_PREFIX}/${currentMedal?.room_id}`" target="_blank" class="text-blue-400">去直播间
+                  <a v-else :href="`${ROOM_URL_PREFIX}/${currentMedal?.roomid}`" target="_blank" class="text-blue-400">去直播间
                   </a>
                 </template>
                 <Medal :medal="currentMedal" />
