@@ -58,7 +58,8 @@ interface IUserMedal {
   medal_id: number
   next_intimacy: number
   today_feed: number
-  room_id: number
+  roomid?: number
+  room_id?: number
   status: number
   target_id: number
   target_name: string
