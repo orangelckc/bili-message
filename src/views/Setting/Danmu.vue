@@ -5,22 +5,6 @@ import { danmaku, demos } from '@/components/Danmu/config'
 import { LOCAL_BROADCAST_URL } from '@/utils/constants'
 import { useSocket } from '@/utils/socket'
 
-const props = defineProps<{
-  modelValue: boolean
-}>()
-
-const emits = defineEmits(['update:modelValue'])
-
-const trigger = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value) {
-    emits('update:modelValue', value)
-  },
-})
-
-const { isOn, voices, voice, pattern } = storeToRefs(useSpeechStore())
 const { isBroadcast, customStyle, defaultSample } = storeToRefs(useAppStore())
 
 function handleStyleChange() {
@@ -53,28 +37,25 @@ function useDemo(id: string) {
 </script>
 
 <template>
-  <el-drawer v-model="trigger" class="rounded-lg" title="广播弹幕配置" :with-header="true" direction="ltr" :modal="true" size="300" @close="trigger = false">
-    <div class="h-full flex flex-col">
-      <el-input v-model="pattern" placeholder="弹幕匹配规则">
-        <template #prepend>
-          语音模版
-        </template>
-      </el-input>
-      <div class="mt2 center gap2">
-        <el-select v-model="voice" class="flex-1" value-key="name">
-          <el-option v-for="item in voices" :key="item.lang" :label="item.name" :value="item" />
-        </el-select>
-        <el-tooltip :content="isOn ? '关闭弹幕语音' : '开启弹幕语音'" placement="bottom">
-          <el-switch v-model="isOn" active-color="#13ce66" />
-        </el-tooltip>
+  <div class="w-full h-full flex gap2">
+    <div class="flex flex-1 flex-col gap3 overflow-auto p3">
+      <div
+        v-for="demo in demos" :key="demo.name"
+        class="relative center cursor-pointer rounded-lg p3 shadow hover:shadow-lg"
+        @click="useDemo(demo.id) "
+      >
+        <span v-if="demo.id === defaultSample" class="i-carbon-checkmark-filled absolute z-9 h8 w8 text-orange -right-1 -top-1" />
+        <component
+          :is="demo.component"
+          :custom-style="{
+            ...demo.baseStyle,
+            ...customStyle,
+          }"
+          :danmaku="danmaku"
+        />
       </div>
-      <div class="mt2 center gap3">
-        <!-- <el-switch v-model="isBroadcast" active-color="#13ce66" @change="toggleBroadcast" /> -->
-        <span class="i-carbon-connection-signal h5 w5" :class="isBroadcast ? 'bg-green' : 'bg-gray'" />
-        <el-link type="primary" :disabled="!isBroadcast" @click="handleCopy">
-          复制广播URL
-        </el-link>
-      </div>
+    </div>
+    <div class="flex flex-col">
       <div class="mt4 flex flex-col gap2">
         <el-input v-model="customStyle.avatarSize" placeholder="头像大小" @change="handleStyleChange">
           <template #prepend>
@@ -112,23 +93,13 @@ function useDemo(id: string) {
           </template>
         </el-input>
       </div>
-      <div class="mt4 flex flex-1 flex-col gap3 overflow-auto p4">
-        <div
-          v-for="demo in demos" :key="demo.name"
-          class="relative center cursor-pointer rounded-lg p3 shadow hover:shadow-lg"
-          @click="useDemo(demo.id) "
-        >
-          <span v-if="demo.id === defaultSample" class="i-carbon-checkmark-filled absolute z-9 h8 w8 text-orange -right-1 -top-1" />
-          <component
-            :is="demo.component"
-            :custom-style="{
-              ...demo.baseStyle,
-              ...customStyle,
-            }"
-            :danmaku="danmaku"
-          />
-        </div>
+      <div class="mt8 center gap3">
+        <!-- <el-switch v-model="isBroadcast" active-color="#13ce66" @change="toggleBroadcast" /> -->
+        <span class="i-carbon-connection-signal h5 w5" :class="isBroadcast ? 'bg-green' : 'bg-gray'" />
+        <el-link type="primary" :disabled="!isBroadcast" @click="handleCopy">
+          复制广播URL
+        </el-link>
       </div>
     </div>
-  </el-drawer>
+  </div>
 </template>
