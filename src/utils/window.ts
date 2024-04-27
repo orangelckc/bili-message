@@ -4,7 +4,7 @@ const windows = {
   setting: {
     url: '/setting',
     title: '设置面板',
-    width: 800,
+    width: 600,
     height: 600,
     decorations: true,
     resizable: false,

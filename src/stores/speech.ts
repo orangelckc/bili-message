@@ -1,18 +1,33 @@
 export const useSpeechStore = defineStore('speech', () => {
-  const isOn = ref(false)
-  const voice = ref<SpeechSynthesisVoice>(undefined as unknown as SpeechSynthesisVoice)
   const text = ref('')
-  const pattern = ref('{user}说{msg}')
+  const voice = ref<SpeechSynthesisVoice>(undefined as unknown as SpeechSynthesisVoice)
   const pitch = ref(1)
   const rate = ref(1)
+  const volume = ref(50)
+
+  const danmuConfig = ref({
+    isOn: false,
+    pattern: '{user}说{msg}',
+  })
+
+  const giftConfig = ref({
+    isOn: false,
+    pattern: '{user}赠送了{gift}',
+  })
+
+  const followConfig = ref({
+    isOn: false,
+    pattern: '感谢{user}的关注',
+  })
 
   const speech = useSpeechSynthesis(text, {
     voice,
     pitch,
     rate,
+    volume: volume.value / 100,
   })
 
-  let synth: SpeechSynthesis
+  const synth: SpeechSynthesis = window.speechSynthesis
 
   const voices = ref<SpeechSynthesisVoice[]>([])
 
@@ -20,10 +35,9 @@ export const useSpeechStore = defineStore('speech', () => {
     if (speech.isSupported.value) {
       voices.value = []
       setTimeout(() => {
-        synth = window.speechSynthesis
         voices.value = synth.getVoices().filter(voice => voice.lang.includes('zh'))
         voice.value = voices.value[0]
-      })
+      }, 200)
     }
   }
 
@@ -43,14 +57,20 @@ export const useSpeechStore = defineStore('speech', () => {
   }
 
   return {
-    isOn,
+    danmuConfig,
+    giftConfig,
+    followConfig,
     text,
     voices,
     voice,
-    pattern,
+    volume,
     init,
     play,
     pause,
     stop,
   }
+}, {
+  persist: {
+    paths: ['danmuConfig', 'giftConfig', 'followConfig', 'volume'],
+  },
 })

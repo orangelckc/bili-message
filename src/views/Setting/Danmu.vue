@@ -55,7 +55,7 @@ function useDemo(id: string) {
         />
       </div>
     </div>
-    <div class="flex flex-col">
+    <div class="flex flex-col max-w-2/5">
       <div class="mt4 flex flex-col gap2">
         <el-input v-model="customStyle.avatarSize" placeholder="头像大小" @change="handleStyleChange">
           <template #prepend>
