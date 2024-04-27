@@ -39,6 +39,12 @@ async function init_listener() {
           id: item.id,
           medal: item.medal,
         })
+        const { followConfig, text } = storeToRefs(useSpeechStore())
+        const { play } = useSpeechStore()
+        if (followConfig.value.isOn) {
+          text.value = followConfig.value.pattern.replace('{user}', item.uname)
+          play()
+        }
       }
       else if (item.msg_type === 'entry') {
         // 进入房间事件
@@ -101,12 +107,12 @@ async function init_listener() {
           })
         }
 
-        const { isOn, text, pattern } = storeToRefs(useSpeechStore())
+        const { danmuConfig, text } = storeToRefs(useSpeechStore())
         const { play } = useSpeechStore()
-        if (isOn.value && msg.type === 'message') {
+        if (danmuConfig.value.isOn && msg.type === 'message') {
           // 去除message中的表情
           const pureText = message.replace(/<[^>]+>/g, '')
-          text.value = pattern.value.replace('{user}', uname).replace('{msg}', pureText)
+          text.value = danmuConfig.value.pattern.replace('{user}', uname).replace('{msg}', pureText)
           play()
         }
       }
@@ -139,6 +145,13 @@ async function init_listener() {
           id: item.id,
           medal: item.medal,
         })
+
+        const { giftConfig, text } = storeToRefs(useSpeechStore())
+        const { play } = useSpeechStore()
+        if (giftConfig.value.isOn) {
+          text.value = giftConfig.value.pattern.replace('{user}', uname).replace('{msg}', `赠送了 ${giftName}`)
+          play()
+        }
       }
     })
   })
@@ -196,6 +209,8 @@ function stopWebsocket() {
   emit(EVENTS.CLOSE_WEBSOCKET_EVENT)
   unlisteners.forEach(unlistener => unlistener())
   unlisteners.length = 0
+  const { stop } = useSpeechStore()
+  stop()
 }
 
 export {
