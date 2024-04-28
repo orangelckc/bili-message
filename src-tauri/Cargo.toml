@@ -1,6 +1,6 @@
 [package]
 name = "bili-message"
-version = "1.2.8"
+version = "1.2.9"
 description = "bilibili弹幕机"
 authors = ["半糖人类"]
 license = "MIT"
