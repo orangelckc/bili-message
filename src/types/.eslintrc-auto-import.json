@@ -306,6 +306,7 @@
     "watchWithFilter": true,
     "whenever": true,
     "ElMessage": true,
-    "useBackgroundStore": true
+    "useBackgroundStore": true,
+    "blockList": true
   }
 }

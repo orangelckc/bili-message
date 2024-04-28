@@ -59,7 +59,7 @@ async function handleDemand(payload: IDemandMusic) {
   // 黑名单校验
   const block = blockList.value.find(item => item.bvid === bvid)
   if (block) {
-    await sendMessageApi(`主播不爱听这首，换首歌吧😊`, EDMType.普通弹幕, uid)
+    await sendMessageApi(`主播不喜欢，换首歌试试吧😊`, EDMType.普通弹幕, uid)
     return
   }
 
@@ -99,17 +99,21 @@ function handleContextMenu() {
 onMounted(async () => {
   stopListeners()
 
-  const listener1 = await listen('danmaku-demand-music', async ({ payload }) => {
-    handleDemand(payload as IDemandMusic)
+  const listener1 = await listen<IDemandMusic>('danmaku-demand-music', async ({ payload }) => {
+    handleDemand(payload)
   })
   const listener2 = await listen('danmaku-cut-music', () => {
     playNext()
   })
-  const listener3 = await listen('change-free-limit', ({ payload }) => {
+  const listener3 = await listen<number>('change-free-limit', ({ payload }) => {
     freeLimit.value = Number(payload)
   })
+  const listener4 = await listen<ISong>('add-to-block', ({ payload }) => {
+    playList.value = playList.value.filter(item => item.bvid !== payload.bvid)
+    blockList.value.push(payload)
+  })
 
-  listeners.push(listener1, listener2, listener3)
+  listeners.push(listener1, listener2, listener3, listener4)
 })
 
 onUnmounted(() => {
