@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import { emit } from '@tauri-apps/api/event'
 
+import Updater from '@/components/Updater.vue'
+
+const updaterRef = ref()
+
 const activeTab = ref('/setting/danmu')
 const menus = ref([
   {
@@ -33,8 +37,8 @@ const menus = ref([
         <span>{{ menu.title }}</span>
       </el-menu-item>
 
-      <div class="absolute bottom-2 center w-full">
-        <el-link type="info" :underline="false" @click="emit('check-update')">
+      <div class="absolute bottom-6 center w-full">
+        <el-link type="info" :underline="false" @click="emit('check-update', false)">
           检查更新
         </el-link>
       </div>
@@ -43,4 +47,5 @@ const menus = ref([
       <router-view />
     </div>
   </div>
+  <Updater ref="updaterRef" :silent="false" />
 </template>

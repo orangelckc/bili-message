@@ -7,6 +7,10 @@ import {
   checkUpdate as tauriCheckUpdate,
 } from '@tauri-apps/api/updater'
 
+const props = defineProps<{
+  silent: boolean
+}>()
+
 const visible = ref(false)
 
 const isDownload = ref(false)
@@ -21,12 +25,12 @@ const showTime = computed(() => {
   return updateManifest.value.date.split(' ')[0]
 })
 
-async function checkUpdate(silent = true) {
+async function checkUpdate() {
   try {
     const updateInfo = await tauriCheckUpdate()
 
     if (!updateInfo.shouldUpdate) {
-      !silent && ElMessage.success('已经是最新版本')
+      !props.silent && ElMessage.success('已经是最新版本')
       return
     }
 
@@ -39,7 +43,7 @@ async function checkUpdate(silent = true) {
   }
   catch (error) {
     console.error(error)
-    !silent && ElMessage.error('检查更新失败，请稍后再试或手动下载最新版本')
+    !props.silent && ElMessage.error('检查更新失败，请稍后再试或手动下载最新版本')
   }
 }
 
@@ -58,7 +62,7 @@ onMounted(async () => {
   checkUpdate()
   currentVersion.value = `v${await getVersion()}`
   listen('check-update', () => {
-    checkUpdate(false)
+    checkUpdate()
   })
   const stopListen = await onUpdaterEvent(({ status }) => {
     switch (status) {
