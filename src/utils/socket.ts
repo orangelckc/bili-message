@@ -36,6 +36,7 @@ class Socket {
       // 同步客户端弹幕样式初始化
       if (e.data === 'sync-config') {
         const { defaultSample, customStyle } = useAppStore()
+        const { backgroundImage } = useBackgroundStore()
         this.send({
           type: 'danmu',
           command: 'sample',
@@ -45,6 +46,11 @@ class Socket {
           type: 'danmu',
           command: 'config',
           data: customStyle,
+        })
+        this.send({
+          type: 'background',
+          command: 'change',
+          data: backgroundImage,
         })
       }
     }

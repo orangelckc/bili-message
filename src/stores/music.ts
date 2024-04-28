@@ -137,6 +137,12 @@ export const useMusicStore = defineStore('music', () => {
         command: 'play',
         data: currentSong.value,
       })
+      useSocket({
+        type: 'background',
+        command: 'change-dynamic',
+        data: currentSong.value.pic,
+      })
+
       const idx = playList.value.findIndex(item => item.bvid === currentSong.value.bvid)
       // 返回10首歌曲
       const list = playList.value.slice(idx + 1, idx + 11)
