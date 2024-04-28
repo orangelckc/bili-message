@@ -21,10 +21,12 @@ const windows = {
 
 type Labels = keyof typeof windows
 
-export function openWindow(label: Labels) {
+export async function openWindow(label: Labels) {
   const win = WebviewWindow.getByLabel(label)
   if (win) {
     win.show()
+    await win.setAlwaysOnTop(true)
+    await win.setAlwaysOnTop(false)
     return
   }
 

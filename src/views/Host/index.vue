@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { emit } from '@tauri-apps/api/event'
 
-import Updater from './Updater.vue'
-
 import { sendMessageApi } from '@/apis/live'
 import Account from '@/components/Account.vue'
 import Control from '@/components/Control.vue'
 import HostDanmu from '@/components/Danmu/Host.vue'
 import Medal from '@/components/Medal.vue'
+import Updater from '@/components/Updater.vue'
 import useWebsocket from '@/hooks/useWebsocket'
 import { ROOM_URL_PREFIX } from '@/utils/constants'
 import { EDMType } from '@/utils/enums'
@@ -109,15 +108,8 @@ onUnmounted(() => {
       </div>
       <div class="tip">
         <a href="https://space.bilibili.com/405579368" target="_blank" class="text-blue-400">@半糖人类</a>&nbsp; 出品
-        <el-tooltip
-          placement="top"
-          trigger="hover"
-          content="检查更新"
-        >
-          <span class="i-carbon-update-now w4 h4 ml3 text-gray/80 cursor-pointer" @click="emit('check-update')" />
-        </el-tooltip>
       </div>
-      <Updater ref="updaterRef" />
+      <Updater ref="updaterRef" :silent="true" />
     </div>
     <div class="right">
       <Control />

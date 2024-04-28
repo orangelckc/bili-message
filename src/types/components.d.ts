@@ -47,5 +47,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SampleA: typeof import('./../components/Danmu/SampleA.vue')['default']
     SampleB: typeof import('./../components/Danmu/SampleB.vue')['default']
+    Updater: typeof import('./../components/Updater.vue')['default']
   }
 }
