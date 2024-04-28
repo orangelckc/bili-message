@@ -44,17 +44,17 @@ onMounted(async () => {
   <div class="center flex-col h-full justify-around">
     <div class="center flex-col gap5">
       <img src="@/assets/logo.png">
+      <span class="text-lg">{{ appInfo.appName }}</span>
       <div class="flex gap4 items-center">
-        <span class="text-lg">{{ appInfo.appName }}</span>
+        <span class="text-sm text-[#666]">Version. {{ appInfo.appVersion }}</span>
         <span class="i-carbon-logo-github w6 h6 cursor-pointer" @click="jumpGithub" />
       </div>
 
-      <span class="text-sm text-[#666]">Version. {{ appInfo.appVersion }}</span>
       <el-button type="info" plain @click="copySystemInfo">
         系统版本信息
       </el-button>
     </div>
-    <span class="text-xs text-[#666]">
+    <span class="text-sm text-[#666]">
       CopyRight © 2023-2024 <a href="https://space.bilibili.com/405579368" target="_blank" class="text-blue-400">半糖人类</a>. All Rights Reserved.
     </span>
   </div>
