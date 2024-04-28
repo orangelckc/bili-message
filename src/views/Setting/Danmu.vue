@@ -5,7 +5,7 @@ import { danmaku, demos } from '@/components/Danmu/config'
 import { LOCAL_BROADCAST_URL } from '@/utils/constants'
 import { useSocket } from '@/utils/socket'
 
-const { isBroadcast, customStyle, defaultSample } = storeToRefs(useAppStore())
+const { customStyle, defaultSample } = storeToRefs(useAppStore())
 
 function handleStyleChange() {
   useSocket({
@@ -56,6 +56,12 @@ function useDemo(id: string) {
       </div>
     </div>
     <div class="flex flex-col max-w-2/5">
+      <div class="mt2 center gap3">
+        <span class="i-carbon-connection-signal h5 w5 bg-green" />
+        <el-link type="primary" @click="handleCopy">
+          复制广播URL
+        </el-link>
+      </div>
       <div class="mt4 flex flex-col gap2">
         <el-input v-model="customStyle.avatarSize" placeholder="头像大小" @change="handleStyleChange">
           <template #prepend>
@@ -92,13 +98,6 @@ function useDemo(id: string) {
             弹幕间距
           </template>
         </el-input>
-      </div>
-      <div class="mt8 center gap3">
-        <!-- <el-switch v-model="isBroadcast" active-color="#13ce66" @change="toggleBroadcast" /> -->
-        <span class="i-carbon-connection-signal h5 w5" :class="isBroadcast ? 'bg-green' : 'bg-gray'" />
-        <el-link type="primary" :disabled="!isBroadcast" @click="handleCopy">
-          复制广播URL
-        </el-link>
       </div>
     </div>
   </div>

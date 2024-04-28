@@ -54,6 +54,11 @@ const routes = [
         component: () => import('@/views/Setting/Music.vue'),
       },
       {
+        path: 'background',
+        name: 'Setting-Background',
+        component: () => import('@/views/Setting/Background.vue'),
+      },
+      {
         path: 'about',
         name: 'Setting-About',
         component: () => import('@/views/Setting/About.vue'),
