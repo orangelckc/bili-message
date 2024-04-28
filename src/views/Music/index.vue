@@ -119,7 +119,7 @@ onUnmounted(() => {
 
 <template>
   <div class="relative h-100vh flex flex-col">
-    <Search @change="setSong" />
+    <Search @add="addToPlayList" />
     <el-tabs v-model="tab" type="card" :stretch="true" class="px3" @tab-change="handleChange">
       <el-tab-pane name="playing">
         <template #label>

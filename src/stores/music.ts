@@ -66,8 +66,11 @@ export const useMusicStore = defineStore('music', () => {
       data: playList.value.slice(idx + 1, idx + 11),
     })
 
-    if (!isPlaying.value)
-      playNext()
+    // 没在播放状态下，直接播放所选歌曲
+    if (!player?.state() || player?.state() === 'unloaded') {
+      currentSong.value = song
+      togglePlay()
+    }
 
     return song
   }

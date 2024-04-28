@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { searchKeyword } from '@/apis/music'
 
-const emits = defineEmits(['change'])
+const emits = defineEmits(['add'])
 
 const input = ref('')
 const searchList = ref<ISong[]>([])
@@ -11,12 +11,6 @@ const searchMusic = useDebounceFn(async () => {
   const query = input.value.trim()
   if (!query)
     return
-
-  // BV号直接跳转
-  if (query.startsWith('BV') && query.length === 12) {
-    emits('change', query)
-    return
-  }
 
   // 搜索音乐
   loading.value = true
@@ -44,7 +38,7 @@ async function setQuery(query: string) {
 }
 
 function addSongFromSearch(item: ISong) {
-  emits('change', item.bvid)
+  emits('add', item.bvid)
   searchList.value = []
 }
 </script>
