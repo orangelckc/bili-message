@@ -106,4 +106,14 @@ function formattedTime(timeInSeconds: number) {
   return `${formattedMinutes}:${formattedSeconds}`
 }
 
-export { encode, decode, colorHexToRgba, formattedTime }
+function convertTimeToMs(duration: string) {
+  const parts = duration.split(':')
+  if (parts.length === 3)
+    return (+parts[0] * 3600 + +parts[1] * 60 + +parts[2]) * 1000
+  else if (parts.length === 2)
+    return (+parts[0] * 60 + +parts[1]) * 1000
+  else
+    return +parts[0] * 1000
+}
+
+export { encode, decode, colorHexToRgba, formattedTime, convertTimeToMs }
