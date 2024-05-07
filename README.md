@@ -1,4 +1,12 @@
-# Bili-Message bilibili简单弹幕机
+<div align="center">
+  <img src="src-tauri/icons/128x128.png"/>
+  <h1>
+  Bili-Message
+  
+  bilibili简单弹幕机
+  </h1>
+  <p>一个集成众多直播辅助功能的桌面应用程序</p>
+</div>
 
 ## 简介
 
@@ -12,12 +20,12 @@ Bili-message是一个集成弹幕显示和点歌相关功能的应用程序，�
 
 - [Mac](https://github.com/orangelckc/bili-message/releases/latest)
 
-MacOS 也可支持 homebrew 安装
+  MacOS 也可支持 homebrew 安装
 
-```shell
-brew tap orangelckc/bili-message
-brew install bili-message
-```
+  ```shell
+  brew tap orangelckc/bili-message
+  brew install bili-message
+  ```
 
 - [Windows](https://github.com/orangelckc/bili-message/releases/latest)
 
@@ -29,9 +37,9 @@ brew install bili-message
 - 当前登录账号切换粉丝勋章
 - 一键点亮已熄灭勋章
 
-### 置顶
+### 窗口置顶
 
-### 弹幕监听
+### 直播互动内容监听
 
 - 监听内容
 
@@ -66,37 +74,37 @@ brew install bili-message
 
 - 广播URL
 
-  `提供复制广播URL将弹幕显示拓展到浏览器，obs等应用场景`
+  > 提供复制广播URL将弹幕显示拓展到浏览器，obs等应用场景
 
 - 弹幕样式修改
 
-  `发送弹幕用户的头像大小调节，用户昵称大小调节，用户昵称颜色调节，弹幕信息字号调节，弹幕信息颜色调节，弹幕背景调节，弹幕间距调节`
+  > 发送弹幕用户的头像大小调节，用户昵称大小调节，用户昵称颜色调节，弹幕信息字号调节，弹幕信息颜色调节，弹幕背景调节，弹幕间距调节
 
 - [ ]  弹幕配置模版扩充
 
 ### 点歌配置
 
-`提供复制音乐URL将点歌机显示拓展到浏览器，obs等应用场景`
+提供复制音乐URL将点歌机显示拓展到浏览器，obs等应用场景
 
 - 歌曲信息展示URL
 
-  `正在播放歌曲名称，封面，bv号，标题，歌曲剩余时长，即将播放歌曲列表`
+  > 正在播放歌曲名称，封面，bv号，标题，歌曲剩余时长，即将播放歌曲列表
 
 - 动态背景URL
 
-  `将当前播放歌曲提取主题色后生成的动态背景显示拓展到浏览器，obs等应用场景`
+  > 将当前播放歌曲提取主题色后生成的动态背景显示拓展到浏览器，obs等应用场景
 
 - 免费数量
 
-  `直播间普通观众每日可点歌的数量（支持手动修改）佩戴粉丝勋章不限量点歌`
+  > 直播间普通观众每日可点歌的数量（支持手动修改）佩戴粉丝勋章不限量点歌
 
 - 黑名单
 
 ### 点歌机
 
-`弹幕输入 点歌+空格+bv号 进行精确点歌`
+弹幕输入 `点歌+空格+bv号` 进行精确点歌
 
-`弹幕输入 点歌+空格+歌名+空格+歌手 匹配检索结果中播放量最高的一首`
+弹幕输入 `点歌+空格+歌名+空格+歌手` 匹配检索结果中播放量最高的一首
 
 - 音乐搜索
 - 正在播放
@@ -128,5 +136,7 @@ brew install bili-message
 ### 样例展示
 
 <img src='./images/obsExample.png' width='400px' height='auto' />
+
+
 
 #### 本应用的最终的所有权和解释权均归orangelckc所有
