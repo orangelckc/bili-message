@@ -21,13 +21,13 @@ function getLiveCodeApi() {
 
 // 获取ws认证token
 function getLiveTokenApi() {
-  const { currentUser, room } = useAppStore()
+  const { currentUser, currentRoom } = useAppStore()
 
   return request({
     url: `${LIVE_URL_PREFIX}/xlive/web-room/v1/index/getDanmuInfo`,
     method: 'GET',
     params: {
-      id: room,
+      id: currentRoom,
     },
     headers: {
       cookie: currentUser?.cookie,
@@ -37,14 +37,14 @@ function getLiveTokenApi() {
 
 // 获取表情列表
 function getEmojiApi() {
-  const { currentUser, room } = useAppStore()
+  const { currentUser, currentRoom } = useAppStore()
 
   return request({
     url: `${LIVE_URL_PREFIX}/xlive/web-ucenter/v2/emoticon/GetEmoticons`,
     method: 'GET',
     params: {
       platform: 'pc',
-      room_id: room,
+      room_id: currentRoom,
     },
     headers: {
       cookie: currentUser?.cookie,
@@ -54,9 +54,9 @@ function getEmojiApi() {
 
 // 发送消息
 function sendMessageApi(message: string, type: EDMType, replyMid = 0) {
-  const { currentUser, room, currentMedal } = useAppStore()
+  const { currentUser, currentRoom, currentMedal } = useAppStore()
   const data = {
-    roomid: type === EDMType.打卡专用 ? `${currentMedal?.roomid}` : `${room}`,
+    roomid: type === EDMType.打卡专用 ? `${currentMedal?.roomid}` : `${currentRoom}`,
     msg: message,
     dm_type: type === EDMType.打卡专用 ? '0' : type,
     bubble: '0',
@@ -84,13 +84,24 @@ function sendMessageApi(message: string, type: EDMType, replyMid = 0) {
 
 // 获取当前直播状态
 function getLiveStatusApi() {
-  const { room } = useAppStore()
+  const { currentRoom } = useAppStore()
   return request({
     url: `${LIVE_URL_PREFIX}/xlive/web-room/v1/index/getRoomBaseInfo`,
     method: 'GET',
     params: {
-      room_ids: room,
+      room_ids: currentRoom,
       req_biz: 'link-center',
+    },
+  })
+}
+
+// 获取主播信息
+function getMasterInfoApi(uid: number) {
+  return request({
+    url: `${LIVE_URL_PREFIX}/live_user/v1/Master/info`,
+    method: 'GET',
+    params: {
+      uid,
     },
   })
 }
@@ -154,4 +165,5 @@ export {
   getMedalApi,
   wearMedalApi,
   unWearMedalApi,
+  getMasterInfoApi,
 }

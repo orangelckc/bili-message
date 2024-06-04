@@ -4,7 +4,7 @@ import { appWindow } from '@tauri-apps/api/window'
 import { connected, startWebsocket, stopWebsocket } from '@/utils/room'
 import { openWindow } from '@/utils/window'
 
-const { room, isFix, isBroadcast, roomList } = storeToRefs(useAppStore())
+const { currentRoom, isFix, isBroadcast, roomList } = storeToRefs(useAppStore())
 const { deleteRoom } = useAppStore()
 
 watchEffect(() => {
@@ -29,7 +29,7 @@ watch(connected, () => {
   </div>
   <div class="room">
     <el-select
-      v-model.trim="room"
+      v-model.trim="currentRoom"
       class="flex-1"
       filterable
       allow-create

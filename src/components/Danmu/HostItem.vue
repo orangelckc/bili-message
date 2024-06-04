@@ -39,6 +39,7 @@ function handleAt() {
       </div>
       <span class="text-base text-amber">
         <el-tooltip
+          v-if="currentUser?.mid !== itemData.uid"
           placement="top"
           :width="80"
           trigger="hover"
@@ -46,6 +47,7 @@ function handleAt() {
         >
           <span class="cursor-pointer" @click="handleAt">{{ itemData.uname }}</span>
         </el-tooltip>
+        <span v-else>{{ itemData.uname }}</span>
       </span>
       <div v-if="itemData.type === 'emoji'">
         <img :src="itemData.message" alt="" class="ml1 min-h-6 w14">
@@ -71,6 +73,7 @@ function handleAt() {
         </el-tooltip>
         <div class="text-base text-amber">
           <el-tooltip
+            v-if="currentUser?.mid !== itemData.uid"
             placement="top"
             :width="80"
             trigger="hover"
@@ -78,6 +81,7 @@ function handleAt() {
           >
             <span class="cursor-pointer" @click="handleAt">{{ itemData.uname }}</span>
           </el-tooltip>
+          <span v-else>{{ itemData.uname }}</span>
         </div>
         <div class="ml2 text-xs text-gray/200">
           {{ itemData.time }}

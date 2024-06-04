@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs'
 import { dayjs } from 'element-plus'
-import { VirtualList } from 'vue-tiny-virtual-list'
+import { VirtList } from 'vue-virt-list'
 
 import HostItem from './HostItem.vue'
 
@@ -10,7 +10,7 @@ import { useSocket } from '@/utils/socket'
 
 const { msgList, autoScroll } = storeToRefs(useAppStore())
 
-const danmuRef: Ref<InstanceType<typeof VirtualList> | null> = ref(null)
+const danmuRef: Ref<InstanceType<typeof VirtList> | null> = ref(null)
 
 function handleClear() {
   msgList.value = []
@@ -52,7 +52,7 @@ watch(autoScroll, (val) => {
 
 <template>
   <div class="danmu">
-    <div class="fixed right-5 top-28 opacity-0 hover:opacity-100">
+    <div class="absolute right-5 opacity-30 hover:opacity-100">
       <el-tooltip v-if="connected" content="自动滚动">
         <el-button :type="autoScroll ? 'primary' : 'info'" size="small" round plain @click="autoScroll = !autoScroll">
           <span class="i-carbon-auto-scroll h4 w4" />
@@ -69,13 +69,13 @@ watch(autoScroll, (val) => {
         </el-button>
       </el-tooltip>
     </div>
-    <VirtualList
+    <VirtList
       ref="danmuRef" item-key="id" :list="msgList" :min-size="30" :fixed="false" :buffer="2"
     >
       <template #default="{ itemData }">
         <HostItem :item-data="itemData" />
       </template>
-    </VirtualList>
+    </VirtList>
   </div>
 </template>
 

@@ -214,96 +214,56 @@ async function handleMessage(messages: any[]) {
   // 处理单独一条弹幕信息的数据解析
   const messageFormatter = async (message: any) => {
     const { cmd } = message
-    switch (cmd) {
-      // 直播间排行榜列表，只需要得到前三名
-      case MESSAGE_TYPE.RANK:
-        await parseRank(message?.data)
-        break
-
-      // 礼物信息
-      case MESSAGE_TYPE.GIFT:
-        await parseGift(message?.data)
-        break
-
-      // 进入信息（文字）
-      case MESSAGE_TYPE.INTERACT:
-        await parseInteract(message?.data)
-        break
-
-      // VIP进场信息展示
-      case MESSAGE_TYPE.ENTRY:
-        await parseVIPEntry(message?.data)
-        break
-
-        // 在线排行榜前三名,已弃用
-        // case MESSAGE_TYPE.TOP3:
-        //   break;
-
-      // 弹幕信息
-      case MESSAGE_TYPE.DANMU:
-        await parseDanmu(message)
-        break
-
-      // SC信息
-      case MESSAGE_TYPE.SUPERCHAT:
-        await parseSuperchat(message?.data)
-        break
-
-      // 房间信息更新
-      case MESSAGE_TYPE.ROOMCHANGE:
-        // TODO 房间信息改变需要触发的操作
-        break
-
-      // 直播开始
-      case MESSAGE_TYPE.LIVESTART:
-        await emit(LIVE_START_EVENT, message)
-        break
-
-      // 直播关闭
-      case MESSAGE_TYPE.LIVECLOSE:
-        await emit(LIVE_END_EVENT, message)
-        break
-
-      // 红包信息
-      case MESSAGE_TYPE.REDPACKET:
-        await parseRedpacket(message?.data)
-        break
-
-      // 观看人数更新
-      case MESSAGE_TYPE.WATCHCHANGE:
-        await emit(WATCHED_CHANGE_EVENT, { num: message?.data?.num })
-        break
-
-      // 舰长登船
-      case MESSAGE_TYPE.GUARDBUY:
-        await parseGuardBuy(message?.data)
-        break
-
-      // 全屏提示
-      case MESSAGE_TYPE.NOTICE_MSG:
-        await parseNotice(message?.data)
-        break
-
-      // 点赞
-      case MESSAGE_TYPE.LIKE:
-        await parseLike(message?.data)
-        break
-
-      // 直播游戏
-      case MESSAGE_TYPE.LIVEGAME:
-        break
-
-      // 在线人数更新
-      case MESSAGE_TYPE.ONLINE_RANK_COUNT:
-        break
-
-      // 点赞更新
-      case MESSAGE_TYPE.ONLINE_LIKE_COUNT:
-        break
-
-      default:
-        // console.log('未知消息类型', message)
-        break
+    if (cmd.includes(MESSAGE_TYPE.RANK)) { // 直播间排行榜列表，只需要得到前三名
+      await parseRank(message?.data)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.GIFT)) { // 礼物信息
+      await parseGift(message?.data)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.INTERACT)) { // 进场信息（文字）
+      await parseInteract(message?.data)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.ENTRY)) { // VIP进场信息展示
+      await parseVIPEntry(message?.data)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.DANMU)) { // 弹幕信息
+      await parseDanmu(message)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.SUPERCHAT)) { // SC信息
+      await parseSuperchat(message?.data)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.ROOMCHANGE)) { // 房间信息更新
+      // TODO 房间信息改变需要触发的操作
+    }
+    else if (cmd.includes(MESSAGE_TYPE.LIVESTART)) { // 直播开始
+      await emit(LIVE_START_EVENT, message)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.LIVECLOSE)) { // 直播关闭
+      await emit(LIVE_END_EVENT, message)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.REDPACKET)) { // 红包信息
+      await parseRedpacket(message?.data)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.WATCHCHANGE)) { // 观看人数更新
+      await emit(WATCHED_CHANGE_EVENT, { num: message?.data?.num })
+    }
+    else if (cmd.includes(MESSAGE_TYPE.GUARDBUY)) { // 舰长登船
+      await parseGuardBuy(message?.data)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.NOTICE_MSG)) { // 全屏提示
+      await parseNotice(message?.data)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.LIKE)) { // 点赞
+      await parseLike(message?.data)
+    }
+    else if (cmd.includes(MESSAGE_TYPE.LIVEGAME)) { // 直播游戏
+    }
+    else if (cmd.includes(MESSAGE_TYPE.ONLINE_RANK_COUNT)) { // 在线人数更新
+    }
+    else if (cmd.includes(MESSAGE_TYPE.ONLINE_LIKE_COUNT)) { // 点赞更新
+    }
+    else {
+      // console.log('未知消息类型', message)
     }
   }
 

@@ -39,7 +39,7 @@
     "tauri-plugin-context-menu": "^0.7.0",
     "vue": "^3.4.23",
     "vue-router": "^4.3.2",
-    "vue-tiny-virtual-list": "^1.4.0"
+    "vue-virt-list": "^1.2.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.15.0",

@@ -3,11 +3,12 @@ import QRCode from 'qrcode'
 import QS from 'qs'
 
 import { getLoginUrlApi, verifyQrCodeApi } from '@/apis/bilibili'
+import { getMasterInfoApi } from '@/apis/live.ts'
 import { ELoginState, EQRCodeState } from '@/utils/enums'
 
 const emits = defineEmits(['success'])
 
-const { userList, currentUser } = storeToRefs(useAppStore())
+const { userList, currentUser, currentRoom, roomList } = storeToRefs(useAppStore())
 
 const qrCodeImage = ref<string>()
 
@@ -107,6 +108,17 @@ async function setUserInfo(access: IAccess) {
   currentUser.value = user
   qrCodeImage.value = ''
   loginState.value = ELoginState.未登录
+
+  const { data } = await getMasterInfoApi(access.uid)
+  if (data) {
+    currentRoom.value = data.room_id
+    const room: IRoom = {
+      roomid: data.room_id,
+      uname: data.info.uname,
+    }
+    roomList.value.unshift(room)
+  }
+
   emits('success')
 }
 
@@ -132,7 +144,7 @@ onMounted(getQRCode)
 </template>
 
 <style lang="scss" scoped>
-.box{
+.box {
   @apply h-40 w-40 center;
 }
 </style>
