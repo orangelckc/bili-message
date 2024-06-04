@@ -21,7 +21,7 @@ export const useAppStore = defineStore(
     }])
 
     // 当前的房间号
-    const room = ref<number>()
+    const currentRoom = ref<number>()
     const roomList = ref<IRoom[]>([])
 
     const addRoom = (info: IRoom) => {
@@ -163,7 +163,7 @@ export const useAppStore = defineStore(
     return {
       currentUser,
       userList,
-      room,
+      currentRoom,
       msgList,
       isFix,
       isBroadcast,
@@ -183,7 +183,7 @@ export const useAppStore = defineStore(
   },
   {
     persist: {
-      paths: ['currentUser', 'userList', 'room', 'currentMedal', 'autoScroll', 'isFix', 'customStyle', 'defaultSample', 'roomList'],
+      paths: ['currentUser', 'userList', 'currentRoom', 'currentMedal', 'autoScroll', 'isFix', 'customStyle', 'defaultSample', 'roomList'],
     },
   },
 )

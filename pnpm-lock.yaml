@@ -71,9 +71,9 @@ importers:
       vue-router:
         specifier: ^4.3.2
         version: 4.3.2(vue@3.4.23(typescript@5.4.5))
-      vue-tiny-virtual-list:
-        specifier: ^1.4.0
-        version: 1.4.0(vue@3.4.23(typescript@5.4.5))
+      vue-virt-list:
+        specifier: ^1.2.1
+        version: 1.2.1(vue@3.4.23(typescript@5.4.5))
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^2.15.0
@@ -3105,6 +3105,17 @@ packages:
       '@vue/composition-api':
         optional: true
 
+  vue-demi@0.14.8:
+    resolution: {integrity: sha512-Uuqnk9YE9SsWeReYqK2alDI5YzciATE0r2SkA6iMAtuXvNTMNACJLJEXNXaEy94ECuBe4Sk6RzRU80kjdbIo1Q==}
+    engines: {node: '>=12'}
+    hasBin: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   vue-eslint-parser@9.4.2:
     resolution: {integrity: sha512-Ry9oiGmCAK91HrKMtCrKFWmSFWvYkpGglCeFAIqDdr9zdXmMMpJOmUJS7WWsW7fX81h6mwHmUZCQQ1E0PkSwYQ==}
     engines: {node: ^14.17.0 || >=16.0.0}
@@ -3119,20 +3130,20 @@ packages:
   vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}
 
-  vue-tiny-virtual-list@1.4.0:
-    resolution: {integrity: sha512-j3P68/ewGJt4RyT3axOx9N/pte2lsPz+8ytcbcKnOUNbbDFJQcfQNQtMyk73uoC+kmfMd4GDWq9QYmB8Ugudnw==}
+  vue-tsc@2.0.13:
+    resolution: {integrity: sha512-a3nL3FvguCWVJUQW/jFrUxdeUtiEkbZoQjidqvMeBK//tuE2w6NWQAbdrEpY2+6nSa4kZoKZp8TZUMtHpjt4mQ==}
+    hasBin: true
+    peerDependencies:
+      typescript: '*'
+
+  vue-virt-list@1.2.1:
+    resolution: {integrity: sha512-M6EfUui0EWOD1zE1rj+ujnQzDzY3Oga9uIb5YJCSes9dcKKmAvXDu322ocyIgoE2BCyq60ndYn+nLNRELvir6Q==}
     peerDependencies:
       '@vue/composition-api': ^1.0.0-rc.1
       vue: ^2.0.0 || >=3.0.0
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
-
-  vue-tsc@2.0.13:
-    resolution: {integrity: sha512-a3nL3FvguCWVJUQW/jFrUxdeUtiEkbZoQjidqvMeBK//tuE2w6NWQAbdrEpY2+6nSa4kZoKZp8TZUMtHpjt4mQ==}
-    hasBin: true
-    peerDependencies:
-      typescript: '*'
 
   vue@3.4.23:
     resolution: {integrity: sha512-X1y6yyGJ28LMUBJ0k/qIeKHstGd+BlWQEOT40x3auJFTmpIhpbKLgN7EFsqalnJXq1Km5ybDEsp6BhuWKciUDg==}
@@ -6416,6 +6427,10 @@ snapshots:
     dependencies:
       vue: 3.4.23(typescript@5.4.5)
 
+  vue-demi@0.14.8(vue@3.4.23(typescript@5.4.5)):
+    dependencies:
+      vue: 3.4.23(typescript@5.4.5)
+
   vue-eslint-parser@9.4.2(eslint@9.0.0):
     dependencies:
       debug: 4.3.4
@@ -6439,17 +6454,17 @@ snapshots:
       de-indent: 1.0.2
       he: 1.2.0
 
-  vue-tiny-virtual-list@1.4.0(vue@3.4.23(typescript@5.4.5)):
-    dependencies:
-      vue: 3.4.23(typescript@5.4.5)
-      vue-demi: 0.14.7(vue@3.4.23(typescript@5.4.5))
-
   vue-tsc@2.0.13(typescript@5.4.5):
     dependencies:
       '@volar/typescript': 2.2.0-alpha.8
       '@vue/language-core': 2.0.13(typescript@5.4.5)
       semver: 7.6.0
       typescript: 5.4.5
+
+  vue-virt-list@1.2.1(vue@3.4.23(typescript@5.4.5)):
+    dependencies:
+      vue: 3.4.23(typescript@5.4.5)
+      vue-demi: 0.14.8(vue@3.4.23(typescript@5.4.5))
 
   vue@3.4.23(typescript@5.4.5):
     dependencies:

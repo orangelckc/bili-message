@@ -85,11 +85,11 @@ async function init_listener() {
 
         // 是否是点歌弹幕
         if (message.startsWith('点歌')) {
-          const { room } = storeToRefs(useAppStore())
+          const { currentRoom } = storeToRefs(useAppStore())
           const demand = message.split(/点歌\s+/)[1]
           if (demand && demand.length) {
             // 主播/房管/牌牌点歌不计数
-            const isFree = isManager || isAnchor || +medal?.room_id === +(room.value || 0)
+            const isFree = isManager || isAnchor || +medal?.room_id === +(currentRoom.value || 0)
             emit('danmaku-demand-music', { demand, uname, uid, isFree })
           }
         }
@@ -162,13 +162,12 @@ async function getEmojiList() {
   const { data } = await getEmojiApi()
   emojiList.value = [
     textEmoji,
-    hxdEmoji,
     ...data.data,
   ]
 }
 
 async function startWebsocket() {
-  const { room, msgList } = storeToRefs(useAppStore())
+  const { currentRoom, msgList } = storeToRefs(useAppStore())
   const { data } = await getLiveStatusApi()
   const roomid = Object.keys(data.by_room_ids)[0]
   if (!roomid) {
@@ -186,7 +185,7 @@ async function startWebsocket() {
     uname: data.by_room_ids[`${roomid}`].uname,
   }
 
-  room.value = info.roomid
+  currentRoom.value = info.roomid
   addRoom(info)
 
   emit(EVENTS.OPEN_WEBSOCKET_EVENT, `${roomid}`)

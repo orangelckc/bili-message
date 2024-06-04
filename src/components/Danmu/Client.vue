@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { VirtualList } from 'vue-tiny-virtual-list'
+import { VirtList } from 'vue-virt-list'
 
 import { demos } from './config'
 
@@ -15,7 +15,7 @@ const demo = computed(() => {
 
 const { autoScroll } = storeToRefs(useAppStore())
 
-const danmuRef: Ref<InstanceType<typeof VirtualList> | null> = ref(null)
+const danmuRef: Ref<InstanceType<typeof VirtList> | null> = ref(null)
 
 watch(() => props.msgList, () => {
   if (!danmuRef.value || !autoScroll.value)
@@ -37,7 +37,7 @@ watch(autoScroll, (val) => {
 <template>
   <div class="danmu">
     <slot />
-    <VirtualList
+    <VirtList
       ref="danmuRef" item-key="id" :list="msgList" :min-size="30" :fixed="false" :buffer="2"
     >
       <template #default="{ itemData }">
@@ -57,7 +57,7 @@ watch(autoScroll, (val) => {
           />
         </div>
       </template>
-    </VirtualList>
+    </VirtList>
   </div>
 </template>
 
