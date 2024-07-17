@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 // import BackgroundRender from '@/components/Background.vue'
 
+import MarqueePlus from '@/components/marqueePlus.vue'
 import { LOCAL_WEBSOCKET_URL } from '@/utils/constants'
 import { formattedTime } from '@/utils/tools'
 
@@ -41,33 +42,33 @@ async function init_listener() {
       const command = data.command as SocketMusicCommand
       const msg = data.data as any
       switch (command) {
-        case 'update':{
+        case 'update': {
           // 更新歌曲播放进度
           currentTime.value = msg
           break
         }
-        case 'play':{
+        case 'play': {
           // 播放
           currentSong.value = msg
           isPaused.value = false
           break
         }
-        case 'pause':{
+        case 'pause': {
           // 暂停
           isPaused.value = true
           break
         }
-        case 'end':{
+        case 'end': {
           // 结束
           isPaused.value = true
           break
         }
-        case 'demand':{
+        case 'demand': {
           // 点歌
           tip.value = msg
           break
         }
-        case 'sync':{
+        case 'sync': {
           // 同步播放列表
           songList.value = msg
           break
@@ -120,14 +121,10 @@ onMounted(() => {
 <template>
   <div class="relative center overflow-hidden rounded-lg bg-black/10 p4 text-white/90">
     <Transition name="slide">
-      <div
-        v-if="showNotification"
-        class="fixed left-0 right-20 top-10px z-9 flex items-center justify-end"
-      >
+      <div v-if="showNotification" class="fixed left-0 right-20 top-10px z-9 flex items-center justify-end">
         <div class="w-1/2 flex items-center overflow-hidden rounded-lg bg-black/10 px30px py10px">
           <span
-            class="text-2xl text-white/90"
-            :class="{
+            class="text-2xl text-white/90" :class="{
               'line-scroll': tip.length > 10,
             }"
           >
@@ -139,17 +136,14 @@ onMounted(() => {
     <div class="relative w-full center gap4">
       <div class="relative h30 w30 center flex-col gap4">
         <img
-          src="@/assets/needle.png"
-          alt="needle"
-          class="absolute left-1/2 z-3 h16 transition-all transition-duration-800 -top-8 -translate-x-1/2"
-          :style="{
+          src="@/assets/needle.png" alt="needle"
+          class="absolute left-1/2 z-3 h16 transition-all transition-duration-800 -top-8 -translate-x-1/2" :style="{
             transform: `rotate(${rotate}deg)`,
             transformOrigin: 'left top',
           }"
         >
         <img
-          src="@/assets/disc.png" alt="disc"
-          class="absolute inset-0 z-1 h-full w-full"
+          src="@/assets/disc.png" alt="disc" class="absolute inset-0 z-1 h-full w-full"
           :class="{ 'rotate-disc': !isPaused }"
         >
         <el-avatar :src="currentSong?.pic" :size="70" shape="circle" fit="cover" class="z-2 shadow-2xl" />
@@ -170,21 +164,15 @@ onMounted(() => {
           </span>
         </div>
 
-        <span
-          class="my6 box-border w-full text-2xl"
-          :class="{
-            'line-scroll': showName.length > 10,
-          }"
-        >
-          {{ showName }}
+        <span class="my6 box-border w-full text-2xl">
+          <MarqueePlus :html="showName" />
         </span>
 
         <div class="w-full flex gap3 overflow-hidden rounded-lg bg-black/30 p4">
           <div class="relative flex-1">
             <div
               v-if="songList.length"
-              class="absolute left-0 right-0 top-0 flex flex-1 flex-col gap3 overflow-hidden truncate"
-              :class="{
+              class="absolute left-0 right-0 top-0 flex flex-1 flex-col gap3 overflow-hidden truncate" :class="{
                 'scroll-list': songList.length > 1,
               }"
             >
@@ -207,54 +195,60 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.line-scroll{
-  white-space: nowrap;
-  animation: marquee 10s linear infinite;
-  animation-delay: 1.5s;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(30px);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
 .rotate-disc {
   transition-delay: 2s;
   animation: spin 3s linear infinite;
 }
 
-.scroll-list{
+.scroll-list {
   animation: scroll 30s linear infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes scroll {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
 }
 
 .slide-enter-active {
   animation: slideDown 0.8s;
 }
+
 .slide-leave-active {
   animation: slideUp 0.8s;
 }
 
 @keyframes slideDown {
-  0% { transform: translateY(-150%); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(-150%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideUp {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-150%); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-150%);
+  }
 }
 </style>

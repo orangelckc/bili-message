@@ -3,6 +3,8 @@ import { emit } from '@tauri-apps/api/event'
 import { open } from '@tauri-apps/api/shell'
 import { showMenu } from 'tauri-plugin-context-menu'
 
+import MarqueePlus from './marqueePlus.vue'
+
 import type { Item } from 'tauri-plugin-context-menu/dist/types'
 
 const props = withDefaults(defineProps<{
@@ -115,8 +117,9 @@ function handleContextMenu(item: ISong) {
       <div class="relative w-full flex items-center">
         <el-avatar shape="square" :size="60" :src="`${item.pic}?@200w_200h_1c.avif`" />
         <div class="relative ml2 box-border flex flex-1 flex-col gap2 overflow-hidden">
-          <span :class="currentSong.bvid === item.bvid ? 'line-scroll' : 'line-clamp-1'" class="w-full">
-            {{ item.name }}
+          <span class="w-full">
+            <span v-if="currentSong.bvid === item.bvid"><MarqueePlus :html="item.name" /></span>
+            <span v-else class="line-clamp-1">{{ item.name }}</span>
           </span>
           <span class="text-sm">
             {{ item.artist }}

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import marqueePlus from '@/components/marqueePlus.vue'
 import { formattedTime } from '@/utils/tools'
 
 const { currentSong, isPlaying, currentTime, currentVolume } = storeToRefs(useMusicStore())
@@ -28,8 +29,8 @@ function changeVolume(value: any) {
     </div>
     <el-avatar shape="square" :size="60" :src="currentSong?.pic" />
     <div class="relative mx2 box-border flex flex-1 flex-col justify-between overflow-hidden">
-      <span class="line-scroll">
-        {{ currentSong?.name }}
+      <span>
+        <marqueePlus :html="currentSong?.name" />
       </span>
       <span class="truncate">
         {{ currentSong?.artist }}
