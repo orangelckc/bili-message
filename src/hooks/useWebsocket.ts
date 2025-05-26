@@ -60,7 +60,7 @@ function useWebsocket() {
       protover: 2,
       type: 2,
       platform: 'web',
-      key: data.token,
+      key: data?.token,
     }
 
     websocket.send(

@@ -1,3 +1,5 @@
+import { getWbi } from './wbi'
+
 import { LIVE_URL_PREFIX } from '@/utils/constants'
 import { EDMType } from '@/utils/enums'
 import request from '@/utils/request'
@@ -20,15 +22,17 @@ function getLiveCodeApi() {
 }
 
 // 获取ws认证token
-function getLiveTokenApi() {
+async function getLiveTokenApi() {
   const { currentUser, room } = useAppStore()
 
+  const params = {
+    id: room,
+  }
+  const wbi = await getWbi(params)
+
   return request({
-    url: `${LIVE_URL_PREFIX}/xlive/web-room/v1/index/getDanmuInfo`,
+    url: `${LIVE_URL_PREFIX}/xlive/web-room/v1/index/getDanmuInfo?${wbi}`,
     method: 'GET',
-    params: {
-      id: room,
-    },
     headers: {
       cookie: currentUser?.cookie,
     },
