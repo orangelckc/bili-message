@@ -110,3 +110,13 @@ export async function searchKeyword(keyword: string) {
     },
   })
 }
+
+export async function getSongInfo(artist: string, song: string) {
+  return request({
+    url: `https://musicbrainz.org/ws/2/recording/?query=artist:"${artist}"%20AND%20recording:"${song}"&fmt=json`,
+    method: 'GET',
+    headers: {
+      // cookie: currentUser?.cookie,
+    },
+  })
+}

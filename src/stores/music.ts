@@ -1,7 +1,13 @@
+import cheerio from 'cheerio'
+import { toSimplified } from 'chinese-simple2traditional'
+import { setupEnhance } from 'chinese-simple2traditional/enhance'
 import { Howl, Howler } from 'howler'
 
-import { getVideoDetail, searchKeyword } from '@/apis/music'
+import { getSongInfo, getVideoDetail, searchKeyword } from '@/apis/music'
 import { useSocket } from '@/utils/socket'
+import { convertTimeToMs } from '@/utils/tools'
+
+setupEnhance() // 注入短语库
 
 export const useMusicStore = defineStore('music', () => {
   // 正在播放列表
@@ -35,18 +41,102 @@ export const useMusicStore = defineStore('music', () => {
     clearInterval(timerInterval)
   }
 
+  // 匹配歌曲和歌手
+  const matchSongArtist = async (songInfos: Array<any>, biliResult: Array<any>) => {
+    // 匹配最佳时长的视频
+    const recordingBase: Array<any> = []
+    let BvIndex: number = 0
+    let videoLenDiff: number = -1
+    for (let i = 0; i < songInfos.length; i++) {
+      recordingBase.push(
+        {
+          index: i,
+          length: songInfos[i].length,
+          title: toSimplified(songInfos[i].title),
+          artist: songInfos[i]['artist-credit'] ? toSimplified(songInfos[i]['artist-credit'][0].name) : '',
+        },
+      )
+    }
+    for (let i = 0; i < biliResult.length; i++) {
+      for (let k = 0; k < recordingBase.length; k++) {
+        if (recordingBase[k].length) {
+          const diff = Math.abs(convertTimeToMs(biliResult[i].duration) - recordingBase[k].length)
+          if (
+            (diff < videoLenDiff
+            // 标题中需要包含点歌的歌名 和 歌手名 提高命中率
+            && (cheerio.load(biliResult[i].title).text().toLowerCase().includes(recordingBase[k].artist.toLowerCase()) && cheerio.load(biliResult[i].title).text().toLowerCase().includes(recordingBase[k].title.toLowerCase()))
+            )
+            || videoLenDiff === -1) {
+            BvIndex = i
+            videoLenDiff = diff
+            // console.log(`最后一个时间差值 ${videoLenDiff} recordingBase index ${k} BV Index ${i}`)
+          }
+        }
+      }
+    }
+    ElMessage.info('通过歌曲信息查询接口匹配')
+    return BvIndex
+  }
+
   const getBvidByKeyword = async (query: string) => {
     query = query.trim()
     const { data } = await searchKeyword(query)
 
-    // 获取播放量最大的视频返回
-    const target = data.result.filter((item: any) => item.type === 'video')
-      .sort((a: any, b: any) => b.play - a.play)
+    const song_artist = query.split(/\s+/)
+    let songName = ''
+    let artist = ''
+    if (song_artist.length > 1) {
+      songName = query.substring(0, query.length - song_artist[song_artist.length - 1].length).trim()
+      artist = song_artist[song_artist.length - 1]
+    }
+    else {
+      songName = query
+    }
 
+    let songsInfos: Array<any> = []
+    try {
+      // 从第三方接口获取歌曲的基本信息（时长）
+      let { recordings: songs } = await getSongInfo(artist, songName)
+      if (songs.length > 0) {
+        // 筛选名称相同或者名称长度相同的歌曲信息，尽可能过滤掉错误的信息
+        songs = songs.filter((item: any) => toSimplified(item.title).toLowerCase() === songName)
+      }
+      if (songs.length === 0) {
+        // 没有查询到结果，可能是错误地把最后一个词组作为歌手名称，不输出歌手参数再尝试查询一次
+        const re = await getSongInfo('', query)
+        if (re.recordings) {
+          songs = re.recordings
+          // 筛选名称相同或者名称长度相同的歌曲信息，尽可能过滤掉错误的信息
+          songs = songs.filter((item: any) => toSimplified(item.title) === query)
+        }
+      }
+      songsInfos = songs
+    }
+    catch (e) {
+      ElMessage.error('查询歌曲信息失败')
+    }
+
+    // 视频索引
+    let BvIndex: number = 0
+
+    let target = data.result.filter((item: any) => item.type === 'video')
+    if (songsInfos && songsInfos.length > 0) {
+      // 匹配最佳时长的视频
+      BvIndex = await matchSongArtist(songsInfos, target)
+    }
+    else {
+      // 获取播放量最大且包含歌名的视频返回
+      let tmp: any = []
+      tmp = target.filter((item: any) => cheerio.load(item.title).text().toLowerCase().includes(query.toLowerCase()))// .sort((a: any, b: any) => b.play - a.play)
+      if (tmp.length === 0)
+        tmp = target.filter((item: any) => cheerio.load(item.title).text().toLowerCase().includes(songName.toLowerCase()))// .sort((a: any, b: any) => b.play - a.play)
+
+      target = tmp
+    }
     if (!target)
       ElMessage.error('未搜索到相关视频')
 
-    return target[0].bvid
+    return target[BvIndex].bvid
   }
 
   const addToPlayList = async (bvid: string) => {
