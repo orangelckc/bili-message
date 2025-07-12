@@ -65,9 +65,29 @@ async function validateLoginInfoApi() {
   })
 }
 
+/**
+ * 获取buvid
+ */
+function getBuvidApi(): PromiseData<{
+  b_3: string
+  b_4: string
+} > | undefined {
+  const { currentUser } = useAppStore()
+  if (!currentUser?.cookie || !currentUser?.csrf)
+    return
+
+  return request({
+    url: `${BASE_URL_PREFIX}/x/frontend/finger/spi`,
+    headers: {
+      cookie: currentUser!.cookie,
+    },
+  })
+}
+
 export {
   getLoginUrlApi,
   verifyQrCodeApi,
   validateLoginInfoApi,
   getUserInfoApi,
+  getBuvidApi,
 }

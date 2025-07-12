@@ -1,3 +1,4 @@
+import { getBuvidApi } from './bilibili'
 import { getWbi } from './wbi'
 
 import { LIVE_URL_PREFIX } from '@/utils/constants'
@@ -30,11 +31,15 @@ async function getLiveTokenApi() {
   }
   const wbi = await getWbi(params)
 
+  const res = await getBuvidApi()
+  if (!res || !res?.data?.b_3)
+    return
+
   return request({
     url: `${LIVE_URL_PREFIX}/xlive/web-room/v1/index/getDanmuInfo?${wbi}`,
     method: 'GET',
     headers: {
-      cookie: currentUser?.cookie,
+      cookie: `${currentUser?.cookie};buvid3=${res.data.b_3}`,
     },
   })
 }
